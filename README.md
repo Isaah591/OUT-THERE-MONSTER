@@ -66,25 +66,26 @@ STUDIO=dark bvenv/bin/python scripts/render_views.py model/out_there_monster.ble
 bvenv/bin/python scripts/make_sheets.py model/renders references
 ```
 
-## How it is built (v3)
+## How it is built
 
 - **Units / axes:** metres, Z up, monster faces −Y. Monster's right (−X) carries the long arm.
-- **Body — blocky and readable first:** lofts of 12-point chamfered box sections along
-  spine/limb paths with only mild irregularity and a light low-poly chisel; a handful of
-  broad, shallow facet planes. Torso, neck and deltoids are one unioned structure. Lean,
-  broad-shouldered climber build (1.2 m shoulder girdle, 0.52 m waist), ~25° hunch, the long
-  arm's elongated forearm dragging to a club hand planted on the floor, the short arm
-  withered and ending at the knee. Mild deliberate asymmetry (dropped right shoulder, slightly
-  collapsed left flank, tilted head).
-- **Head:** a compact barrel built from three stacked rust strata — each band starts with an
-  overhanging lip, so the boundaries read as R08's layered ledges. Square, dark, recessed
-  sockets with tiny red square eyes. Light damage only: a torn cheek with flesh at the
-  monster's left mouth corner and a couple of strata peels.
-- **Jaw / mouth:** heavy jaw on knuckle hinges hanging open **55°** (the right hinge is split,
-  hence a 7° sag); the mouth is big because the jaw drops, not because the face is pushed
-  forward. Lower teeth, gums and tongue are checked against the chest on every build (BVH
-  overlap test: 0). Torn membranes at the mouth corners; dark interior with palate ridges,
-  tongue and ribbed throat.
+- **Body (R08):** lofts of chamfered box sections along limb/torso paths, with mild
+  irregularity and a light low-poly chisel. A big near-vertical box torso with a rounded
+  upper back; the head sits directly on its top (a short hidden neck block ties them). The
+  upper chest recedes slightly behind the jaw (invisible from the front) so the forced-open
+  jaw can hang in front of it. Chunky box arms whose tops form the shoulder blocks; thick
+  straight legs on blocky feet; slight stance asymmetry.
+- **Head (R08):** a compact, deep barrel built from three stacked rust strata (each band
+  overhangs the next), nodding forward ~9°. Square, dark, recessed sockets with tiny red
+  square eyes.
+- **Jaw / mouth (the one intentional change):** the lower jaw is as long as the head is deep
+  and is forced open **58°** about its rear hinge, so the profile is a '<' / Pac-Man wedge
+  with the chin dropping to 1.90 m while the upper skull and upper-jaw projection stay as in
+  R08. Knuckle hinges (the right one split and sagging 5°), torn membranes bridging only the
+  rear third of the wedge, taut tendons straining across it (one snapped per side), palate
+  ridges, tongue and ribbed throat. Lower teeth ride the jaw and are re-aimed up into the
+  mouth. Teeth, gums and tongue are checked against the chest on every build (BVH overlap:
+  0); only the hinge itself is anchored into the torso top.
 - **Teeth:** 32 big plank teeth (17 upper, 15 lower) in deliberate rows — rectangular sections,
   uneven lengths and tilts, some snapped, chipped, slabbed or broken to stumps, the odd gap,
   one tooth per row rammed in at a bad angle. Yellowed, decaying, dark grime and dried blood at
