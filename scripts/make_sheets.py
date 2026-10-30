@@ -55,6 +55,29 @@ def REF(n, box=None):
     return im.crop(box) if box else im
 
 
+def has(n):
+    return os.path.exists(os.path.join(renders, n + ".png"))
+
+
+def R08(box):
+    return Image.open(os.path.join(refs, "r08_remaster_surface_1.webp")).convert("RGB").crop(box)
+
+
+if has("head_front"):   # v2 review sheets
+    stack([row([label(R("front"), "FRONT (ortho)"), label(R("threequarter"), "THREE-QUARTER"),
+                label(R("side_r"), "SIDE R 90deg (ortho)")], h=700)]).save(os.path.join(renders, "_sheet_main.png"))
+    stack([row([label(R("head_front"), "HEAD"), label(R("mouth"), "MOUTH")], h=520),
+           row([label(R("wound_leg"), "TISSUE - LEG"), label(R("wound_arm"), "TISSUE - ARM"),
+                label(R("wound_torso"), "TISSUE - FLANK")], h=520)]).save(os.path.join(renders, "_sheet_closeups.png"))
+    stack([row([label(REF(1, (420, 150, 1420, 1050)), "ORIGINAL front"), label(R("front"), "v2 front")], h=560),
+           row([label(REF(3, (700, 240, 1380, 1200)), "ORIGINAL side"), label(R("side_r"), "v2 side R")], h=560)]
+          ).save(os.path.join(renders, "_compare_original.png"))
+    stack([row([label(R08((0, 628, 380, 992)), "R08 head (benchmark)"), label(R("head_front"), "v2 head")], h=520),
+           row([label(R08((1188, 628, 1586, 992)), "R08 leg tissue (benchmark)"), label(R("wound_leg"), "v2 leg tissue")], h=520)]
+          ).save(os.path.join(renders, "_compare_r08.png"))
+    print("v2 sheets written")
+    raise SystemExit
+
 # 1. Blockout overview: front / side / three-quarter
 views = [("front", "FRONT (ortho)"), ("side_r", "SIDE R 90deg (ortho)"),
          ("threequarter", "THREE-QUARTER")]
