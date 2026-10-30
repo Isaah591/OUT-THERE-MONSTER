@@ -17,18 +17,24 @@ the model rebuilds in ~15 s.
 | Baked textures + FBX for Roblox | not run (held until approval) | `scripts/bake_export.py`, `docs/ROBLOX_IMPORT.md` |
 | Rigging / animation | not started | see `docs/ROBLOX_IMPORT.md` |
 
-### R08 proportions used (measured from the sheet, overall height 2.8 m)
+### R08 proportions used (measured from the sheet panels on a pixel grid, overall height 2.8 m)
 
-| | R08 sheet | Reconstruction |
+Depth positions are measured in R08's side panel relative to the flat torso back (placed at
+y = +0.30 m; the monster faces −Y).
+
+| | R08 sheet | Reconstruction (measured from the .blend) |
 |---|---|---|
-| Head width / torso width | 0.62 | 0.65 |
-| Head front … back (side view) | −0.74 … −0.09 m | −0.74 … −0.11 m |
-| Skull above upper gum line | ~0.32 m | 0.36 m |
-| Torso | ~0.91 × 0.52 m, crotch 1.10 m, shoulders 2.40 m | same |
-| Long arm | out to the elbow, forearm forward to a club hand on the floor ~0.9 m ahead | same |
-| Short arm | straight slab ending ~0.75 m | 0.75 m |
-| Legs | thick straight blocks, ~0.33–0.38 m | same |
-| Lower jaw | almost closed | **forced open 58° about the rear hinge** (chin drops to 1.90 m) |
+| Overall height | 2.8 m (scale reference) | 2.83 m |
+| Head width / torso width | 0.62 | 0.62 (0.59 m / 0.95 m) |
+| Head front … back (side view) | −0.69 … −0.07 m | −0.67 … −0.04 m |
+| Skull above upper gum line | ~0.33 m | 0.35 m |
+| Torso | ~0.95 m wide, flat vertical back, crotch ~1.15 m, shoulders 2.42 m | 0.95 m, back at +0.30, crotch 1.10 m, shoulders 2.42 m |
+| Long arm | elbow outer edge ~1.17 m out; heavy forearm swings back in; club end ~0.85 m out, ~0.75 m ahead, just off the floor | 1.18 m; club end at x −0.87 / y −0.76, lowest point 0.11 m |
+| Short arm | straight slab, front edge ~0.19–0.24 m ahead of the leg, ends ~0.75 m | front edge 0.24 m ahead, ends 0.74 m |
+| Legs | ~0.32 m and ~0.37 m wide, ~0.15 m gap | 0.31–0.33 m and 0.35–0.37 m, 0.15 m gap |
+| Lower jaw | almost closed | **forced open 66° about the rear hinge** (62° below horizontal); chin drops to 1.99 m |
+
+Forms-stage triangle count: 11,708 (no damage pass yet).
 
 ## Layout
 
