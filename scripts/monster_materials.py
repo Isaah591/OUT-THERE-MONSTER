@@ -175,7 +175,7 @@ def shell_rust(name="M_Shell_Rust"):
     g.link(co, flake_v.inputs["Vector"])
     flakes = g.maprange(flake_v.outputs["Distance"], 0.05, 0.35)
     rustc = g.ramp(g.noise(16.0, 6.0, 0.6, coord=co).outputs["Fac"],
-                   [(0.35, (0.075, 0.028, 0.011)), (0.6, (0.16, 0.06, 0.022)), (0.8, (0.21, 0.085, 0.032))])
+                   [(0.35, (0.060, 0.024, 0.010)), (0.6, (0.12, 0.048, 0.019)), (0.8, (0.165, 0.068, 0.028))])
     col = g.mix(zA, base, rustc)
     # zone B: old dark oxidised scale (near black-brown, a little sheen)
     zB = g.maprange(g.noise(0.8, 3.0, 0.5, coord=co, distortion=0.4).outputs["Fac"], 0.56, 0.66)
@@ -187,7 +187,12 @@ def shell_rust(name="M_Shell_Rust"):
     pits = g.maprange(vor.outputs["Distance"], 0.11, 0.0)
     col = g.mix(g.math('MULTIPLY', pits, 0.5), col, (0.014, 0.008, 0.005))
     spk = g.noise(28.0, 4.0, 0.6, coord=co).outputs["Fac"]
-    col = g.mix(g.maprange(spk, 0.55, 0.7, 0.0, 0.6), col, (0.02, 0.012, 0.008))
+    col = g.mix(g.maprange(spk, 0.5, 0.62, 0.0, 0.8), col, (0.02, 0.012, 0.008))
+    # dense fine mottling + dark corrosion spotting (multi-scale, R08-level surface density)
+    fine = g.noise(65.0, 3.0, 0.6, coord=co).outputs["Fac"]
+    col = g.mix(g.maprange(fine, 0.42, 0.62, 0.0, 0.55), col, (0.03, 0.017, 0.011))
+    spots = g.noise(9.0, 6.0, 0.7, coord=co, distortion=0.5).outputs["Fac"]
+    col = g.mix(g.maprange(spots, 0.6, 0.68, 0.0, 0.75), col, (0.016, 0.010, 0.007))
     # worn exposed edges: rust rubbed thin, lighter and smoother
     edge = g.math('MULTIPLY', edge_mask(g), g.maprange(spk, 0.35, 0.6), clamp=True)
     col = g.mix(g.math('MULTIPLY', edge, 0.5), col, (0.15, 0.085, 0.045))
@@ -205,8 +210,9 @@ def shell_rust(name="M_Shell_Rust"):
     rough = g.math('SUBTRACT', rough, g.math('MULTIPLY', edge, 0.2))
     rough = g.math('SUBTRACT', rough, g.math('MULTIPLY', bl, 0.35))
     g.link(rough, g.bsdf.inputs["Roughness"])
-    h = g.math('ADD', g.math('MULTIPLY', g.noise(14.0, 8.0, 0.68, coord=co).outputs["Fac"], 0.7),
+    h = g.math('ADD', g.math('MULTIPLY', g.noise(14.0, 8.0, 0.68, coord=co).outputs["Fac"], 0.5),
                g.math('ADD', g.math('MULTIPLY', pits, -0.15), g.math('MULTIPLY', g.math('MULTIPLY', flakes, zA), 0.3)))
+    h = g.math('ADD', h, g.math('MULTIPLY', fine, 0.35))
     g.link(g.bump(h, 0.5, 0.012), g.bsdf.inputs["Normal"])
     return m
 
@@ -306,11 +312,13 @@ def teeth(name="M_Teeth"):
     tpos, tblood, tdecay = t.outputs[0], t.outputs[1], t.outputs[2]
     tint = a.outputs["Alpha"]
     n = g.noise(16.0, 6.0, 0.6, coord=co).outputs["Fac"]
-    col = g.ramp(n, [(0.3, (0.24, 0.16, 0.06)), (0.6, (0.40, 0.29, 0.11)), (0.85, (0.50, 0.40, 0.19))])
+    col = g.ramp(n, [(0.3, (0.17, 0.11, 0.04)), (0.6, (0.30, 0.21, 0.08)), (0.85, (0.40, 0.31, 0.14))])
     col = g.mix(g.math('MULTIPLY', tint, 0.55), col, (0.20, 0.12, 0.04))           # per-tooth yellowing
     # root grime and decay pits
     root = g.maprange(tpos, 0.4, 0.0)
-    col = g.mix(g.math('MULTIPLY', root, 0.85), col, (0.07, 0.04, 0.016))
+    col = g.mix(g.math('MULTIPLY', root, 0.9), col, (0.06, 0.035, 0.014))
+    grime = g.maprange(g.noise(22.0, 5.0, coord=co).outputs["Fac"], 0.5, 0.66, 0.0, 0.6)
+    col = g.mix(grime, col, (0.09, 0.055, 0.022))
     dec = g.math('MULTIPLY', tdecay, g.maprange(g.noise(9.0, 4.0, coord=co).outputs["Fac"], 0.48, 0.6), clamp=True)
     col = g.mix(dec, col, (0.025, 0.015, 0.007))
     # dried blood creeping down from the gum by a per-tooth amount
