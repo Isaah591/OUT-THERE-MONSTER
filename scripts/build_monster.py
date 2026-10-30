@@ -39,7 +39,7 @@ JAW_BROKEN_ROLL_DEG = 7.0  # sideways sag of the broken hinge (monster's right l
 # stick". The mouth stays huge because the jaw still drops 55 deg - not because the head
 # is big. The head sits forward of a taller torso, shoulders at about eye level.
 HEAD_SCALE = 0.78
-HEAD_POS = Vector((0.02, -0.82, 2.36))  # centre of the skull base (= upper gum line)
+HEAD_POS = Vector((0.02, -0.88, 2.26))  # centre of the skull base (= upper gum line)
 HEAD_ROT = (math.radians(-4.0), math.radians(-5.0), math.radians(-3.0))  # nod + unsettling tilt
 
 # Limb paths (shared by the forms, the wounds and the rods): (point, width, depth)
@@ -216,15 +216,15 @@ def build_body(M, C, detail):
         {"p": (0.00, 0.00, 1.86), "w": 0.84, "d": 0.46, "oy": -0.02, "rot": 1},   # lats flare
         {"p": (-0.02, -0.16, 2.10), "w": 1.14, "d": 0.54, "oy": -0.06, "rot": 4},
         {"p": (-0.04, -0.28, 2.36), "w": 1.28, "d": 0.58, "oy": -0.12, "rot": 6},  # broad shoulder girdle
-        {"p": (-0.03, -0.31, 2.58), "w": 0.92, "d": 0.48, "oy": -0.16, "rot": 7},  # upper-back ridge
-        {"p": (-0.02, -0.34, 2.72), "w": 0.48, "d": 0.30, "oy": -0.12, "rot": 8},
+        {"p": (-0.03, -0.30, 2.62), "w": 0.94, "d": 0.50, "oy": -0.18, "rot": 7},  # upper-back ridge
+        {"p": (-0.02, -0.32, 2.80), "w": 0.50, "d": 0.32, "oy": -0.15, "rot": 8},
     ], chamfer=0.16, irreg=ir(0.03), step=step, seed=1)
     torso = mesh_object("Torso", bm, C["Body"], [M["shell"]])
     pieces = []
     bm = bmesh.new()   # neck / trapezius wedge into the back of the skull
-    loft(bm, [{"p": (0.00, -0.26, 2.22), "w": 0.56, "d": 0.40},
-              {"p": (0.00, -0.46, 2.42), "w": 0.60, "d": 0.42},
-              {"p": (0.01, -0.60, 2.56), "w": 0.52, "d": 0.34}], chamfer=0.2,
+    loft(bm, [{"p": (0.00, -0.26, 2.16), "w": 0.56, "d": 0.40},
+              {"p": (0.00, -0.48, 2.34), "w": 0.60, "d": 0.42},
+              {"p": (0.01, -0.64, 2.46), "w": 0.52, "d": 0.34}], chamfer=0.2,
          irreg=ir(0.03), step=step, seed=2)
     pieces.append(mesh_object("_neck", bm, C["Body"], [M["shell"]]))
     bm = bmesh.new()   # deltoids: right heavier and dropped, left smaller and higher
