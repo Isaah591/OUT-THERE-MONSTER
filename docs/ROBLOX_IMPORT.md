@@ -10,14 +10,14 @@ model/roblox_export/textures/<Part>_Roughness.png
 model/roblox_export/textures/Rods_Metalness.png
 ```
 
-The FBX contains nine meshes, one per future MeshPart: `Body` (torso, neck, deltoids,
-spine, scapulae), `Head` (skull, upper teeth/gums, palate, throat, hinge knuckles, sinew,
-mouth-corner membranes, tissue strings), `Jaw` (jaw, lower teeth/gums, tongue),
-`Arm_R_Long`, `Arm_L_Short`, `Leg_R`, `Leg_L`, `Rods`, `Eyes`. In v2 the largest group
-(Body) is ~16.8k triangles, under Roblox's 20k MeshPart limit, and the Head/Jaw split
+The FBX contains nine meshes, one per future MeshPart: `Body` (torso, neck, deltoids),
+`Head` (skull, upper teeth/gums, palate, throat, hinge knuckles, mouth-corner membranes),
+`Jaw` (jaw, lower teeth/gums, tongue),
+`Arm_R_Long`, `Arm_L_Short`, `Leg_R`, `Leg_L`, `Rods`, `Eyes`. In v3 the largest group
+(Body) is ~8.6k triangles, far under Roblox's 20k MeshPart limit, and the Head/Jaw split
 keeps the hinge separately animatable.
 
-> v2 note: the bake/export has not been run for v2 yet (held until the v2 review is
+> v3 note: the bake/export has not been run for v3 yet (held until the v3 review is
 > approved). The shell is flat-shaded while tissue, gums and teeth are smooth-shaded with
 > sharp fracture edges; check after import that Roblox kept that split (if everything
 > looks faceted or everything looks soft, re-export with `mesh_smooth_type='OFF'`).
