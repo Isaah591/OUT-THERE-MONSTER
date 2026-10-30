@@ -22,8 +22,8 @@ import monster_detail as D
 
 rng = random.Random(77)
 
-HW, HD, CH = 0.90, 0.79, 0.58          # skull width / depth / height
-JAW_LEN, JAW_W = 0.81, 0.88
+HW, HD, CH = 0.90, 0.95, 0.58          # skull width / depth / height (R08 head is deeper than wide)
+JAW_LEN, JAW_W = 0.90, 0.88            # closed, the jaw spans the head's depth
 HINGE = Vector((0.0, HD / 2 - 0.12, -0.02))   # jaw pivot in cranium space
 
 
@@ -52,7 +52,8 @@ def gauss(p, centre, r):
 # ---------------------------------------------------------------------------
 # Skull
 # ---------------------------------------------------------------------------
-EYES = [(-0.215, 0.235, 1.0), (0.195, 0.225, 0.9)]   # (x, z, size)
+CH_K = 0.864   # cranium height factor: R08's skull is a squat barrel (0.32 m above the gum line)
+EYES = [(-0.23, 0.215 * CH_K, 1.12), (0.22, 0.205 * CH_K, 1.02)]   # (x, z, size)
 
 
 def skull_point(x, y, z):
@@ -63,7 +64,7 @@ def skull_point(x, y, z):
         p.y += 0.018 * g * f
     if x < 0:
         p.x *= 1.02                                     # right side a little swollen
-    p.z += 0.03 * (x / (HW / 2)) * (z / CH) ** 1.5      # crown slants slightly
+    p.z += 0.03 * (x / (HW / 2)) * max(0.0, z / CH) ** 1.5      # crown slants slightly
     p -= (p - Vector((0, 0, 0.28))).normalized() * 0.03 * gauss(p, (0.27, -0.1, 0.5), 0.16)   # old dent
     p += Vector((noise.noise(p * 3.1), noise.noise(p * 3.1 + Vector((5, 1, 2))),
                  noise.noise(p * 3.1 + Vector((9, 4, 7))))) * 0.008
@@ -73,9 +74,9 @@ def skull_point(x, y, z):
 # Three stacked strata (z0, z1, width, depth, x-shift, y-shift, twist deg). Each band
 # starts with an overhanging lip and narrows toward its top, so every boundary reads as
 # a ledge - the layered-rock look of the R08 head.
-STRATA = [(0.00, 0.17, 0.90, 0.79, 0.000, 0.000, 0.0),
-          (0.17, 0.37, 0.91, 0.80, 0.008, -0.006, 2.0),
-          (0.37, 0.535, 0.87, 0.76, -0.006, 0.006, -1.5)]
+STRATA = [(0.00, 0.17, 0.90, 0.95, 0.000, 0.000, 0.0),
+          (0.17, 0.37, 0.91, 0.96, 0.008, -0.006, 2.0),
+          (0.37, 0.535, 0.87, 0.91, -0.006, 0.006, -1.5)]
 
 
 def build_skull(M, col, location, rotation):
@@ -83,8 +84,9 @@ def build_skull(M, col, location, rotation):
     for z0, z1, w, d, sx_, sy_, tw in STRATA:
         for t, k in ((0.0, 1.0), (0.06, 1.022), (0.8, 1.0), (1.0, 0.975)):
             rings.append((z0 + (z1 - z0) * t - (0.004 if t == 1.0 else 0.0), w * k, d * k, sx_, sy_, tw))
-    rings[0] = (0.0, 0.86, 0.75, 0, 0, 0)
-    rings += [(0.565, 0.80, 0.70, 0, 0, -1.5), (0.585, 0.66, 0.57, 0, 0, -1.5)]
+    rings[0] = (0.0, 0.86, 0.90, 0, 0, 0)
+    rings += [(0.565, 0.80, 0.84, 0, 0, -1.5), (0.585, 0.66, 0.68, 0, 0, -1.5)]
+    rings = [(r[0] * CH_K,) + tuple(r[1:]) for r in rings]
     n = 16
     profiles = []
     for z, w, d, sx_, sy_, tw in rings:
@@ -138,7 +140,7 @@ def eye_sockets(sk, M, col):
 # ---------------------------------------------------------------------------
 def jaw_h(x):
     sag = 0.035 * max(0.0, -x / (JAW_W / 2))              # broken side hangs deeper
-    return 0.23 + 0.12 * (1 - (x / (JAW_W / 2)) ** 2) + sag
+    return 0.20 + 0.10 * (1 - (x / (JAW_W / 2)) ** 2) + sag
 
 
 def jaw_front(x):
@@ -238,8 +240,9 @@ def hinges_and_tissue(M, col, sk, jaw):
         grid = []
         for i in range(cols_n):
             u = i / (cols_n - 1)
-            top = Vector((sx * (HW / 2 - 0.06), HINGE.y + 0.02 - u * 0.42, 0.005))
-            bot = jm @ Vector((sx * (JAW_W / 2 - 0.05), 0.02 - u * 0.42, -0.01))
+            # only the rear third of the wedge is bridged, so the profile stays an open '<'
+            top = Vector((sx * (HW / 2 - 0.06), HINGE.y + 0.02 - u * 0.30, 0.005))
+            bot = jm @ Vector((sx * (JAW_W / 2 - 0.05), 0.02 - u * 0.30, -0.01))
             row = []
             for j in range(rows_n):
                 v = j / (rows_n - 1)
@@ -258,6 +261,26 @@ def hinges_and_tissue(M, col, sk, jaw):
                 q = (grid[i][j], grid[i + 1][j], grid[i + 1][j + 1], grid[i][j + 1])
                 mb.faces.new(q if sx > 0 else tuple(reversed(q)))
     mem = D.bm_object("Mouth_Corner_Tissue", mb, col, [M["flesh"]], parent=sk)
+
+    # taut tendons straining across the rear of the forced-open wedge (one snapped per side)
+    tb = bmesh.new()
+    for sx in (-1, 1):
+        for i, (ty, by) in enumerate(((-0.10, -0.12), (-0.22, -0.26), (-0.34, -0.40))):
+            top = Vector((sx * (HW / 2 - 0.08), HINGE.y + ty + rng.uniform(-0.02, 0.02), -0.01))
+            bot = jm @ Vector((sx * (JAW_W / 2 - 0.08), by + rng.uniform(-0.03, 0.03), 0.0))
+            snapped = i == (1 if sx > 0 else 2)
+            pts, radii = [], []
+            for k in range(6):
+                t = k / 5
+                if snapped and t > 0.5:
+                    break
+                sag = 0.012 * math.sin(math.pi * t) if not snapped else 0.06 * t * t
+                pts.append(top.lerp(bot, t) + Vector((sx * 0.01 * math.sin(math.pi * t), -sag * 0.3, -sag)))
+                radii.append(rng.uniform(0.016, 0.024) * (1.0 - 0.45 * math.sin(math.pi * t)))
+            if snapped:
+                radii[-1] *= 0.35
+            D.tube(tb, pts, radii, 0, sides=6, jitter=0.2)
+    D.bm_object("Mouth_Tendons", tb, col, [M["flesh"]], parent=sk)
     sol = mem.modifiers.new("Thick", 'SOLIDIFY')
     sol.thickness = 0.018
     D.apply_modifiers(mem)
@@ -360,7 +383,7 @@ def gums_and_teeth(M, col, sk, jaw):
         for y in (-0.44, -0.32, -0.20):
             lo.append((Vector((sx * wall, y + rng.uniform(-0.015, 0.015), 0.02)), Vector((sx, 0, 0)), False))
     bm, layer = D.new_tooth_bm()
-    D.plank_row(bm, layer, lo, down=(0, 0, 1), out_bias=(0.0, 0.2), lean=(0, 0.7, 0),
+    D.plank_row(bm, layer, lo, down=(0, 0, 1), out_bias=(0.0, 0.2), lean=(0, 1.0, 0),
                 size={"front_len": (0.14, 0.24), "side_len": (0.10, 0.16)}, wild=1)
     D.bm_object("Teeth_Lower", bm, col, [M["teeth"]], parent=jaw)
 

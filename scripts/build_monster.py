@@ -33,45 +33,40 @@ OUT_DIR = os.path.join(HERE, "..", "model")
 # ---------------------------------------------------------------------------
 # Tunable proportions
 # ---------------------------------------------------------------------------
-JAW_OPEN_DEG = 55.0        # lower jaw hang (checked against the chest below)
-JAW_BROKEN_ROLL_DEG = 7.0  # sideways sag of the broken hinge (monster's right lower)
-# Proportion pass: the head is scaled down so the creature does not read as "a mouth on a
-# stick". The mouth stays huge because the jaw still drops 55 deg - not because the head
-# is big. The head sits forward of a taller torso, shoulders at about eye level.
-HEAD_SCALE = 0.78
-HEAD_POS = Vector((0.02, -0.88, 2.26))  # centre of the skull base (= upper gum line)
-HEAD_ROT = (math.radians(-4.0), math.radians(-5.0), math.radians(-3.0))  # nod + unsettling tilt
+# ---- R08-faithful proportions (measured from references/r08_reference_sheet_primary.webp,
+# overall height 2.8 m => ~0.0051 m per sheet pixel). The ONLY intended deviation from R08
+# is the lower jaw: forced / broken open into a Pac-Man-like wedge around its rear hinge.
+JAW_OPEN_DEG = 58.0        # lower jaw forced far past a natural range (R08 is nearly closed)
+JAW_BROKEN_ROLL_DEG = 5.0  # sideways sag of the broken hinge (monster's right lower)
+HEAD_SCALE = 0.633         # head built at reference size, scaled to R08's 0.57 m width
+HEAD_POS = Vector((0.0, -0.44, 2.48))   # centre of the upper gum line: head sits on the torso top
+HEAD_ROT = (math.radians(-9.0), math.radians(-2.0), math.radians(-2.0))  # forward nod, as in R08's side view
 
 # Limb paths (shared by the forms, the wounds and the rods): (point, width, depth)
-# Lean, sinewy limbs; the long arm still drags its club hand on the floor.
-LONG_ARM = [
-    ((-0.70, -0.31, 2.36), 0.27, 0.29),
-    ((-0.86, -0.42, 1.88), 0.25, 0.27),
-    ((-1.00, -0.52, 1.46), 0.27, 0.27),   # bony, hyper-extended elbow
-    ((-1.07, -0.56, 1.37), 0.29, 0.29),
-    ((-1.42, -0.73, 1.02), 0.33, 0.31),   # swollen forearm
-    ((-1.78, -0.90, 0.64), 0.30, 0.29),
-    ((-2.18, -1.10, 0.18), 0.35, 0.29),
-    ((-2.30, -1.16, 0.05), 0.32, 0.23),   # club hand, planted flat on the floor
+LONG_ARM = [   # monster's right: hangs out to the elbow, forearm reaches forward to the floor
+    ((-0.66, -0.12, 2.42), 0.36, 0.38),   # shoulder block top
+    ((-0.70, -0.13, 2.28), 0.37, 0.39),
+    ((-0.84, -0.17, 1.86), 0.36, 0.37),
+    ((-0.98, -0.22, 1.44), 0.36, 0.36),   # elbow
+    ((-0.98, -0.40, 1.00), 0.38, 0.37),   # heavy forearm
+    ((-0.95, -0.65, 0.50), 0.39, 0.37),
+    ((-0.93, -0.80, 0.20), 0.40, 0.36),
+    ((-0.92, -0.86, 0.04), 0.37, 0.30),   # club hand resting on the floor
 ]
-SHORT_ARM = [   # withered: thinner, pinched at the elbow, ends at mid-thigh
-    ((0.70, -0.31, 2.40), 0.26, 0.28),
-    ((0.78, -0.40, 2.08), 0.23, 0.25),
-    ((0.86, -0.49, 1.76), 0.25, 0.25),    # elbow
-    ((0.88, -0.53, 1.68), 0.26, 0.26),
-    ((0.91, -0.60, 1.30), 0.28, 0.26),
-    ((0.92, -0.64, 1.02), 0.27, 0.25),    # bloody stump end
+SHORT_ARM = [  # monster's left: a straight slab hanging to just above the knee
+    ((0.62, -0.18, 2.39), 0.32, 0.34),    # shoulder block top
+    ((0.64, -0.18, 2.24), 0.33, 0.35),
+    ((0.69, -0.20, 1.70), 0.31, 0.32),
+    ((0.73, -0.21, 1.25), 0.31, 0.31),
+    ((0.77, -0.22, 0.76), 0.30, 0.30),    # bloody stump end
 ]
-LEGS = {   # longer, structurally believable legs (hip at ~45% of overall height)
-    "Leg_R": [((-0.20, 0.20, 1.32), 0.31, 0.33), ((-0.21, 0.07, 1.00), 0.29, 0.31),
-              ((-0.17, -0.12, 0.66), 0.27, 0.29), ((-0.19, -0.03, 0.36), 0.24, 0.26),
-              ((-0.20, 0.04, 0.12), 0.26, 0.28)],
-    "Leg_L": [((0.20, 0.20, 1.32), 0.30, 0.32), ((0.21, 0.08, 1.00), 0.28, 0.30),
-              ((0.17, -0.08, 0.68), 0.26, 0.28), ((0.19, -0.01, 0.37), 0.23, 0.25),
-              ((0.20, 0.05, 0.12), 0.25, 0.27)],
+LEGS = {   # thick straight blocks, slight stance asymmetry
+    "Leg_R": [((-0.20, 0.00, 1.18), 0.33, 0.36), ((-0.20, -0.02, 0.86), 0.33, 0.35),
+              ((-0.20, -0.03, 0.56), 0.32, 0.34), ((-0.20, 0.00, 0.12), 0.31, 0.33)],
+    "Leg_L": [((0.24, 0.00, 1.18), 0.37, 0.38), ((0.25, -0.02, 0.86), 0.36, 0.37),
+              ((0.25, -0.04, 0.56), 0.35, 0.36), ((0.25, 0.00, 0.12), 0.34, 0.35)],
 }
-SPINE = [(0.0, 0.22, 1.20), (0.0, 0.16, 1.48), (0.0, 0.04, 1.76), (-0.01, -0.12, 2.04),
-         (-0.02, -0.24, 2.32), (-0.02, -0.30, 2.56)]
+SPINE = [(0.0, 0.02, 1.10), (0.0, 0.03, 1.50), (0.0, 0.04, 1.90), (0.0, 0.05, 2.30)]
 
 rng = random.Random(7)
 
@@ -207,36 +202,24 @@ def build_body(M, C, detail):
     ir = (lambda a: a) if detail else (lambda a: 0.0)
     parts = {}
 
-    # Torso: climber build - broad shoulder girdle, lean ribcage, narrow waist, hunched.
+    # Torso (R08): a big, near-vertical, slightly tapered box with a rounded upper back.
+    # The upper front recedes a little behind the jaw (hidden in front view) so the forced-open
+    # lower jaw has room to hang in front of the chest.
     bm = bmesh.new()
     loft(bm, [
-        {"p": (0.00, 0.22, 1.18), "w": 0.54, "d": 0.37},
-        {"p": (0.00, 0.19, 1.38), "w": 0.48, "d": 0.34, "rot": -3},              # narrow waist
-        {"p": (0.01, 0.11, 1.62), "w": 0.60, "d": 0.38, "rot": -2},
-        {"p": (0.00, 0.00, 1.86), "w": 0.84, "d": 0.46, "oy": -0.02, "rot": 1},   # lats flare
-        {"p": (-0.02, -0.16, 2.10), "w": 1.14, "d": 0.54, "oy": -0.06, "rot": 4},
-        {"p": (-0.04, -0.28, 2.36), "w": 1.28, "d": 0.58, "oy": -0.12, "rot": 6},  # broad shoulder girdle
-        {"p": (-0.03, -0.30, 2.62), "w": 0.94, "d": 0.50, "oy": -0.18, "rot": 7},  # upper-back ridge
-        {"p": (-0.02, -0.32, 2.80), "w": 0.50, "d": 0.32, "oy": -0.15, "rot": 8},
-    ], chamfer=0.16, irreg=ir(0.03), step=step, seed=1)
+        {"p": (0.00, 0.02, 1.10), "w": 0.80, "d": 0.48},
+        {"p": (0.00, 0.02, 1.28), "w": 0.84, "d": 0.50},
+        {"p": (0.00, 0.03, 1.70), "w": 0.88, "d": 0.52},
+        {"p": (0.00, 0.09, 2.02), "w": 0.91, "d": 0.48},
+        {"p": (0.00, 0.12, 2.28), "w": 0.90, "d": 0.44},
+        {"p": (0.00, 0.12, 2.40), "w": 0.80, "d": 0.38},
+    ], chamfer=0.14, irreg=ir(0.03), step=step, seed=1)
     torso = mesh_object("Torso", bm, C["Body"], [M["shell"]])
     pieces = []
-    bm = bmesh.new()   # neck / trapezius wedge into the back of the skull
-    loft(bm, [{"p": (0.00, -0.26, 2.16), "w": 0.56, "d": 0.40},
-              {"p": (0.00, -0.48, 2.34), "w": 0.60, "d": 0.42},
-              {"p": (0.01, -0.64, 2.46), "w": 0.52, "d": 0.34}], chamfer=0.2,
-         irreg=ir(0.03), step=step, seed=2)
+    bm = bmesh.new()   # short hidden neck block tying the back of the skull into the torso top
+    loft(bm, [{"p": (0.00, 0.08, 2.30), "w": 0.46, "d": 0.30},
+              {"p": (0.00, -0.12, 2.52), "w": 0.44, "d": 0.28}], chamfer=0.2, irreg=ir(0.03), seed=2)
     pieces.append(mesh_object("_neck", bm, C["Body"], [M["shell"]]))
-    bm = bmesh.new()   # deltoids: right heavier and dropped, left smaller and higher
-    loft(bm, [{"p": (-0.38, -0.30, 2.48), "w": 0.36, "d": 0.46},
-              {"p": (-0.68, -0.31, 2.38), "w": 0.38, "d": 0.46},
-              {"p": (-0.83, -0.33, 2.24), "w": 0.27, "d": 0.34}],
-         ref=(0, 0, 1), chamfer=0.2, irreg=ir(0.035), seed=3)
-    loft(bm, [{"p": (0.38, -0.30, 2.52), "w": 0.32, "d": 0.42},
-              {"p": (0.66, -0.31, 2.47), "w": 0.32, "d": 0.40},
-              {"p": (0.80, -0.33, 2.36), "w": 0.24, "d": 0.32}],
-         ref=(0, 0, 1), chamfer=0.2, irreg=ir(0.035), seed=4)
-    pieces.append(mesh_object("_delts", bm, C["Body"], [M["shell"]]))
     if False:   # v3: simple structure - no vertebra knobs / scapula plates
         # bony structure pushing through the shell: vertebra knobs and scapula plates
         bm = bmesh.new()
@@ -261,16 +244,13 @@ def build_body(M, C, detail):
     D.union(torso, pieces)
     if detail:
         D.chisel(torso, level=0, plate=0.01, lump=0.012)
-        for v in torso.data.vertices:      # collapsed left flank
-            g = math.exp(-((v.co - Vector((0.36, 0.0, 1.68))).length / 0.2) ** 2)
-            v.co.x -= 0.025 * g
         D.deform(torso, 0.012, 1.8, seed=1)
         D.facet_cuts(torso, 14, M, size=(0.3, 0.5), depth=(0.0, 0.01), tilt=(3, 8))
     parts["Torso"] = torso
 
     for name, path, seed in (("Arm_R_Long", LONG_ARM, 5), ("Arm_L_Short", SHORT_ARM, 6)):
         bm = bmesh.new()
-        loft(bm, limb_rings(path), chamfer=0.16, irreg=ir(0.035), step=step, seed=seed,
+        loft(bm, limb_rings(path), chamfer=0.12, irreg=ir(0.035), step=step, seed=seed,
              cap_mats=(0, 1) if name == "Arm_L_Short" else (0, 0))
         ob = mesh_object(name, bm, C["Arms"], [M["shell"], M["flesh"]])
         if detail:
@@ -283,11 +263,12 @@ def build_body(M, C, detail):
     for name, path in LEGS.items():
         seed = 7 if name == "Leg_R" else 8
         bm = bmesh.new()
-        loft(bm, limb_rings(path), chamfer=0.18, irreg=ir(0.035), step=step, seed=seed)
-        sx = 1 if path[0][0][0] > 0 else -1
-        loft(bm, [{"p": (0.20 * sx, 0.16, 0.09), "w": 0.31, "d": 0.18},
-                  {"p": (0.21 * sx, -0.08, 0.08), "w": 0.33, "d": 0.16},
-                  {"p": (0.22 * sx, -0.28, 0.065), "w": 0.30, "d": 0.12}],
+        loft(bm, limb_rings(path), chamfer=0.13, irreg=ir(0.035), step=step, seed=seed)
+        fx = path[-1][0][0]
+        fw = path[-1][1] + 0.05
+        loft(bm, [{"p": (fx, 0.14, 0.07), "w": fw, "d": 0.14},      # blocky foot
+                  {"p": (fx, -0.10, 0.065), "w": fw, "d": 0.13},
+                  {"p": (fx, -0.27, 0.055), "w": fw - 0.03, "d": 0.11}],
              ref=(0, 0, 1), chamfer=0.15, irreg=ir(0.03), seed=seed + 10)
         ob = mesh_object(name, bm, C["Legs"], [M["shell"]])
         if detail:
@@ -307,9 +288,10 @@ def build_hardware(M, C, parts, extra_bars):
     top_l = D.surface_frame(cr, cr.matrix_world @ Vector((0.06, -0.26, 0.9)))[0]
     top_r = D.surface_frame(cr, cr.matrix_world @ Vector((0.08, 0.22, 0.9)))[0]
     a, b = cr.matrix_world @ top_l, cr.matrix_world @ top_r
-    hs = HEAD_SCALE
-    flat_bar(bm, [a - Vector((0, 0, 0.12 * hs)), a + Vector((0.03, 0.0, 0.42 * hs)),
-                  b + Vector((0.07, 0.0, 0.45 * hs)), b - Vector((0, 0, 0.12 * hs))], ref=(1, 0, 0))
+    hs = HEAD_SCALE   # small staple bracket on the crown (R08: ~0.15 m tall)
+    flat_bar(bm, [a - Vector((0, 0, 0.12 * hs)), a + Vector((0.0, 0.0, 0.24 * hs)),
+                  b + Vector((0.03, 0.0, 0.25 * hs)), b - Vector((0, 0, 0.12 * hs))], w=0.06, d=0.03,
+             ref=(1, 0, 0))
     entries = [a, b]
 
     def spike(part, world_hint, outward, length):
@@ -323,17 +305,16 @@ def build_hardware(M, C, parts, extra_bars):
 
     la = lambda t, off: along(LONG_ARM, t)[0] + Vector(off)
     sa = lambda t, off: along(SHORT_ARM, t)[0] + Vector(off)
-    spike("Torso", (-0.25, 0.12, 2.55), (0, 1, 0.8), 0.40)
-    spike("Torso", (0.30, 0.06, 2.46), (0.4, 1, 0.6), 0.32)
-    spike("Arm_R_Long", la(0.24, (-0.5, 0, 0)), (-1, 0, 0.3), 0.30)
-    spike("Arm_L_Short", sa(0.25, (0.5, 0, 0)), (1, 0, 0.5), 0.28)
-    spike("Arm_L_Short", sa(0.70, (0.5, 0, 0)), (1, 0, 0), 0.2)
-    spike("Leg_R", (-0.60, 0.04, 1.02), (-1, 0, 0), 0.26)
-    ob = parts["Torso"]                     # bent V-rod jammed into the belly
-    loc, n, _ = D.surface_frame(ob, (0.05, -0.6, 1.62))
+    spike("Torso", (0.30, 0.40, 2.30), (0.2, 1, 1.0), 0.30)            # back of left shoulder
+    spike("Arm_R_Long", la(0.72, (0, -0.5, 0.2)), (0, -1, 0.6), 0.22)   # forearm stub, forward
+    spike("Arm_R_Long", la(0.40, (-0.5, 0, 0)), (-1, 0, 0.2), 0.16)     # outer elbow stub
+    spike("Arm_L_Short", sa(0.40, (0.5, 0, 0)), (1, 0, 0.1), 0.18)      # short-arm side stub
+    spike("Leg_L", (0.60, -0.02, 0.50), (1, 0, 0), 0.20)               # shin stub
+    ob = parts["Torso"]                     # bent hook rod jammed into the belly
+    loc, n, _ = D.surface_frame(ob, (-0.05, -0.6, 1.62))
     p = ob.matrix_world @ loc
-    p1 = p + n * 0.30 + Vector((-0.04, 0, -0.24))
-    flat_bar(bm, [p - n * 0.10, p1, p1 + Vector((-0.22, -0.03, 0.22))], ref=(0, -1, 0))
+    p1 = p + n * 0.42 + Vector((-0.12, 0, -0.12))
+    flat_bar(bm, [p - n * 0.10, p1, p1 + Vector((-0.04, -0.03, 0.24))], ref=(0, -1, 0))
     entries.append(p)
     for p0, p1 in extra_bars:              # rods driven into wounds
         flat_bar(bm, [p0, p1], w=0.07, d=0.045)
@@ -415,16 +396,16 @@ def check_jaw_clearance():
             polys += [[i + off for i in p.vertices] for p in ob.data.polygons]
         return BVHTree.FromPolygons(verts, polys)
     total = 0
-    for a in ("Teeth_Lower", "Gums_Lower", "Tongue"):
+    for a in ("Teeth_Lower", "Gums_Lower", "Tongue", "Jaw"):
         for b in ("Torso", "Arm_L_Short", "Arm_R_Long"):
             ob = bpy.data.objects[a]
             hits = bvh([a]).overlap(bvh([b]))
             if hits:
                 ys = [ob.data.polygons[i].center.y for i, _ in hits]
-                print("  overlap %s / %s: %d pairs, jaw-local y %.2f..%.2f (hinge at 0, chin at -0.81)"
-                      % (a, b, len(hits), min(ys), max(ys)))
+                print("  overlap %s / %s: %d pairs, jaw-local y %.2f..%.2f (hinge at 0, chin at -%.2f)"
+                      % (a, b, len(hits), min(ys), max(ys), H.JAW_LEN))
             total += len(hits)
-    print("JAW-TEETH/GUMS/TONGUE-vs-BODY overlapping face pairs:", total)
+    print("JAW/TEETH/GUMS/TONGUE-vs-BODY overlapping face pairs:", total)
     return total
 
 
@@ -466,7 +447,7 @@ def build(stage):
         for ob in list(parts.values()) + [bpy.data.objects["Jaw_Hinges"]]:
             D.paint_blood(ob, blood, base=0.03)
             D.facet_attr(ob)
-    for name in ("Mouth_Corner_Tissue", "Tongue", "Gums_Upper",
+    for name in ("Mouth_Corner_Tissue", "Mouth_Tendons", "Tongue", "Gums_Upper",
                  "Gums_Lower", "Palate", "Throat", "Teeth_Upper", "Teeth_Lower"):
         D.smooth_organic(bpy.data.objects[name], range(8),
                          sharp_angle=42 if name.startswith(("Teeth", "Gums")) else None)
