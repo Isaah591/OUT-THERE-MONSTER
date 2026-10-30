@@ -71,6 +71,17 @@ def ray_frame(ob, origin_world, dir_world, world_axis=(0, 0, 1)):
     return loc, nor.normalized(), u.normalized()
 
 
+def place(ob, spec):
+    """Wound frame from a spec: ray-cast if it carries one, else nearest surface point."""
+    if "ray" in spec:
+        o, d = spec["ray"]
+        inv = ob.matrix_world.inverted()
+        hit = local_bvh(ob).ray_cast(inv @ Vector(o), (inv.to_3x3() @ Vector(d)).normalized())
+        if hit[0] is not None:
+            return ray_frame(ob, o, d, spec.get("axis", (0, 0, 1)))
+    return surface_frame(ob, spec["world"], spec.get("axis", (0, 0, 1)))
+
+
 def surface_frame(ob, world_pt, world_axis=(0, 0, 1)):
     """Nearest surface point to world_pt -> (local point, local normal, local tangent)."""
     inv = ob.matrix_world.inverted()
@@ -335,14 +346,13 @@ def tissue_sheet(bm, c, n, u, v, a, b, mat, project, top=(0.012, 0.02), groove=0
 
 
 def shard(bm, c, n, u, v, outline, start, length, shell_mat, edge_mat, reach=(0.05, 0.13), lift=(0.002, 0.016),
-          project=None):
+          project=None, inward=True):
     """Splintered shell lip still attached to the rim, lifted / peeled outward."""
     k = len(outline)
     idx = [(start + i) % k for i in range(length)]
     L = rng.uniform(*lift)
     R = rng.uniform(*reach)
     th = rng.uniform(0.006, 0.01)
-    inward = True                         # hang over the opening (never float off a silhouette)
     base, tip = [], []
     for j, i in enumerate(idx):
         x, y = outline[i]
@@ -375,12 +385,21 @@ def damage(ob, tears, peels, chips, M, blood_sources, rod_bm=None):
     cbm = bmesh.new()   # mats: 0 edge, 1 flesh, 2 under
     extras = []
     mw = ob.matrix_world
+    lips = []
     for p in peels:
-        c, n, u = surface_frame(ob, p["world"], p.get("axis", (0, 0, 1)))
-        out = jagged_outline(p["a"], p["b"], 40, notch=0.3, fine=0.25)
-        cutter(cbm, c, n, u, rng.uniform(0.008, 0.014), out, rough_floor=0.0, floor_mat=2, taper=(0.9, 0.98))
+        # bark-like peel: the outer rust skin torn away in two stepped strata
+        c, n, u = place(ob, p)
+        out = jagged_outline(p["a"], p["b"], 34, notch=0.2, fine=0.12)
+        cutter(cbm, c, n, u, rng.uniform(0.007, 0.010), out, rough_floor=0.0, floor_mat=2, taper=(0.92, 0.98))
+        v = n.cross(u)
+        shift = u * rng.uniform(-0.25, 0.25) * p["a"] + v * rng.uniform(-0.2, 0.2) * p["b"]
+        inner = jagged_outline(p["a"] * rng.uniform(0.45, 0.65), p["b"] * rng.uniform(0.45, 0.65), 24,
+                               notch=0.2, fine=0.1)
+        cutter(cbm, c + shift, n, u, rng.uniform(0.016, 0.022), inner, rough_floor=0.0, floor_mat=2,
+               taper=(0.9, 0.97))
+        lips.append((c, n, u, v, out))
     for w in tears:
-        c, n, u = surface_frame(ob, w["world"], w.get("axis", (0, 0, 1)))
+        c, n, u = place(ob, w)
         a, b, depth = w["a"], w["b"], max(0.045, w.get("depth", 0.045))
         # layered: wide jagged peel of the rust skin around the split ...
         peel = [(x * rng.uniform(1.3, 1.6), y * rng.uniform(1.5, 2.0))
@@ -412,6 +431,10 @@ def damage(ob, tears, peels, chips, M, blood_sources, rod_bm=None):
 
     bm = bmesh.new()
     bm.from_mesh(ob.data)
+    for c, n, u, v, out in lips:       # thin rust lips curling off the torn edge
+        for _ in range(rng.randint(1, 2)):
+            shard(bm, c, n, u, v, out, rng.randrange(len(out)), rng.randint(5, 9), shell_i, edge_i,
+                  reach=(0.015, 0.04), lift=(0.006, 0.014), project=project, inward=False)
     for c, n, u, v, w, out in extras:
         tissue_sheet(bm, c, n, u, v, w["a"], w["b"], flesh_i, project)
         for _ in range(max(2, w.get("shards", 4) // 2)):
@@ -464,7 +487,7 @@ def paint_blood(ob, sources, base=0.0):
 # ---------------------------------------------------------------------------
 # Teeth
 # ---------------------------------------------------------------------------
-def make_tooth(bm, layer, base, direction, length, w, d, kind=None, twist=0.0, root_exposed=0.0):
+def make_tooth(bm, layer, base, direction, length, w, d, kind=None, twist=0.0, root_exposed=0.0, plank=False):
     """Kinked, lumpy, damaged tooth. Colour attr: (t, blood, decay, tint)."""
     dvec = Vector(direction).normalized()
     side = Matrix.Rotation(math.radians(twist), 3, dvec) @ dvec.orthogonal().normalized()
@@ -477,9 +500,15 @@ def make_tooth(bm, layer, base, direction, length, w, d, kind=None, twist=0.0, r
         length *= rng.uniform(0.5, 0.8)
     elif kind == "slab":
         w *= rng.uniform(1.3, 1.7)
-    sides = rng.choice([5, 6, 6, 7])
-    prof = [(math.cos(2 * math.pi * k / sides + 0.3) * w / 2 * rng.uniform(0.88, 1.08),
-             math.sin(2 * math.pi * k / sides + 0.3) * d / 2 * rng.uniform(0.88, 1.08)) for k in range(sides)]
+    if plank:   # rectangular plank tooth with slightly bevelled corners
+        c_ = 0.18
+        prof = [(x * w / 2 * rng.uniform(0.94, 1.04), y * d / 2 * rng.uniform(0.94, 1.04)) for x, y in
+                ((1, 1 - c_), (1 - c_, 1), (-1 + c_, 1), (-1, 1 - c_), (-1, -1 + c_), (-1 + c_, -1),
+                 (1 - c_, -1), (1, -1 + c_))]
+    else:
+        sides = rng.choice([5, 6, 6, 7])
+        prof = [(math.cos(2 * math.pi * k / sides + 0.3) * w / 2 * rng.uniform(0.88, 1.08),
+                 math.sin(2 * math.pi * k / sides + 0.3) * d / 2 * rng.uniform(0.88, 1.08)) for k in range(sides)]
     kink = (side * rng.uniform(-1, 1) + fwd * rng.uniform(-1, 1)) * length * rng.uniform(0.06, 0.22)
     blood = min(1.0, rng.choice([0.0, 0.2, 0.35, 0.5, 0.7, 0.95]) * rng.uniform(0.7, 1.2))
     decay = rng.random() ** 1.6
@@ -562,6 +591,30 @@ def teeth_row(bm, layer, slots, down, out_bias, lean, size):
             inner = Vector(base) - outward.normalized() * rng.uniform(0.05, 0.09) + Vector((rng.uniform(-0.04, 0.04), 0, 0))
             make_tooth(bm, layer, inner, down + crooked * 1.6 + Vector(lean), L * rng.uniform(0.45, 0.7),
                        w * 0.75, d * 0.8, twist=rng.uniform(-50, 50))
+
+
+def plank_row(bm, layer, slots, down, out_bias, lean, size, wild=1):
+    """Readable, intentional row of big crooked plank teeth (R08 style): one tooth per
+    slot, uneven lengths and tilts, a few snapped or chipped, at most `wild` rammed in
+    at a bad angle, the odd gap - but never a messy pile."""
+    down = Vector(down)
+    wild_idx = set(rng.sample(range(len(slots)), min(wild, len(slots))))
+    for i, (base, outward, front) in enumerate(slots):
+        if rng.random() < 0.06:
+            continue
+        L = rng.uniform(*size["front_len"]) if front else rng.uniform(*size["side_len"])
+        if front and rng.random() < 0.15:
+            L *= rng.uniform(1.2, 1.35)
+        w = rng.uniform(0.058, 0.088)
+        d = rng.uniform(0.042, 0.058)
+        kind = rng.choices(["chipped", "snapped", "slab", "fang", "stump"], [0.36, 0.24, 0.14, 0.16, 0.10])[0]
+        crooked = Vector((rng.uniform(-0.22, 0.22), rng.uniform(-0.12, 0.12), 0))
+        dvec = down + outward * rng.uniform(*out_bias) + Vector(lean) + crooked
+        if i in wild_idx:
+            axis = Vector((rng.uniform(-1, 1), rng.uniform(-1, 1), 0)).normalized()
+            dvec = Matrix.Rotation(math.radians(rng.uniform(28, 40)), 3, axis) @ dvec
+        make_tooth(bm, layer, base, dvec, L, w, d, kind=kind, twist=rng.uniform(-16, 16),
+                   root_exposed=rng.uniform(0.0, 0.12), plank=True)
 
 
 def new_tooth_bm():

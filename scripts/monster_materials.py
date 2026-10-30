@@ -164,18 +164,18 @@ def shell_rust(name="M_Shell_Rust"):
     facet = g.attr("facet").outputs["Fac"]
     # base iron-oxide brown, each chiselled plate slightly different
     mid = g.noise(4.0, 8.0, 0.62, coord=co).outputs["Fac"]
-    base = g.ramp(mid, [(0.30, (0.030, 0.014, 0.008)), (0.50, (0.062, 0.027, 0.013)),
-                        (0.70, (0.105, 0.044, 0.019))])
+    base = g.ramp(mid, [(0.30, (0.045, 0.020, 0.010)), (0.50, (0.100, 0.045, 0.021)),
+                        (0.72, (0.170, 0.076, 0.034))])
     base = g.mix(g.math('MULTIPLY', facet, 0.35), base, (0.022, 0.012, 0.008))
-    base = g.mix(g.math('MULTIPLY', g.math('SUBTRACT', 1.0, facet), 0.18), base, (0.13, 0.055, 0.022))
+    base = g.mix(g.math('MULTIPLY', g.math('SUBTRACT', 1.0, facet), 0.18), base, (0.16, 0.078, 0.038))
     # zone A: active flaking rust (orange, rough, raised flakes)
-    zA = g.maprange(g.noise(1.1, 4.0, 0.55, coord=co).outputs["Fac"], 0.52, 0.62)
+    zA = g.maprange(g.noise(1.1, 4.0, 0.55, coord=co).outputs["Fac"], 0.55, 0.64)
     flake_v = g.n("ShaderNodeTexVoronoi")
     g.val(flake_v, "Scale", 24.0)
     g.link(co, flake_v.inputs["Vector"])
     flakes = g.maprange(flake_v.outputs["Distance"], 0.05, 0.35)
     rustc = g.ramp(g.noise(16.0, 6.0, 0.6, coord=co).outputs["Fac"],
-                   [(0.35, (0.060, 0.024, 0.010)), (0.6, (0.12, 0.048, 0.019)), (0.8, (0.165, 0.068, 0.028))])
+                   [(0.35, (0.070, 0.032, 0.015)), (0.6, (0.13, 0.058, 0.026)), (0.8, (0.18, 0.082, 0.036))])
     col = g.mix(zA, base, rustc)
     # zone B: old dark oxidised scale (near black-brown, a little sheen)
     zB = g.maprange(g.noise(0.8, 3.0, 0.5, coord=co, distortion=0.4).outputs["Fac"], 0.56, 0.66)
@@ -193,6 +193,13 @@ def shell_rust(name="M_Shell_Rust"):
     col = g.mix(g.maprange(fine, 0.42, 0.62, 0.0, 0.55), col, (0.03, 0.017, 0.011))
     spots = g.noise(9.0, 6.0, 0.7, coord=co, distortion=0.5).outputs["Fac"]
     col = g.mix(g.maprange(spots, 0.6, 0.68, 0.0, 0.75), col, (0.016, 0.010, 0.007))
+    # granular, stone-like dark speckle (the R08 "rusted granite" grain)
+    dots = g.n("ShaderNodeTexVoronoi")
+    g.val(dots, "Scale", 150.0)
+    g.link(co, dots.inputs["Vector"])
+    grain = g.math('MULTIPLY', g.maprange(dots.outputs["Distance"], 0.22, 0.05),
+                   g.maprange(g.noise(20.0, 3.0, coord=co).outputs["Fac"], 0.4, 0.6), clamp=True)
+    col = g.mix(g.math('MULTIPLY', grain, 0.7), col, (0.018, 0.010, 0.007))
     # worn exposed edges: rust rubbed thin, lighter and smoother
     edge = g.math('MULTIPLY', edge_mask(g), g.maprange(spk, 0.35, 0.6), clamp=True)
     col = g.mix(g.math('MULTIPLY', edge, 0.5), col, (0.15, 0.085, 0.045))
@@ -205,7 +212,7 @@ def shell_rust(name="M_Shell_Rust"):
     bl = blood_mask(g)
     col = g.mix(bl, col, (0.040, 0.005, 0.004))
     g.link(col, g.bsdf.inputs["Base Color"])
-    rough = g.math('ADD', g.math('MULTIPLY', zA, 0.08), g.maprange(mid, 0.3, 0.8, 0.74, 0.88))
+    rough = g.math('ADD', g.math('MULTIPLY', zA, 0.08), g.maprange(mid, 0.3, 0.8, 0.62, 0.82))
     rough = g.math('SUBTRACT', rough, g.math('MULTIPLY', zB, 0.22))
     rough = g.math('SUBTRACT', rough, g.math('MULTIPLY', edge, 0.2))
     rough = g.math('SUBTRACT', rough, g.math('MULTIPLY', bl, 0.35))
@@ -227,8 +234,8 @@ def shell_edge(name="M_Shell_TornEdge"):
     g.link(co, w.inputs["Vector"])
     n = g.noise(12.0, 6.0, 0.6, coord=co).outputs["Fac"]
     f = n
-    col = g.ramp(f, [(0.3, (0.040, 0.018, 0.010)), (0.55, (0.12, 0.052, 0.022)),
-                     (0.78, (0.20, 0.10, 0.048))])
+    col = g.ramp(f, [(0.3, (0.07, 0.034, 0.017)), (0.55, (0.17, 0.083, 0.040)),
+                     (0.78, (0.27, 0.14, 0.07))])
     col = ao_dark(g, col, 1.1, 0.1)
     col = g.mix(blood_mask(g, 0.9), col, (0.045, 0.006, 0.004))
     g.link(col, g.bsdf.inputs["Base Color"])
@@ -238,7 +245,7 @@ def shell_edge(name="M_Shell_TornEdge"):
 
 
 def shell_under(name="M_Shell_Under"):
-    """Floor of peels/chips: exposed, pitted dark steel under the rust skin."""
+    """Floor of the peels: the older, darker rust strata under the torn skin."""
     m, g = _new(name)
     co = g.coord()
     n = g.noise(10.0, 6.0, 0.6, coord=co).outputs["Fac"]
@@ -246,16 +253,14 @@ def shell_under(name="M_Shell_Under"):
     g.val(vor, "Scale", 60.0)
     g.link(co, vor.inputs["Vector"])
     pits = g.maprange(vor.outputs["Distance"], 0.14, 0.0)
-    col = g.ramp(n, [(0.3, (0.020, 0.016, 0.014)), (0.6, (0.050, 0.040, 0.034)), (0.85, (0.085, 0.060, 0.045))])
-    rust = g.maprange(g.noise(5.0, 4.0, coord=co).outputs["Fac"], 0.5, 0.65)
-    col = g.mix(g.math('MULTIPLY', rust, 0.7), col, (0.09, 0.035, 0.014))      # fresh rust bloom
-    col = g.mix(g.math('MULTIPLY', pits, 0.6), col, (0.010, 0.007, 0.005))
+    col = g.ramp(n, [(0.3, (0.012, 0.007, 0.005)), (0.6, (0.030, 0.016, 0.009)), (0.85, (0.055, 0.027, 0.014))])
+    col = g.mix(g.math('MULTIPLY', pits, 0.6), col, (0.010, 0.006, 0.004))
     col = ao_dark(g, col, 1.0, 0.08)
-    col = g.mix(blood_mask(g, 0.7), col, (0.04, 0.006, 0.004))
+    col = g.mix(blood_mask(g, 0.8), col, (0.04, 0.006, 0.004))
     g.link(col, g.bsdf.inputs["Base Color"])
-    g.link(g.maprange(rust, 0.0, 1.0, 0.55, 0.1), g.bsdf.inputs["Metallic"])
-    g.link(g.maprange(n, 0.3, 0.8, 0.45, 0.7), g.bsdf.inputs["Roughness"])
-    g.link(g.bump(g.math('SUBTRACT', n, pits), 0.45, 0.006), g.bsdf.inputs["Normal"])
+    g.val(g.bsdf, "Metallic", 0.05)
+    g.link(g.maprange(n, 0.3, 0.8, 0.6, 0.85), g.bsdf.inputs["Roughness"])
+    g.link(g.bump(g.math('SUBTRACT', n, pits), 0.5, 0.006), g.bsdf.inputs["Normal"])
     return m
 
 
@@ -270,15 +275,15 @@ def flesh(name="M_Flesh", dark=1.0):
     n = g.noise(7.0, 5.0, 0.6, coord=co).outputs["Fac"]
     f = g.math('ADD', g.math('MULTIPLY', fib, 0.65), g.math('MULTIPLY', n, 0.35))
     k = dark
-    col = g.ramp(f, [(0.28, (0.020 * k, 0.003 * k, 0.003 * k)), (0.5, (0.065 * k, 0.011 * k, 0.009 * k)),
-                     (0.7, (0.105 * k, 0.022 * k, 0.017 * k)), (0.86, (0.14 * k, 0.038 * k, 0.028 * k))])
+    col = g.ramp(f, [(0.28, (0.018 * k, 0.003 * k, 0.003 * k)), (0.5, (0.055 * k, 0.010 * k, 0.008 * k)),
+                     (0.7, (0.088 * k, 0.019 * k, 0.015 * k)), (0.86, (0.115 * k, 0.032 * k, 0.024 * k))])
     nec = g.maprange(g.noise(3.0, 4.0, coord=co).outputs["Fac"], 0.58, 0.68)       # necrotic patches
     col = g.mix(g.math('MULTIPLY', nec, 0.8), col, (0.012 * k, 0.006 * k, 0.005 * k))
     fas = g.maprange(fib, 0.74, 0.82)                                                # pale fascia threads
     col = g.mix(g.math('MULTIPLY', fas, 0.35), col, (0.11 * k, 0.06 * k, 0.045 * k))
     col = ao_dark(g, col, 1.2, 0.06, dark=(0.006, 0.002, 0.002))
     g.link(col, g.bsdf.inputs["Base Color"])
-    g.link(g.math('ADD', g.maprange(n, 0.3, 0.7, 0.48, 0.72), g.math('MULTIPLY', nec, 0.15)),
+    g.link(g.math('ADD', g.maprange(n, 0.3, 0.7, 0.6, 0.82), g.math('MULTIPLY', nec, 0.1)),
            g.bsdf.inputs["Roughness"])
     g.link(g.bump(f, 0.55, 0.01), g.bsdf.inputs["Normal"])
     return m
@@ -348,9 +353,9 @@ def metal_plate(name="M_Metal_Plate"):
     g.link(rot.outputs[0], w2.inputs["Vector"])
     tread = g.maprange(g.math('MULTIPLY', w1.outputs["Fac"], w2.outputs["Fac"]), 0.55, 0.8)
     rustn = g.noise(4.0, 6.0, 0.6, coord=co).outputs["Fac"]
-    rust = g.maprange(rustn, 0.45, 0.62)
+    rust = g.maprange(rustn, 0.25, 0.45)
     col = g.mix(rust, (0.040, 0.040, 0.044), g.ramp(rustn, [(0.4, (0.05, 0.02, 0.01)), (0.8, (0.13, 0.05, 0.02))]))
-    col = g.mix(g.math('MULTIPLY', tread, 0.4), col, (0.10, 0.10, 0.105))
+    col = g.mix(g.math('MULTIPLY', tread, 0.2), col, (0.10, 0.10, 0.105))
     col = ao_dark(g, col, 0.9, 0.1)
     col = g.mix(blood_mask(g, 0.7), col, (0.045, 0.006, 0.004))
     g.link(col, g.bsdf.inputs["Base Color"])

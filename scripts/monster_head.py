@@ -1,15 +1,15 @@
 """
-Head of the OUT THERE monster (v2): skull, hinged jaw, connecting tissue, mouth interior,
-gums and teeth. All in cranium-local space (origin = centre of the upper gum line,
-front = -Y). The Jaw is parented to the Cranium and pivots at its own origin.
+Head of the OUT THERE monster (v3, R08-directed): skull, hinged jaw, mouth tissue,
+mouth interior, gums and teeth. All in cranium-local space (origin = centre of the upper
+gum line, front = -Y). The Jaw is parented to the Cranium and pivots at its own origin.
 
-Design goals
-- Skull: compact (no snout), angular, asymmetric, caved-in on the upper left,
-  heavy brow shelf over deeply sunk sockets with tiny red eyes, fractured layers.
-- Jaw: heavy, irregular, hanging open on knuckle hinges; the monster's right hinge
-  is broken (split knuckle, bent pin) which is why that side sags.
-- Mouth: torn, stretched membranes at the corners, frayed masseter bands, dark
-  interior with palate ridges, a rotted tongue mass, ribbed throat and tissue strings.
+Design (after the Astra R08 reference sheet, keeping the original's dropped jaw)
+- Skull: compact blocky barrel built from three stacked rust strata; each band overhangs
+  the next, giving R08's layered ledges. Mild asymmetry only.
+- Eyes: square, dark, recessed sockets with tiny red square eyes.
+- Jaw: heavy, hanging open on knuckle hinges (monster's right hinge split -> sag).
+- Mouth: torn flesh at the corners, dark interior (palate ridges, tongue, ribbed throat),
+  a deliberate row of big crooked plank teeth with blood at the gum line.
 """
 import math
 import random
@@ -52,51 +52,47 @@ def gauss(p, centre, r):
 # ---------------------------------------------------------------------------
 # Skull
 # ---------------------------------------------------------------------------
-EYES = [(-0.235, 0.205, 1.0), (0.175, 0.185, 0.85)]   # (x, z, socket strength): right eye larger
+EYES = [(-0.215, 0.235, 1.0), (0.195, 0.225, 0.9)]   # (x, z, size)
 
 
 def skull_point(x, y, z):
     p = Vector((x, y, z))
     f = max(0.0, -y / (HD / 2))                         # 1 at the face, 0 at the back
-    band = lambda z0, z1: max(0.0, 1 - abs(z - (z0 + z1) / 2) / ((z1 - z0) / 2))
-    p.y += 0.02 * f * band(0.36, 0.48)                  # forehead slopes back
-    for ex, ez, k in EYES:                              # deep orbital hollows ...
-        g = math.exp(-((x - ex) / 0.12) ** 2 - ((z - ez) / 0.09) ** 2)
-        p.y += 0.055 * k * g * f
-        gb = math.exp(-((x - ex * 1.05) / 0.15) ** 2 - ((z - ez - 0.105) / 0.05) ** 2)
-        p.y -= 0.05 * k * gb * f                        # ... under heavy, separate brow ridges
-    gf = math.exp(-(x / 0.07) ** 2 - ((z - 0.27) / 0.06) ** 2) * f
-    p.z -= 0.035 * gf                                   # brows pulled down into a central furrow
-    p.y += 0.02 * gf
-    if y < 0 and abs(x) > 0.22:
-        p.x += math.copysign(0.03, x) * band(0.04, 0.16)  # cheekbone ledges
+    for ex, ez, k in EYES:                              # shallow recess around each socket
+        g = math.exp(-((x - ex) / 0.10) ** 2 - ((z - ez) / 0.08) ** 2)
+        p.y += 0.018 * g * f
     if x < 0:
-        p.x *= 1.035                                    # right side swollen
-    p.z += 0.055 * (x / (HW / 2)) * (z / CH) ** 1.5     # skull top slants (left side higher)
-    # caved-in dent, upper left / front
-    g = gauss(p, (0.27, -0.12, 0.47), 0.17)
-    p -= (p - Vector((0, 0, 0.28))).normalized() * 0.075 * g
-    # crushed rear-left corner
-    p.z -= 0.05 * gauss(p, (0.30, 0.30, 0.55), 0.16)
-    # low-frequency lumps
+        p.x *= 1.02                                     # right side a little swollen
+    p.z += 0.03 * (x / (HW / 2)) * (z / CH) ** 1.5      # crown slants slightly
+    p -= (p - Vector((0, 0, 0.28))).normalized() * 0.03 * gauss(p, (0.27, -0.1, 0.5), 0.16)   # old dent
     p += Vector((noise.noise(p * 3.1), noise.noise(p * 3.1 + Vector((5, 1, 2))),
-                 noise.noise(p * 3.1 + Vector((9, 4, 7))))) * 0.012
+                 noise.noise(p * 3.1 + Vector((9, 4, 7))))) * 0.008
     return p
 
 
+# Three stacked strata (z0, z1, width, depth, x-shift, y-shift, twist deg). Each band
+# starts with an overhanging lip and narrows toward its top, so every boundary reads as
+# a ledge - the layered-rock look of the R08 head.
+STRATA = [(0.00, 0.17, 0.90, 0.79, 0.000, 0.000, 0.0),
+          (0.17, 0.37, 0.91, 0.80, 0.008, -0.006, 2.0),
+          (0.37, 0.535, 0.87, 0.76, -0.006, 0.006, -1.5)]
+
+
 def build_skull(M, col, location, rotation):
-    rings = [(0.00, 0.86, 0.75), (0.04, 0.90, 0.79), (0.10, 0.93, 0.80), (0.15, 0.93, 0.80),
-             (0.20, 0.92, 0.80), (0.25, 0.93, 0.81), (0.29, 0.94, 0.82), (0.33, 0.92, 0.80),
-             (0.39, 0.89, 0.77), (0.46, 0.88, 0.76), (0.52, 0.86, 0.73), (0.56, 0.80, 0.68),
-             (0.585, 0.66, 0.56)]
+    rings = []
+    for z0, z1, w, d, sx_, sy_, tw in STRATA:
+        for t, k in ((0.0, 1.0), (0.06, 1.022), (0.8, 1.0), (1.0, 0.975)):
+            rings.append((z0 + (z1 - z0) * t - (0.004 if t == 1.0 else 0.0), w * k, d * k, sx_, sy_, tw))
+    rings[0] = (0.0, 0.86, 0.75, 0, 0, 0)
+    rings += [(0.565, 0.80, 0.70, 0, 0, -1.5), (0.585, 0.66, 0.57, 0, 0, -1.5)]
     n = 16
     profiles = []
-    for z, w, d in rings:
+    for z, w, d, sx_, sy_, tw in rings:
         prof = []
         for k in range(n):
-            th = 2 * math.pi * k / n + math.pi / n
-            x, y = superellipse(th, w / 2, d / 2, 5.0)
-            prof.append(skull_point(x, y, z))
+            th = 2 * math.pi * k / n + math.pi / n + math.radians(tw)
+            x, y = superellipse(th, w / 2, d / 2, 3.6)
+            prof.append(skull_point(x + sx_, y + sy_, z))
         profiles.append(prof)
     bm = bmesh.new()
     skin(bm, profiles, mats=(0, 1, 0))
@@ -104,37 +100,35 @@ def build_skull(M, col, location, rotation):
     sk = D.bm_object("Cranium", bm, col, [M["shell"], M["inner"]])
     sk.location, sk.rotation_euler = location, rotation
     bpy.context.view_layer.update()
-    D.chisel(sk, level=1, plate=0.02, lump=0.012, cell=0.13)
-    D.deform(sk, 0.02, 3.4, seed=3)
-    # knapped, layered skull plates: more cuts on the crown and brow
-    D.facet_cuts(sk, 46, M, size=(0.2, 0.4), depth=(0.0, 0.02), tilt=(4, 16),
-                 weight=lambda w: 1.0 + 2.0 * max(0.0, (w.z - location.z) / CH))
+    D.chisel(sk, level=1, plate=0.012, lump=0.01, cell=0.15)
+    D.deform(sk, 0.01, 3.0, seed=3)
     return sk
 
 
 def eye_sockets(sk, M, col):
-    """Jagged, deep, tapered sockets under the brow; fracture lines run from them."""
+    """Square, dark, recessed sockets with a tiny red square eye deep in each."""
     D.ensure_mat(sk, M["socket"])
     bm = bmesh.new()
-    eyes = [(EYES[0][0], EYES[0][1], 0.070, 0.062, 0.12), (EYES[1][0], EYES[1][1], 0.058, 0.07, 0.13)]
     centres = []
-    for ex, ez, a, b, depth in eyes:
+    for ex, ez, k in EYES:
         c, n, u = D.ray_frame(sk, sk.matrix_world @ Vector((ex, -1.2, ez)),
                               sk.matrix_world.to_3x3() @ Vector((0, 1, 0)), (0, 0, 1))
-        out = D.jagged_outline(a, b, 18, notch=0.25, fine=0.15)
-        D.cutter(bm, c, n, u, depth, out, rough_floor=0.2, wall_mat=0, floor_mat=0, taper=(0.45, 0.6))
+        a, b = 0.068 * k, 0.058 * k
+        # squarish outline with a few small chips in the rim
+        out = []
+        for i in range(16):
+            ang = 2 * math.pi * i / 16 + math.pi / 16
+            x, y = superellipse(ang, a, b, 6.0)
+            r = rng.uniform(0.93, 1.05) * (rng.uniform(0.8, 0.9) if rng.random() < 0.15 else 1.0)
+            out.append((x * r, y * r))
+        D.cutter(bm, c, n, u, 0.10, out, rough_floor=0.1, wall_mat=0, floor_mat=0, taper=(0.72, 0.8))
         centres.append((c, n, u))
-    # fracture lines: left socket cracks down-outward, right one up through the brow
-    for (c, n, u), ax, L in zip(centres, (Vector((0.4, 0, 1)), Vector((0.5, 0, -1))), (0.20, 0.17)):
-        a3 = (ax - n * ax.dot(n)).normalized()
-        out = D.jagged_outline(L, 0.018, 26, notch=0.35, fine=0.4)
-        D.cutter(bm, c + a3 * L * 0.9, n, a3, 0.03, out, rough_floor=0.1, wall_mat=1, floor_mat=1)
-    D.boolean_apply(sk, D.cutter_from_bm(bm, [M["socket"], M["under"]], sk))
-    # tiny, dim red eyes deep inside
+    D.boolean_apply(sk, D.cutter_from_bm(bm, [M["socket"]], sk))
     ebm = bmesh.new()
-    for (c, n, u), r in zip(centres, (0.012, 0.010)):
-        bmesh.ops.create_icosphere(ebm, subdivisions=1, radius=r,
-                                   matrix=Matrix.Translation(c - n * 0.045))
+    for (c, n, u), (ex, ez, k) in zip(centres, EYES):
+        r = 0.011 * k
+        rot = n.to_track_quat('Z', 'Y').to_matrix().to_4x4()
+        bmesh.ops.create_cube(ebm, size=2 * r, matrix=Matrix.Translation(c - n * 0.055) @ rot)
     D.bm_object("Eyes", ebm, col, [M["eye"]], parent=sk)
     return centres
 
@@ -193,9 +187,9 @@ def build_jaw(M, col, sk, open_deg, roll_deg):
     skin(cb, profs)
     bpy.context.view_layer.update()
     D.boolean_apply(jaw, D.cutter_from_bm(cb, [M["inner"]], jaw))
-    D.chisel(jaw, level=1, plate=0.012, lump=0.012, cell=0.16)
-    D.deform(jaw, 0.012, 2.6, seed=5)
-    D.facet_cuts(jaw, 26, M, size=(0.16, 0.32), tilt=(4, 15))
+    D.chisel(jaw, level=1, plate=0.012, lump=0.01, cell=0.15)
+    D.deform(jaw, 0.01, 2.6, seed=5)
+    D.facet_cuts(jaw, 8, M, size=(0.25, 0.4), depth=(0.0, 0.012), tilt=(3, 9))
     jaw.rotation_euler = (math.radians(open_deg), math.radians(-roll_deg), math.radians(1.5))
     bpy.context.view_layer.update()
     return jaw
@@ -236,28 +230,6 @@ def hinges_and_tissue(M, col, sk, jaw):
         skin(bm, ring_pts, mats=(2, 2, 2))
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     D.bm_object("Jaw_Hinges", bm, col, [M["shell"], M["edge"], M["metal"]], parent=sk)
-
-    # masseter bands: thick frayed tissue from cheek ledge to the jaw's outer wall
-    tb = bmesh.new()
-    for sx in (-1, 1):
-        for i in range(4):
-            top = Vector((sx * (HW / 2 - 0.02), rng.uniform(0.02, 0.28), rng.uniform(0.04, 0.15)))
-            bot = jm @ Vector((sx * (JAW_W / 2 + 0.005), rng.uniform(-0.38, -0.12), rng.uniform(-0.2, -0.07)))
-            torn = (sx < 0 and i < 2) or rng.random() < 0.2
-            pts, radii = [], []
-            steps = 7
-            for k in range(steps):
-                t = k / (steps - 1)
-                if torn and t > 0.62:
-                    break
-                p = top.lerp(bot, t) + Vector((sx * 0.012 * math.sin(math.pi * t), 0, -0.015 * math.sin(math.pi * t)))
-                pts.append(p)
-                r = rng.uniform(0.03, 0.045) * (0.7 + 0.4 * math.sin(math.pi * min(t, 0.95) + 0.2))
-                radii.append(r * (0.35 if torn and k == len(pts) - 1 and t > 0.5 else 1.0))
-            if torn:
-                radii[-1] *= 0.3       # frayed, hanging end
-            D.tube(tb, pts, radii, 0, sides=6, jitter=0.2, frame_ref=(sx, 0, 0), flat=0.3)
-    D.bm_object("Masseter_Tissue", tb, col, [M["flesh"]], parent=sk)
 
     # stretched, torn membranes at the mouth corners (with tension wrinkles)
     mb = bmesh.new()
@@ -334,22 +306,6 @@ def mouth_interior(M, col, sk, jaw):
     skin(tb, rings, caps=(False, True))
     bmesh.ops.reverse_faces(tb, faces=tb.faces)          # seen from inside
     D.bm_object("Throat", tb, col, [M["throat"]], parent=sk)
-    # tissue strings stretched between palate and the jaw floor
-    sb = bmesh.new()
-    for i in range(5):
-        top = Vector((rng.uniform(-0.3, 0.3), rng.uniform(-0.25, 0.12), -0.01))
-        bot = jm @ Vector((top.x * 0.8 + rng.uniform(-0.05, 0.05), rng.uniform(-0.45, -0.1), -0.15))
-        broken = i >= 3
-        pts, radii = [], []
-        for k in range(7):
-            t = k / 6
-            if broken and t > 0.45:
-                break
-            p = top.lerp(bot, t) + Vector((0, 0.04 * math.sin(math.pi * t), -0.03 * math.sin(math.pi * t)))
-            pts.append(p)
-            radii.append(rng.uniform(0.006, 0.012) * (1.6 - math.sin(math.pi * t) * 0.9))
-        D.tube(sb, pts, radii, 0, sides=4, jitter=0.2)
-    D.bm_object("Mouth_Strings", sb, col, [M["flesh"]], parent=sk)
 
 
 # ---------------------------------------------------------------------------
@@ -372,10 +328,10 @@ def gums_and_teeth(M, col, sk, jaw):
                 t = s / steps
                 dense.append(Vector((x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, z)))
         dense.append(Vector((path[-1][0], path[-1][1], z)))
-        radii = [rng.uniform(0.03, 0.07) for _ in dense]         # swollen, uneven, receding
-        D.tube(gb, dense, radii, 0, sides=7, jitter=0.45, frame_ref=(0, 0, 1))
-        for p in dense[::2]:                                     # necrotic swellings
-            bmesh.ops.create_icosphere(gb, subdivisions=1, radius=rng.uniform(0.025, 0.05),
+        radii = [rng.uniform(0.035, 0.055) for _ in dense]       # swollen, uneven gum ridge
+        D.tube(gb, dense, radii, 0, sides=7, jitter=0.25, frame_ref=(0, 0, 1))
+        for p in dense[::3]:                                     # dark swellings
+            bmesh.ops.create_icosphere(gb, subdivisions=1, radius=rng.uniform(0.022, 0.035),
                                        matrix=Matrix.Translation(p + Vector((rng.uniform(-0.03, 0.03),
                                                                              rng.uniform(-0.03, 0.03),
                                                                              rng.uniform(-0.02, 0.02))))
@@ -386,26 +342,26 @@ def gums_and_teeth(M, col, sk, jaw):
         s, x = [], x0
         while x < x1:
             s.append((Vector((x, yfun(x), z)), Vector((0, -1, 0)), True))
-            x += rng.uniform(0.045, 0.1)
+            x += rng.uniform(0.062, 0.078)
         return s
 
-    up = front_slots(-HW / 2 + 0.09, HW / 2 - 0.08, lambda x: -HD / 2 + 0.085, -0.02)
+    up = front_slots(-HW / 2 + 0.10, HW / 2 - 0.09, lambda x: -HD / 2 + 0.085, -0.02)
     for sx in (-1, 1):
-        for y in (-0.25, -0.15, -0.04, 0.07):
-            up.append((Vector((sx * (HW / 2 - 0.07), y + rng.uniform(-0.03, 0.03), -0.02)),
+        for y in (-0.24, -0.14, -0.04):
+            up.append((Vector((sx * (HW / 2 - 0.07), y + rng.uniform(-0.015, 0.015), -0.02)),
                        Vector((sx, 0, 0)), False))
     bm, layer = D.new_tooth_bm()
-    D.teeth_row(bm, layer, up, down=(0, 0, -1), out_bias=(0.05, 0.4), lean=(0, 0, 0),
-                size={"front_len": (0.17, 0.33), "side_len": (0.11, 0.22)})
+    D.plank_row(bm, layer, up, down=(0, 0, -1), out_bias=(0.05, 0.25), lean=(0, 0, 0),
+                size={"front_len": (0.16, 0.27), "side_len": (0.11, 0.18)}, wild=1)
     D.bm_object("Teeth_Upper", bm, col, [M["teeth"]], parent=sk)
 
-    lo = front_slots(-wall + 0.05, wall - 0.04, lambda x: jaw_front(x) + 0.06, 0.02)
+    lo = front_slots(-wall + 0.06, wall - 0.05, lambda x: jaw_front(x) + 0.06, 0.02)
     for sx in (-1, 1):
-        for y in (-0.46, -0.32, -0.18):
-            lo.append((Vector((sx * wall, y + rng.uniform(-0.04, 0.04), 0.02)), Vector((sx, 0, 0)), False))
+        for y in (-0.44, -0.32, -0.20):
+            lo.append((Vector((sx * wall, y + rng.uniform(-0.015, 0.015), 0.02)), Vector((sx, 0, 0)), False))
     bm, layer = D.new_tooth_bm()
-    D.teeth_row(bm, layer, lo, down=(0, 0, 1), out_bias=(0.0, 0.35), lean=(0, 0.75, 0),
-                size={"front_len": (0.16, 0.30), "side_len": (0.10, 0.2)})
+    D.plank_row(bm, layer, lo, down=(0, 0, 1), out_bias=(0.0, 0.2), lean=(0, 0.7, 0),
+                size={"front_len": (0.14, 0.24), "side_len": (0.10, 0.16)}, wild=1)
     D.bm_object("Teeth_Lower", bm, col, [M["teeth"]], parent=jaw)
 
 

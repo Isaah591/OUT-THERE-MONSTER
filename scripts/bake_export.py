@@ -19,7 +19,7 @@ import bpy
 GROUPS = {
     "Body": ["Torso"],                                   # torso, neck, deltoids, spine, scapulae
     "Head": ["Cranium", "Teeth_Upper", "Gums_Upper", "Palate", "Throat", "Jaw_Hinges",
-             "Masseter_Tissue", "Mouth_Corner_Tissue", "Mouth_Strings"],
+             "Mouth_Corner_Tissue"],
     "Jaw": ["Jaw", "Teeth_Lower", "Gums_Lower", "Tongue"],
     "Arm_R_Long": ["Arm_R_Long"],
     "Arm_L_Short": ["Arm_L_Short"],

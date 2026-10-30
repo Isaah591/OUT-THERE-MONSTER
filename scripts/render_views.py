@@ -19,7 +19,7 @@ VIEWS = {
     "side_r":         ((-12.0, -0.45, 1.50), (0.0, -0.45, 1.50), 3.40, None, (1000, 1200)),
     "side_l":         ((12.0, -0.45, 1.50), (0.0, -0.45, 1.50), 3.40, None, (1000, 1200)),
     "rear":           ((-0.62, 12.0, 1.50), (-0.62, 0.0, 1.50), 3.75, None, (1200, 1200)),
-    "threequarter":   ((-5.2, -7.0, 2.7), (-0.60, -0.40, 1.30), None, 50, (1100, 1200)),
+    "threequarter":   ((-5.2, -7.0, 2.0), (-0.60, -0.40, 1.30), None, 50, (1100, 1200)),
     "threequarter_l": ((5.6, -6.6, 2.7), (-0.45, -0.40, 1.30), None, 50, (1100, 1200)),
     "head":           ((-1.10, -3.0, 2.55), (0.0, -0.95, 2.02), None, 60, (1200, 1000)),
     "head_front":     ((0.02, -3.4, 2.30), (0.02, -0.80, 2.12), None, 75, (1200, 1000)),
@@ -28,6 +28,7 @@ VIEWS = {
     "wound_arm":      ((-1.55, -2.05, 1.55), (-0.98, -0.62, 1.05), None, 70, (1200, 1000)),
     "wound_leg":      ((0.75, -1.85, 0.75), (0.17, -0.10, 0.42), None, 60, (1000, 1200)),
     "wound_torso":    ((2.1, -1.0, 1.85), (0.32, -0.10, 1.55), None, 55, (1200, 1000)),
+    "wound_shoulder": ((-1.75, -1.55, 2.95), (-0.62, -0.25, 2.22), None, 55, (1200, 1000)),
     "wound_back":     ((-1.3, 2.4, 2.9), (-0.25, 0.10, 1.95), None, 50, (1200, 1000)),
 }
 
@@ -48,7 +49,9 @@ def ensure_studio():
     me.from_pydata([(-s, -s, 0), (s, -s, 0), (s, s, 0), (-s, s, 0)], [], [(0, 1, 2, 3)])
     ground = bpy.data.objects.new("Ground", me)
     m = bpy.data.materials.new("M_Studio_Ground")
-    m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (0.30, 0.30, 0.30, 1)
+    dark = os.environ.get("STUDIO") == "dark"     # R08-sheet style presentation backdrop
+    g = 0.045 if dark else 0.30
+    m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (g, g, g, 1)
     m.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.9
     me.materials.append(m)
     col.objects.link(ground)
@@ -61,14 +64,16 @@ def ensure_studio():
         look_at(ob, target)
         col.objects.link(ob)
 
-    area("Key", (-4.5, -6.0, 5.5), 900, 4.0)
-    area("Fill", (5.5, -4.5, 3.0), 380, 5.0)
-    area("Rim", (1.5, 6.0, 5.0), 700, 4.0)
-    area("Top", (0.0, -1.0, 8.0), 250, 6.0)
+    k = 1.25 if dark else 1.0
+    area("Key", (-4.5, -6.0, 5.5), 900 * k, 4.0)
+    area("Fill", (5.5, -4.5, 3.0), 380 * k, 5.0)
+    area("Rim", (1.5, 6.0, 5.0), 700 * k, 4.0)
+    area("Top", (0.0, -1.0, 8.0), 250 * k, 6.0)
 
     world = bpy.data.worlds.new("StudioWorld")
-    world.node_tree.nodes["Background"].inputs["Color"].default_value = (0.32, 0.34, 0.37, 1)
-    world.node_tree.nodes["Background"].inputs["Strength"].default_value = 0.6
+    bg = (0.028, 0.030, 0.033, 1) if dark else (0.32, 0.34, 0.37, 1)
+    world.node_tree.nodes["Background"].inputs["Color"].default_value = bg
+    world.node_tree.nodes["Background"].inputs["Strength"].default_value = 1.0 if dark else 0.6
     bpy.context.scene.world = world
     return col
 

@@ -213,26 +213,26 @@ def build_body(M, C, detail):
         {"p": (-0.04, -0.26, 2.00), "w": 1.20, "d": 0.61, "oy": -0.12, "rot": 6},
         {"p": (-0.03, -0.26, 2.22), "w": 0.88, "d": 0.50, "oy": -0.14, "rot": 7},
         {"p": (-0.02, -0.28, 2.36), "w": 0.46, "d": 0.30, "oy": -0.10, "rot": 8},
-    ], chamfer=0.18, irreg=ir(0.05), step=step, seed=1)
+    ], chamfer=0.16, irreg=ir(0.03), step=step, seed=1)
     torso = mesh_object("Torso", bm, C["Body"], [M["shell"]])
     pieces = []
     bm = bmesh.new()   # neck / trapezius wedge into the back of the skull
     loft(bm, [{"p": (0.00, -0.22, 1.86), "w": 0.62, "d": 0.42},
               {"p": (0.00, -0.42, 2.06), "w": 0.70, "d": 0.46},
               {"p": (0.01, -0.58, 2.22), "w": 0.62, "d": 0.38}], chamfer=0.2,
-         irreg=ir(0.05), step=step, seed=2)
+         irreg=ir(0.03), step=step, seed=2)
     pieces.append(mesh_object("_neck", bm, C["Body"], [M["shell"]]))
     bm = bmesh.new()   # deltoids: right heavier and dropped, left smaller and higher
     loft(bm, [{"p": (-0.34, -0.26, 2.08), "w": 0.36, "d": 0.46},
               {"p": (-0.62, -0.27, 1.99), "w": 0.39, "d": 0.47},
               {"p": (-0.77, -0.29, 1.86), "w": 0.28, "d": 0.36}],
-         ref=(0, 0, 1), chamfer=0.22, irreg=ir(0.06), seed=3)
+         ref=(0, 0, 1), chamfer=0.2, irreg=ir(0.035), seed=3)
     loft(bm, [{"p": (0.34, -0.26, 2.13), "w": 0.33, "d": 0.42},
               {"p": (0.61, -0.27, 2.08), "w": 0.33, "d": 0.40},
               {"p": (0.74, -0.29, 1.98), "w": 0.25, "d": 0.32}],
-         ref=(0, 0, 1), chamfer=0.22, irreg=ir(0.06), seed=4)
+         ref=(0, 0, 1), chamfer=0.2, irreg=ir(0.035), seed=4)
     pieces.append(mesh_object("_delts", bm, C["Body"], [M["shell"]]))
-    if detail:
+    if False:   # v3: simple structure - no vertebra knobs / scapula plates
         # bony structure pushing through the shell: vertebra knobs and scapula plates
         bm = bmesh.new()
         for t in (0.32, 0.42, 0.52, 0.62, 0.72, 0.82):
@@ -255,40 +255,41 @@ def build_body(M, C, detail):
     bpy.context.view_layer.update()
     D.union(torso, pieces)
     if detail:
-        D.chisel(torso, level=0, plate=0.014, lump=0.015)
+        D.chisel(torso, level=0, plate=0.01, lump=0.012)
         for v in torso.data.vertices:      # collapsed left flank
             g = math.exp(-((v.co - Vector((0.36, -0.02, 1.45))).length / 0.2) ** 2)
-            v.co.x -= 0.05 * g
-        D.deform(torso, 0.02, 1.8, seed=1)
-        D.facet_cuts(torso, 70, M, size=(0.22, 0.45))
+            v.co.x -= 0.025 * g
+        D.deform(torso, 0.012, 1.8, seed=1)
+        D.facet_cuts(torso, 14, M, size=(0.3, 0.5), depth=(0.0, 0.01), tilt=(3, 8))
     parts["Torso"] = torso
 
     for name, path, seed in (("Arm_R_Long", LONG_ARM, 5), ("Arm_L_Short", SHORT_ARM, 6)):
         bm = bmesh.new()
-        loft(bm, limb_rings(path), chamfer=0.16, irreg=ir(0.07), step=step, seed=seed,
+        loft(bm, limb_rings(path), chamfer=0.16, irreg=ir(0.035), step=step, seed=seed,
              cap_mats=(0, 1) if name == "Arm_L_Short" else (0, 0))
         ob = mesh_object(name, bm, C["Arms"], [M["shell"], M["flesh"]])
         if detail:
-            D.chisel(ob, level=0, plate=0.014, lump=0.012)
-            D.deform(ob, 0.018, 2.0, seed=seed)
-            D.facet_cuts(ob, 40 if name == "Arm_R_Long" else 26, M)
+            D.chisel(ob, level=0, plate=0.01, lump=0.01)
+            D.deform(ob, 0.01, 2.0, seed=seed)
+            D.facet_cuts(ob, 10 if name == "Arm_R_Long" else 6, M, size=(0.3, 0.5), depth=(0.0, 0.01), tilt=(3, 8))
         D.clamp_to_floor(ob)
         parts[name] = ob
 
     for name, path in LEGS.items():
         seed = 7 if name == "Leg_R" else 8
         bm = bmesh.new()
-        loft(bm, limb_rings(path), chamfer=0.18, irreg=ir(0.07), step=step, seed=seed)
+        loft(bm, limb_rings(path), chamfer=0.18, irreg=ir(0.035), step=step, seed=seed)
         sx = 1 if path[0][0][0] > 0 else -1
         loft(bm, [{"p": (0.20 * sx, 0.16, 0.09), "w": 0.31, "d": 0.18},
                   {"p": (0.21 * sx, -0.08, 0.08), "w": 0.33, "d": 0.16},
                   {"p": (0.22 * sx, -0.28, 0.065), "w": 0.30, "d": 0.12}],
-             ref=(0, 0, 1), chamfer=0.15, irreg=ir(0.06), seed=seed + 10)
+             ref=(0, 0, 1), chamfer=0.15, irreg=ir(0.03), seed=seed + 10)
         ob = mesh_object(name, bm, C["Legs"], [M["shell"]])
         if detail:
-            D.chisel(ob, level=0, plate=0.014, lump=0.012)
-            D.deform(ob, 0.018, 2.0, seed=seed)
-            D.facet_cuts(ob, 28, M, weight=lambda w: 0.0 if w.z < 0.2 else 1.0)   # spare the feet
+            D.chisel(ob, level=0, plate=0.01, lump=0.01)
+            D.deform(ob, 0.01, 2.0, seed=seed)
+            D.facet_cuts(ob, 6, M, size=(0.3, 0.5), depth=(0.0, 0.01), tilt=(3, 8),
+                         weight=lambda w: 0.0 if w.z < 0.2 else 1.0)   # spare the feet
         D.clamp_to_floor(ob, 0.0)
         parts[name] = ob
     return parts
@@ -342,48 +343,48 @@ def damage_pass(M, parts, sk, jaw):
     blood, bars = [], []
 
     def lw(path, t, hint, a, b, **kw):
+        """Wound on a limb: ray-cast from outside, along -hint, onto the limb at fraction t
+        (a nearest-point search from far away can land on the wrong face, e.g. the foot)."""
         p, tangent = along(path, t)
-        return dict(world=p + Vector(hint) * 0.6, axis=tangent, a=a, b=b, **kw)
+        h = Vector(hint)
+        h = (h - tangent * h.dot(tangent)).normalized()
+        return dict(world=p + h * 0.5, ray=(p + h * 0.8, -h), axis=tangent, a=a, b=b, **kw)
 
     LA, SA, LR, LL = LONG_ARM, SHORT_ARM, LEGS["Leg_R"], LEGS["Leg_L"]
+    # Localized, believable damage (R08 sheet): torn rust strata on the limbs - heaviest on
+    # forearms, knees and shins - and on the torso sides; the chest front stays mostly
+    # intact. Only a few shallow flesh tears, at stress points.
     tears = {
-        "Arm_R_Long": [lw(LA, 0.33, (-0.4, -1, 0), 0.20, 0.07, bundles=5, shards=6),
-                       lw(LA, 0.58, (-1, 0.4, 0.3), 0.17, 0.06, bundles=4, shards=4, rod=0.26),
-                       lw(LA, 0.80, (0.2, -1, 0.3), 0.11, 0.05, bundles=3)],
-        "Arm_L_Short": [lw(SA, 0.40, (1, -0.5, 0), 0.16, 0.065, bundles=4, shards=5)],
-        "Leg_R": [lw(LR, 0.50, (0, -1, 0), 0.15, 0.06, bundles=4, shards=5)],
-        "Leg_L": [lw(LL, 0.62, (0, -1, 0.1), 0.20, 0.065, bundles=5, shards=6)],
-        "Torso": [dict(world=(0.42, 0.0, 1.45), axis=(0, 0, 1), a=0.16, b=0.06, bundles=4, shards=4),
-                  dict(world=(-0.62, -0.2, 2.30), axis=(1, 0, 0.3), a=0.17, b=0.075, bundles=4, shards=6, rod=0.3),
-                  dict(world=(-0.30, 0.25, 1.95), axis=(0.3, 0, 1), a=0.15, b=0.06, bundles=4, shards=4)],
-        "Cranium": [dict(world=sk.matrix_world @ Vector((0.47, -0.05, 0.40)), axis=(0, 0, 1),
-                         a=0.12, b=0.05, bundles=3, shards=5, depth=0.03)],
-        "Jaw": [dict(world=jaw.matrix_world @ Vector((-0.5, -0.40, -0.16)), axis=(0, 1, -1),
-                     a=0.11, b=0.045, bundles=3, shards=4, depth=0.03)],
+        "Arm_R_Long": [lw(LA, 0.36, (-0.4, -1, 0), 0.16, 0.055, shards=4),
+                       lw(LA, 0.72, (-1, 0.3, 0.3), 0.14, 0.05, shards=4)],
+        "Arm_L_Short": [lw(SA, 0.48, (1, -0.5, 0), 0.13, 0.05, shards=4)],
+        "Leg_R": [lw(LR, 0.50, (0, -1, 0), 0.14, 0.05, shards=4)],
+        "Leg_L": [lw(LL, 0.68, (0, -1, 0.1), 0.18, 0.055, shards=5)],
+        "Torso": [dict(world=(-0.62, -0.2, 2.30), axis=(1, 0, 0.3), a=0.21, b=0.09, shards=4, rod=0.3),
+                  dict(world=(0.42, -0.05, 1.50), axis=(0, 0, 1), a=0.15, b=0.055, shards=4)],
+        "Cranium": [dict(world=sk.matrix_world @ Vector((0.40, -0.30, 0.10)), axis=(0, 0, 1),
+                         a=0.11, b=0.05, shards=5, depth=0.035)],
+        "Jaw": [],
     }
     peels = {
-        "Arm_R_Long": [lw(LA, 0.10, (-1, 0, 0.4), 0.14, 0.08), lw(LA, 0.45, (0, 1, 0), 0.18, 0.07),
-                       lw(LA, 0.68, (0.3, -1, 0.5), 0.16, 0.08), lw(LA, 0.92, (-1, 0, 0.3), 0.12, 0.07),
-                       lw(LA, 0.22, (0.4, -1, 0), 0.10, 0.06)],
-        "Arm_L_Short": [lw(SA, 0.15, (1, 0, 0.3), 0.12, 0.06), lw(SA, 0.70, (0.5, -1, 0), 0.13, 0.07),
-                        lw(SA, 0.88, (1, 0.5, 0), 0.10, 0.06)],
-        "Leg_R": [lw(LR, 0.20, (-1, 0, 0), 0.13, 0.07), lw(LR, 0.78, (0, -1, 0), 0.11, 0.06),
-                  lw(LR, 0.40, (0, 1, 0), 0.12, 0.06)],
-        "Leg_L": [lw(LL, 0.25, (1, 0.3, 0), 0.12, 0.06), lw(LL, 0.85, (1, -1, 0), 0.10, 0.06),
-                  lw(LL, 0.40, (0, 1, 0), 0.12, 0.06)],
-        "Torso": [dict(world=(0.25, -0.45, 1.70), axis=(0, 0, 1), a=0.18, b=0.08),
-                  dict(world=(-0.50, -0.10, 1.80), axis=(0.4, 0, 1), a=0.16, b=0.08),
-                  dict(world=(0.30, 0.25, 2.15), axis=(1, 0, 0.4), a=0.20, b=0.07),
-                  dict(world=(-0.05, 0.30, 1.40), axis=(0, 0, 1), a=0.14, b=0.07),
-                  dict(world=(0.55, -0.25, 2.25), axis=(1, 0, 0), a=0.12, b=0.07)],
-        "Cranium": [dict(world=sk.matrix_world @ Vector((-0.30, -0.30, 0.62)), axis=(1, 0, 0), a=0.16, b=0.07),
-                    dict(world=sk.matrix_world @ Vector((-0.10, -0.45, 0.42)), axis=(1, 0, 0.3), a=0.13, b=0.05),
-                    dict(world=sk.matrix_world @ Vector((-0.48, 0.10, 0.30)), axis=(0, 1, 0), a=0.12, b=0.06)],
-        "Jaw": [dict(world=jaw.matrix_world @ Vector((0.1, -0.85, -0.25)), axis=(1, 0, 0), a=0.16, b=0.06),
-                dict(world=jaw.matrix_world @ Vector((0.5, -0.30, -0.15)), axis=(0, 1, 0), a=0.12, b=0.06)],
+        "Arm_R_Long": [lw(LA, 0.12, (-1, 0, 0.4), 0.126, 0.154), lw(LA, 0.52, (0, 1, 0), 0.112, 0.182),
+                       lw(LA, 0.62, (0.3, -1, 0.4), 0.126, 0.168), lw(LA, 0.86, (-1, 0, 0.2), 0.140, 0.168),
+                       lw(LA, 0.94, (0.3, -1, 0.2), 0.112, 0.140)],
+        "Arm_L_Short": [lw(SA, 0.22, (1, 0, 0.3), 0.112, 0.140), lw(SA, 0.70, (0.4, -1, 0), 0.126, 0.154),
+                        lw(SA, 0.88, (1, 0.4, 0), 0.112, 0.140)],
+        "Leg_R": [lw(LR, 0.28, (-1, 0, 0), 0.112, 0.154), lw(LR, 0.72, (0, -1, 0), 0.126, 0.154),
+                  lw(LR, 0.78, (-1, 0.3, 0), 0.112, 0.140)],
+        "Leg_L": [lw(LL, 0.30, (1, 0.3, 0), 0.112, 0.154), lw(LL, 0.48, (0, 1, 0), 0.112, 0.154),
+                  lw(LL, 0.80, (1, -1, 0), 0.112, 0.140)],
+        "Torso": [dict(world=(-0.52, -0.15, 1.72), axis=(0, 0, 1), a=0.196, b=0.140),
+                  dict(world=(0.50, -0.30, 1.92), axis=(0, 0, 1), a=0.168, b=0.126),
+                  dict(world=(-0.05, 0.32, 1.40), axis=(1, 0, 0), a=0.210, b=0.126),
+                  dict(world=(0.20, -0.40, 1.15), axis=(1, 0, 0), a=0.140, b=0.098)],
+        "Cranium": [dict(world=sk.matrix_world @ Vector((0.30, -0.25, 0.56)), axis=(1, 0, 0), a=0.168, b=0.112),
+                    dict(world=sk.matrix_world @ Vector((-0.44, -0.05, 0.30)), axis=(0, 1, 0), a=0.140, b=0.098)],
+        "Jaw": [dict(world=jaw.matrix_world @ Vector((0.15, -0.85, -0.25)), axis=(1, 0, 0), a=0.168, b=0.098)],
     }
-    chips = {"Arm_R_Long": 10, "Arm_L_Short": 6, "Leg_R": 6, "Leg_L": 6, "Torso": 14,
-             "Cranium": 6, "Jaw": 4}
+    chips = {k: 0 for k in tears}
     for name in tears:
         D.damage(parts[name], tears[name], peels[name], chips[name], M, blood, bars)
 
@@ -458,7 +459,7 @@ def build(stage):
         for ob in list(parts.values()) + [bpy.data.objects["Jaw_Hinges"]]:
             D.paint_blood(ob, blood, base=0.03)
             D.facet_attr(ob)
-    for name in ("Masseter_Tissue", "Mouth_Corner_Tissue", "Mouth_Strings", "Tongue", "Gums_Upper",
+    for name in ("Mouth_Corner_Tissue", "Tongue", "Gums_Upper",
                  "Gums_Lower", "Palate", "Throat", "Teeth_Upper", "Teeth_Lower"):
         D.smooth_organic(bpy.data.objects[name], range(8),
                          sharp_angle=42 if name.startswith(("Teeth", "Gums")) else None)

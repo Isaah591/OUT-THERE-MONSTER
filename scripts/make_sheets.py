@@ -63,6 +63,31 @@ def R08(box):
     return Image.open(os.path.join(refs, "r08_remaster_surface_1.webp")).convert("RGB").crop(box)
 
 
+def SHEET(box):
+    return Image.open(os.path.join(refs, "r08_reference_sheet_primary.webp")).convert("RGB").crop(box)
+
+
+if has("wound_shoulder"):   # v3: panel-by-panel against the R08 reference sheet
+    P = {"front": (0, 30, 537, 628), "3/4": (537, 30, 1111, 628), "side": (1111, 30, 1586, 628),
+         "head": (0, 656, 380, 992), "shoulder": (380, 656, 770, 992), "arm": (770, 656, 1188, 992),
+         "leg": (1188, 656, 1586, 992)}
+    stack([row([label(SHEET(P["front"]), "R08 FRONT"), label(R("front"), "v3 FRONT (ortho)")], h=620),
+           row([label(SHEET(P["3/4"]), "R08 3/4"), label(R("threequarter"), "v3 THREE-QUARTER")], h=620),
+           row([label(SHEET(P["side"]), "R08 SIDE"), label(R("side_r"), "v3 SIDE 90deg (ortho)")], h=620)]
+          ).save(os.path.join(renders, "_compare_r08_body.png"))
+    stack([row([label(SHEET(P["head"]), "R08 HEAD"), label(R("head_front"), "v3 HEAD")], h=480),
+           row([label(SHEET(P["shoulder"]), "R08 SHOULDER"), label(R("wound_shoulder"), "v3 SHOULDER")], h=480),
+           row([label(SHEET(P["arm"]), "R08 ARM"), label(R("wound_arm"), "v3 ARM")], h=480),
+           row([label(SHEET(P["leg"]), "R08 LEG"), label(R("wound_leg"), "v3 LEG")], h=480)]
+          ).save(os.path.join(renders, "_compare_r08_detail.png"))
+    stack([row([label(R("front"), "FRONT"), label(R("threequarter"), "THREE-QUARTER"),
+                label(R("side_r"), "SIDE 90deg")], h=700)]).save(os.path.join(renders, "_sheet_main.png"))
+    stack([row([label(R("head_front"), "HEAD"), label(R("mouth"), "MOUTH"), label(R("wound_shoulder"), "SHOULDER")], h=480),
+           row([label(R("wound_leg"), "LEG"), label(R("wound_arm"), "ARM"), label(R("wound_torso"), "FLANK")], h=480)]
+          ).save(os.path.join(renders, "_sheet_closeups.png"))
+    print("v3 sheets written")
+    raise SystemExit
+
 if has("head_front"):   # v2 review sheets
     stack([row([label(R("front"), "FRONT (ortho)"), label(R("threequarter"), "THREE-QUARTER"),
                 label(R("side_r"), "SIDE R 90deg (ortho)")], h=700)]).save(os.path.join(renders, "_sheet_main.png"))
