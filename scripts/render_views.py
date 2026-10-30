@@ -3,7 +3,7 @@ Render review views of the monster with neutral studio lighting (Cycles, CPU).
 
     python render_views.py <file.blend> <out_dir> [view ...]
 
-Views: front, side_r, side_l, threequarter, threequarter_l, rear, head, mouth.
+Views: see VIEWS (full-body ortho views, three-quarters, head/mouth and wound close-ups).
 Adds a STUDIO collection (ground, lights, cameras) to the file and saves it.
 """
 import math
@@ -14,15 +14,20 @@ import bpy
 from mathutils import Vector
 
 VIEWS = {
-    # name: (camera location, look-at target, ortho scale or None, lens)
-    "front":          ((-0.45, -12.0, 1.45), (-0.45, 0.0, 1.45), 3.9, None),
-    "side_r":         ((-12.0, -0.40, 1.45), (0.0, -0.40, 1.45), 3.9, None),
-    "side_l":         ((12.0, -0.40, 1.45), (0.0, -0.40, 1.45), 3.9, None),
-    "rear":           ((-0.45, 12.0, 1.45), (-0.45, 0.0, 1.45), 3.9, None),
-    "threequarter":   ((-5.6, -6.6, 2.6), (-0.45, -0.35, 1.30), None, 50),
-    "threequarter_l": ((5.4, -6.8, 2.6), (-0.30, -0.35, 1.30), None, 50),
-    "head":           ((-1.15, -3.3, 2.45), (0.0, -0.95, 2.00), None, 60),
-    "mouth":          ((0.05, -3.0, 1.95), (0.0, -0.95, 1.85), None, 65),
+    # name: (camera location, look-at target, ortho scale or None, lens, resolution)
+    "front":          ((-0.62, -12.0, 1.50), (-0.62, 0.0, 1.50), 3.75, None, (1200, 1200)),
+    "side_r":         ((-12.0, -0.45, 1.50), (0.0, -0.45, 1.50), 3.40, None, (1000, 1200)),
+    "side_l":         ((12.0, -0.45, 1.50), (0.0, -0.45, 1.50), 3.40, None, (1000, 1200)),
+    "rear":           ((-0.62, 12.0, 1.50), (-0.62, 0.0, 1.50), 3.75, None, (1200, 1200)),
+    "threequarter":   ((-5.2, -7.0, 2.7), (-0.60, -0.40, 1.30), None, 50, (1100, 1200)),
+    "threequarter_l": ((5.6, -6.6, 2.7), (-0.45, -0.40, 1.30), None, 50, (1100, 1200)),
+    "head":           ((-1.10, -3.0, 2.55), (0.0, -0.95, 2.02), None, 60, (1200, 1000)),
+    "mouth":          ((0.10, -2.75, 1.70), (0.0, -0.95, 1.80), None, 62, (1200, 1000)),
+    "mouth_side":     ((-2.4, -2.05, 1.95), (0.0, -0.95, 1.85), None, 62, (1200, 1000)),
+    "wound_arm":      ((-1.55, -2.05, 1.55), (-0.98, -0.62, 1.05), None, 70, (1200, 1000)),
+    "wound_leg":      ((0.75, -1.85, 0.75), (0.17, -0.10, 0.42), None, 60, (1000, 1200)),
+    "wound_torso":    ((2.1, -1.0, 1.85), (0.32, -0.10, 1.55), None, 55, (1200, 1000)),
+    "wound_back":     ((-1.3, 2.4, 2.9), (-0.25, 0.10, 1.95), None, 50, (1200, 1000)),
 }
 
 
@@ -92,19 +97,16 @@ def main():
     col = ensure_studio()
     sc.render.engine = 'CYCLES'
     sc.cycles.device = 'CPU'
-    sc.cycles.samples = 48
+    sc.cycles.samples = int(os.environ.get("SAMPLES", 48))
     sc.cycles.use_denoising = True
     sc.render.resolution_x, sc.render.resolution_y = 1000, 1200
     sc.view_settings.view_transform = 'AgX'
     sc.view_settings.look = 'AgX - Base Contrast'
     for n in names:
-        loc, tgt, ortho, lens = VIEWS[n]
+        loc, tgt, ortho, lens, res = VIEWS[n]
         cam = camera("CAM_" + n, col, loc, tgt, ortho, lens)
         sc.camera = cam
-        if n in ("head", "mouth"):
-            sc.render.resolution_x, sc.render.resolution_y = 1200, 1000
-        else:
-            sc.render.resolution_x, sc.render.resolution_y = 1000, 1200
+        sc.render.resolution_x, sc.render.resolution_y = res
         sc.render.filepath = os.path.join(out, n + ".png")
         bpy.ops.render.render(write_still=True)
         print("RENDERED", sc.render.filepath)
