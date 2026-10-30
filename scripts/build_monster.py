@@ -35,38 +35,43 @@ OUT_DIR = os.path.join(HERE, "..", "model")
 # ---------------------------------------------------------------------------
 JAW_OPEN_DEG = 55.0        # lower jaw hang (checked against the chest below)
 JAW_BROKEN_ROLL_DEG = 7.0  # sideways sag of the broken hinge (monster's right lower)
-HEAD_POS = Vector((0.02, -0.80, 1.98))  # centre of the skull base (= upper gum line)
+# Proportion pass: the head is scaled down so the creature does not read as "a mouth on a
+# stick". The mouth stays huge because the jaw still drops 55 deg - not because the head
+# is big. The head sits forward of a taller torso, shoulders at about eye level.
+HEAD_SCALE = 0.78
+HEAD_POS = Vector((0.02, -0.82, 2.36))  # centre of the skull base (= upper gum line)
 HEAD_ROT = (math.radians(-4.0), math.radians(-5.0), math.radians(-3.0))  # nod + unsettling tilt
 
 # Limb paths (shared by the forms, the wounds and the rods): (point, width, depth)
+# Lean, sinewy limbs; the long arm still drags its club hand on the floor.
 LONG_ARM = [
-    ((-0.64, -0.28, 1.97), 0.27, 0.29),
-    ((-0.80, -0.40, 1.52), 0.25, 0.27),
-    ((-0.93, -0.50, 1.14), 0.28, 0.27),   # bony, hyper-extended elbow
-    ((-1.00, -0.54, 1.06), 0.30, 0.30),
-    ((-1.30, -0.69, 0.78), 0.34, 0.32),   # swollen forearm
-    ((-1.62, -0.84, 0.48), 0.31, 0.30),
-    ((-1.98, -1.02, 0.16), 0.36, 0.30),
-    ((-2.10, -1.08, 0.05), 0.33, 0.24),   # club hand, planted flat on the floor
+    ((-0.70, -0.31, 2.36), 0.27, 0.29),
+    ((-0.86, -0.42, 1.88), 0.25, 0.27),
+    ((-1.00, -0.52, 1.46), 0.27, 0.27),   # bony, hyper-extended elbow
+    ((-1.07, -0.56, 1.37), 0.29, 0.29),
+    ((-1.42, -0.73, 1.02), 0.33, 0.31),   # swollen forearm
+    ((-1.78, -0.90, 0.64), 0.30, 0.29),
+    ((-2.18, -1.10, 0.18), 0.35, 0.29),
+    ((-2.30, -1.16, 0.05), 0.32, 0.23),   # club hand, planted flat on the floor
 ]
-SHORT_ARM = [   # withered: thinner, pinched at the elbow
-    ((0.64, -0.28, 2.00), 0.26, 0.28),
-    ((0.72, -0.38, 1.70), 0.23, 0.25),
-    ((0.80, -0.47, 1.40), 0.25, 0.25),    # elbow
-    ((0.82, -0.51, 1.32), 0.26, 0.26),
-    ((0.85, -0.58, 1.02), 0.28, 0.26),
-    ((0.86, -0.62, 0.80), 0.27, 0.25),    # bloody stump end, knee height
+SHORT_ARM = [   # withered: thinner, pinched at the elbow, ends at mid-thigh
+    ((0.70, -0.31, 2.40), 0.26, 0.28),
+    ((0.78, -0.40, 2.08), 0.23, 0.25),
+    ((0.86, -0.49, 1.76), 0.25, 0.25),    # elbow
+    ((0.88, -0.53, 1.68), 0.26, 0.26),
+    ((0.91, -0.60, 1.30), 0.28, 0.26),
+    ((0.92, -0.64, 1.02), 0.27, 0.25),    # bloody stump end
 ]
-LEGS = {
-    "Leg_R": [((-0.20, 0.16, 1.04), 0.33, 0.35), ((-0.21, 0.02, 0.78), 0.31, 0.33),
-              ((-0.17, -0.15, 0.52), 0.30, 0.32), ((-0.19, -0.04, 0.27), 0.25, 0.28),
-              ((-0.20, 0.04, 0.12), 0.28, 0.30)],
-    "Leg_L": [((0.20, 0.16, 1.04), 0.32, 0.34), ((0.21, 0.04, 0.78), 0.30, 0.32),
-              ((0.17, -0.10, 0.55), 0.29, 0.31), ((0.19, -0.02, 0.29), 0.24, 0.27),
-              ((0.20, 0.05, 0.12), 0.27, 0.29)],
+LEGS = {   # longer, structurally believable legs (hip at ~45% of overall height)
+    "Leg_R": [((-0.20, 0.20, 1.32), 0.31, 0.33), ((-0.21, 0.07, 1.00), 0.29, 0.31),
+              ((-0.17, -0.12, 0.66), 0.27, 0.29), ((-0.19, -0.03, 0.36), 0.24, 0.26),
+              ((-0.20, 0.04, 0.12), 0.26, 0.28)],
+    "Leg_L": [((0.20, 0.20, 1.32), 0.30, 0.32), ((0.21, 0.08, 1.00), 0.28, 0.30),
+              ((0.17, -0.08, 0.68), 0.26, 0.28), ((0.19, -0.01, 0.37), 0.23, 0.25),
+              ((0.20, 0.05, 0.12), 0.25, 0.27)],
 }
-SPINE = [(0.0, 0.20, 1.00), (0.0, 0.13, 1.25), (0.0, 0.02, 1.50), (-0.01, -0.12, 1.75),
-         (-0.02, -0.20, 1.98), (-0.02, -0.24, 2.18)]
+SPINE = [(0.0, 0.22, 1.20), (0.0, 0.16, 1.48), (0.0, 0.04, 1.76), (-0.01, -0.12, 2.04),
+         (-0.02, -0.24, 2.32), (-0.02, -0.30, 2.56)]
 
 rng = random.Random(7)
 
@@ -205,31 +210,31 @@ def build_body(M, C, detail):
     # Torso: climber build - broad shoulder girdle, lean ribcage, narrow waist, hunched.
     bm = bmesh.new()
     loft(bm, [
-        {"p": (0.00, 0.16, 0.95), "w": 0.58, "d": 0.40},
-        {"p": (0.00, 0.13, 1.13), "w": 0.52, "d": 0.37, "rot": -3},
-        {"p": (0.01, 0.03, 1.34), "w": 0.62, "d": 0.41, "rot": -2},
-        {"p": (0.00, -0.08, 1.55), "w": 0.84, "d": 0.49, "oy": -0.02, "rot": 1},
-        {"p": (-0.02, -0.20, 1.77), "w": 1.10, "d": 0.57, "oy": -0.06, "rot": 4},
-        {"p": (-0.04, -0.26, 2.00), "w": 1.20, "d": 0.61, "oy": -0.12, "rot": 6},
-        {"p": (-0.03, -0.26, 2.22), "w": 0.88, "d": 0.50, "oy": -0.14, "rot": 7},
-        {"p": (-0.02, -0.28, 2.36), "w": 0.46, "d": 0.30, "oy": -0.10, "rot": 8},
+        {"p": (0.00, 0.22, 1.18), "w": 0.54, "d": 0.37},
+        {"p": (0.00, 0.19, 1.38), "w": 0.48, "d": 0.34, "rot": -3},              # narrow waist
+        {"p": (0.01, 0.11, 1.62), "w": 0.60, "d": 0.38, "rot": -2},
+        {"p": (0.00, 0.00, 1.86), "w": 0.84, "d": 0.46, "oy": -0.02, "rot": 1},   # lats flare
+        {"p": (-0.02, -0.16, 2.10), "w": 1.14, "d": 0.54, "oy": -0.06, "rot": 4},
+        {"p": (-0.04, -0.28, 2.36), "w": 1.28, "d": 0.58, "oy": -0.12, "rot": 6},  # broad shoulder girdle
+        {"p": (-0.03, -0.31, 2.58), "w": 0.92, "d": 0.48, "oy": -0.16, "rot": 7},  # upper-back ridge
+        {"p": (-0.02, -0.34, 2.72), "w": 0.48, "d": 0.30, "oy": -0.12, "rot": 8},
     ], chamfer=0.16, irreg=ir(0.03), step=step, seed=1)
     torso = mesh_object("Torso", bm, C["Body"], [M["shell"]])
     pieces = []
     bm = bmesh.new()   # neck / trapezius wedge into the back of the skull
-    loft(bm, [{"p": (0.00, -0.22, 1.86), "w": 0.62, "d": 0.42},
-              {"p": (0.00, -0.42, 2.06), "w": 0.70, "d": 0.46},
-              {"p": (0.01, -0.58, 2.22), "w": 0.62, "d": 0.38}], chamfer=0.2,
+    loft(bm, [{"p": (0.00, -0.26, 2.22), "w": 0.56, "d": 0.40},
+              {"p": (0.00, -0.46, 2.42), "w": 0.60, "d": 0.42},
+              {"p": (0.01, -0.60, 2.56), "w": 0.52, "d": 0.34}], chamfer=0.2,
          irreg=ir(0.03), step=step, seed=2)
     pieces.append(mesh_object("_neck", bm, C["Body"], [M["shell"]]))
     bm = bmesh.new()   # deltoids: right heavier and dropped, left smaller and higher
-    loft(bm, [{"p": (-0.34, -0.26, 2.08), "w": 0.36, "d": 0.46},
-              {"p": (-0.62, -0.27, 1.99), "w": 0.39, "d": 0.47},
-              {"p": (-0.77, -0.29, 1.86), "w": 0.28, "d": 0.36}],
+    loft(bm, [{"p": (-0.38, -0.30, 2.48), "w": 0.36, "d": 0.46},
+              {"p": (-0.68, -0.31, 2.38), "w": 0.38, "d": 0.46},
+              {"p": (-0.83, -0.33, 2.24), "w": 0.27, "d": 0.34}],
          ref=(0, 0, 1), chamfer=0.2, irreg=ir(0.035), seed=3)
-    loft(bm, [{"p": (0.34, -0.26, 2.13), "w": 0.33, "d": 0.42},
-              {"p": (0.61, -0.27, 2.08), "w": 0.33, "d": 0.40},
-              {"p": (0.74, -0.29, 1.98), "w": 0.25, "d": 0.32}],
+    loft(bm, [{"p": (0.38, -0.30, 2.52), "w": 0.32, "d": 0.42},
+              {"p": (0.66, -0.31, 2.47), "w": 0.32, "d": 0.40},
+              {"p": (0.80, -0.33, 2.36), "w": 0.24, "d": 0.32}],
          ref=(0, 0, 1), chamfer=0.2, irreg=ir(0.035), seed=4)
     pieces.append(mesh_object("_delts", bm, C["Body"], [M["shell"]]))
     if False:   # v3: simple structure - no vertebra knobs / scapula plates
@@ -257,7 +262,7 @@ def build_body(M, C, detail):
     if detail:
         D.chisel(torso, level=0, plate=0.01, lump=0.012)
         for v in torso.data.vertices:      # collapsed left flank
-            g = math.exp(-((v.co - Vector((0.36, -0.02, 1.45))).length / 0.2) ** 2)
+            g = math.exp(-((v.co - Vector((0.36, 0.0, 1.68))).length / 0.2) ** 2)
             v.co.x -= 0.025 * g
         D.deform(torso, 0.012, 1.8, seed=1)
         D.facet_cuts(torso, 14, M, size=(0.3, 0.5), depth=(0.0, 0.01), tilt=(3, 8))
@@ -302,8 +307,9 @@ def build_hardware(M, C, parts, extra_bars):
     top_l = D.surface_frame(cr, cr.matrix_world @ Vector((0.06, -0.26, 0.9)))[0]
     top_r = D.surface_frame(cr, cr.matrix_world @ Vector((0.08, 0.22, 0.9)))[0]
     a, b = cr.matrix_world @ top_l, cr.matrix_world @ top_r
-    flat_bar(bm, [a - Vector((0, 0, 0.12)), a + Vector((0.03, 0.0, 0.42)),
-                  b + Vector((0.07, 0.0, 0.45)), b - Vector((0, 0, 0.12))], ref=(1, 0, 0))
+    hs = HEAD_SCALE
+    flat_bar(bm, [a - Vector((0, 0, 0.12 * hs)), a + Vector((0.03, 0.0, 0.42 * hs)),
+                  b + Vector((0.07, 0.0, 0.45 * hs)), b - Vector((0, 0, 0.12 * hs))], ref=(1, 0, 0))
     entries = [a, b]
 
     def spike(part, world_hint, outward, length):
@@ -317,14 +323,14 @@ def build_hardware(M, C, parts, extra_bars):
 
     la = lambda t, off: along(LONG_ARM, t)[0] + Vector(off)
     sa = lambda t, off: along(SHORT_ARM, t)[0] + Vector(off)
-    spike("Torso", (-0.25, 0.20, 2.20), (0, 1, 0.8), 0.40)
-    spike("Torso", (0.30, 0.12, 2.10), (0.4, 1, 0.6), 0.32)
+    spike("Torso", (-0.25, 0.12, 2.55), (0, 1, 0.8), 0.40)
+    spike("Torso", (0.30, 0.06, 2.46), (0.4, 1, 0.6), 0.32)
     spike("Arm_R_Long", la(0.24, (-0.5, 0, 0)), (-1, 0, 0.3), 0.30)
     spike("Arm_L_Short", sa(0.25, (0.5, 0, 0)), (1, 0, 0.5), 0.28)
     spike("Arm_L_Short", sa(0.70, (0.5, 0, 0)), (1, 0, 0), 0.2)
-    spike("Leg_R", (-0.60, 0.02, 0.80), (-1, 0, 0), 0.26)
+    spike("Leg_R", (-0.60, 0.04, 1.02), (-1, 0, 0), 0.26)
     ob = parts["Torso"]                     # bent V-rod jammed into the belly
-    loc, n, _ = D.surface_frame(ob, (0.05, -0.6, 1.38))
+    loc, n, _ = D.surface_frame(ob, (0.05, -0.6, 1.62))
     p = ob.matrix_world @ loc
     p1 = p + n * 0.30 + Vector((-0.04, 0, -0.24))
     flat_bar(bm, [p - n * 0.10, p1, p1 + Vector((-0.22, -0.03, 0.22))], ref=(0, -1, 0))
@@ -360,8 +366,8 @@ def damage_pass(M, parts, sk, jaw):
         "Arm_L_Short": [lw(SA, 0.48, (1, -0.5, 0), 0.13, 0.05, shards=4)],
         "Leg_R": [lw(LR, 0.50, (0, -1, 0), 0.14, 0.05, shards=4)],
         "Leg_L": [lw(LL, 0.68, (0, -1, 0.1), 0.18, 0.055, shards=5)],
-        "Torso": [dict(world=(-0.62, -0.2, 2.30), axis=(1, 0, 0.3), a=0.21, b=0.09, shards=4, rod=0.3),
-                  dict(world=(0.42, -0.05, 1.50), axis=(0, 0, 1), a=0.15, b=0.055, shards=4)],
+        "Torso": [dict(world=(-0.66, -0.26, 2.52), axis=(1, 0, 0.3), a=0.21, b=0.09, shards=4, rod=0.3),
+                  dict(world=(0.40, -0.02, 1.74), axis=(0, 0, 1), a=0.15, b=0.055, shards=4)],
         "Cranium": [dict(world=sk.matrix_world @ Vector((0.40, -0.30, 0.10)), axis=(0, 0, 1),
                          a=0.11, b=0.05, shards=5, depth=0.035)],
         "Jaw": [],
@@ -376,10 +382,10 @@ def damage_pass(M, parts, sk, jaw):
                   lw(LR, 0.78, (-1, 0.3, 0), 0.112, 0.140)],
         "Leg_L": [lw(LL, 0.30, (1, 0.3, 0), 0.112, 0.154), lw(LL, 0.48, (0, 1, 0), 0.112, 0.154),
                   lw(LL, 0.80, (1, -1, 0), 0.112, 0.140)],
-        "Torso": [dict(world=(-0.52, -0.15, 1.72), axis=(0, 0, 1), a=0.196, b=0.140),
-                  dict(world=(0.50, -0.30, 1.92), axis=(0, 0, 1), a=0.168, b=0.126),
-                  dict(world=(-0.05, 0.32, 1.40), axis=(1, 0, 0), a=0.210, b=0.126),
-                  dict(world=(0.20, -0.40, 1.15), axis=(1, 0, 0), a=0.140, b=0.098)],
+        "Torso": [dict(world=(-0.52, -0.12, 1.95), axis=(0, 0, 1), a=0.196, b=0.140),
+                  dict(world=(0.50, -0.32, 2.15), axis=(0, 0, 1), a=0.168, b=0.126),
+                  dict(world=(-0.05, 0.32, 1.62), axis=(1, 0, 0), a=0.210, b=0.126),
+                  dict(world=(0.20, -0.34, 1.36), axis=(1, 0, 0), a=0.140, b=0.098)],
         "Cranium": [dict(world=sk.matrix_world @ Vector((0.30, -0.25, 0.56)), axis=(1, 0, 0), a=0.168, b=0.112),
                     dict(world=sk.matrix_world @ Vector((-0.44, -0.05, 0.30)), axis=(0, 1, 0), a=0.140, b=0.098)],
         "Jaw": [dict(world=jaw.matrix_world @ Vector((0.15, -0.85, -0.25)), axis=(1, 0, 0), a=0.168, b=0.098)],
@@ -446,7 +452,8 @@ def build(stage):
     root = collection("MONSTER")
     C = {k: collection(k, root) for k in ("Head", "Body", "Arms", "Legs", "Hardware")}
     parts = build_body(M, C, detail)
-    sk, jaw, _ = H.build_head(M, C["Head"], HEAD_POS, HEAD_ROT, JAW_OPEN_DEG, JAW_BROKEN_ROLL_DEG)
+    sk, jaw, _ = H.build_head(M, C["Head"], HEAD_POS, HEAD_ROT, JAW_OPEN_DEG, JAW_BROKEN_ROLL_DEG,
+                              scale=HEAD_SCALE)
     parts["Cranium"], parts["Jaw"] = sk, jaw
     bpy.context.view_layer.update()
     blood, bars = damage_pass(M, parts, sk, jaw) if detail else ([], [])

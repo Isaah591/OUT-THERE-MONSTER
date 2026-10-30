@@ -365,11 +365,15 @@ def gums_and_teeth(M, col, sk, jaw):
     D.bm_object("Teeth_Lower", bm, col, [M["teeth"]], parent=jaw)
 
 
-def build_head(M, col, location, rotation, open_deg, roll_deg):
+def build_head(M, col, location, rotation, open_deg, roll_deg, scale=1.0):
+    """Builds the whole head at reference size, then scales it (and every child: jaw,
+    teeth, gums, tissue, eyes) about the upper gum line."""
     sk = build_skull(M, col, location, rotation)
     centres = eye_sockets(sk, M, col)
     jaw = build_jaw(M, col, sk, open_deg, roll_deg)
     hinges_and_tissue(M, col, sk, jaw)
     mouth_interior(M, col, sk, jaw)
     gums_and_teeth(M, col, sk, jaw)
+    sk.scale = (scale, scale, scale)
+    bpy.context.view_layer.update()
     return sk, jaw, centres
