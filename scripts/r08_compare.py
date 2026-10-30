@@ -15,7 +15,10 @@ except OSError:
     FONT = ImageFont.load_default()
 SHEET = Image.open(os.path.join(refs, "r08_reference_sheet_primary.webp")).convert("RGB")
 PANELS = {"front": (0, 30, 537, 628), "34": (537, 30, 1111, 628), "side": (1111, 30, 1586, 628),
-          "head": (0, 656, 380, 992)}
+          "head": (0, 656, 380, 992),
+          # R08 side-view head at the same scale and centre as the `mouth_profile` camera
+          # (1.25 m wide, centred on y -0.52 / z 2.22; R08 sheet ~0.0051 m per pixel)
+          "head_side": (1197, 68, 1442, 272)}
 
 
 def label(im, text):
@@ -41,7 +44,8 @@ def pair(ref_key, render, title, h=760):
 for key, render, title, name in (("front", "r08_front", "FRONT", "_r08_vs_front.png"),
                                  ("side", "r08_side", "EXACT SIDE", "_r08_vs_side.png"),
                                  ("34", "r08_34", "THREE-QUARTER", "_r08_vs_34.png"),
-                                 ("head", "mouth_34", "HEAD / MOUTH", "_r08_vs_head.png")):
+                                 ("head", "mouth_34", "HEAD / MOUTH", "_r08_vs_head.png"),
+                                 ("head_side", "mouth_profile", "MOUTH PROFILE", "_r08_vs_mouth_profile.png")):
     pair(key, render, title).save(os.path.join(renders, name))
 prof = Image.open(os.path.join(renders, "mouth_profile.png")).convert("RGB")
 label(prof, "NEW MOUTH - EXACT PROFILE (Pac-Man wedge)").save(os.path.join(renders, "_mouth_profile.png"))

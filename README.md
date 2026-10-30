@@ -70,25 +70,30 @@ bvenv/bin/python scripts/make_sheets.py model/renders references
 
 - **Units / axes:** metres, Z up, monster faces −Y. Monster's right (−X) carries the long arm.
 - **Body (R08):** lofts of chamfered box sections along limb/torso paths, with mild
-  irregularity and a light low-poly chisel. A big near-vertical box torso with a rounded
-  upper back; the head sits directly on its top (a short hidden neck block ties them). The
-  upper chest recedes slightly behind the jaw (invisible from the front) so the forced-open
-  jaw can hang in front of it. Chunky box arms whose tops form the shoulder blocks; thick
-  straight legs on blocky feet; slight stance asymmetry.
-- **Head (R08):** a compact, deep barrel built from three stacked rust strata (each band
-  overhangs the next), nodding forward ~9°. Square, dark, recessed sockets with tiny red
-  square eyes.
-- **Jaw / mouth (the one intentional change):** the lower jaw is as long as the head is deep
-  and is forced open **58°** about its rear hinge, so the profile is a '<' / Pac-Man wedge
-  with the chin dropping to 1.90 m while the upper skull and upper-jaw projection stay as in
-  R08. Knuckle hinges (the right one split and sagging 5°), torn membranes bridging only the
-  rear third of the wedge, taut tendons straining across it (one snapped per side), palate
+  irregularity and a light low-poly chisel. A big near-vertical box torso (~0.95 m wide) with
+  a flat vertical back and rounded top; the head sits directly on its top (a short hidden
+  neck block ties them). The upper chest recedes behind the jaw (hidden from the front by the
+  jaw and from the side by the short arm) so the forced-open jaw can hang in front of it.
+  Thick box arms whose tops butt against the torso as shoulder blocks: the long arm angles out
+  to the elbow and its heavy, slightly flared forearm swings forward and back in, the club end
+  hovering just off the floor; the short arm is a straight slab ending above the knee. Thick
+  straight legs set well apart on blocky feet; slight stance asymmetry.
+- **Head (R08):** a compact, deep block built from three stacked rust strata (each band
+  overhangs the next), crown nearly level as in R08's side view. Square, dark, recessed
+  sockets with tiny red square eyes.
+- **Jaw / mouth (the one intentional change):** the lower jaw runs from its rear hinge to the
+  face front (R08's closed jaw length) and is forced open **66°** about that hinge, so the
+  profile is a '<' / Pac-Man wedge while the upper skull and upper-jaw projection stay as in
+  R08. The hinge sits where R08's jaw line meets the shoulder, i.e. right at the front edge
+  of the near shoulder block, so the whole wedge — apex included — is visible in the exact
+  side view. Knuckle hinges (the right one split and sagging 5°), torn membranes bridging only
+  the rear of the wedge, taut tendons straining across it (one snapped per side), palate
   ridges, tongue and ribbed throat. Lower teeth ride the jaw and are re-aimed up into the
   mouth. Teeth, gums and tongue are checked against the chest on every build (BVH overlap:
-  0); only the hinge itself is anchored into the torso top.
-- **Teeth:** 32 big plank teeth (17 upper, 15 lower) in deliberate rows — rectangular sections,
-  uneven lengths and tilts, some snapped, chipped, slabbed or broken to stumps, the odd gap,
-  one tooth per row rammed in at a bad angle. Yellowed, decaying, dark grime and dried blood at
+  0); only the hinge itself is anchored into the neck/torso top.
+- **Teeth:** 32 big plank teeth (17 upper, 15 lower) in deliberate rows — straight rectangular
+  sections with blunt ends as in R08, uneven lengths and tilts, some snapped, chipped, slabbed
+  or broken to stumps, the odd gap, one tooth per row rammed in at a bad angle. Yellowed, decaying, dark grime and dried blood at
   the gum line; smooth enamel with crisp fracture edges.
 - **Damage — localized, R08 style:** *bark peels* tear the rust skin away in two stepped
   strata (dark old-rust floor, lighter torn edges, a curling lip or two), concentrated on

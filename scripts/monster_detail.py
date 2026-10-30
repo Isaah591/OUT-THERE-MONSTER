@@ -509,11 +509,14 @@ def make_tooth(bm, layer, base, direction, length, w, d, kind=None, twist=0.0, r
         sides = rng.choice([5, 6, 6, 7])
         prof = [(math.cos(2 * math.pi * k / sides + 0.3) * w / 2 * rng.uniform(0.88, 1.08),
                  math.sin(2 * math.pi * k / sides + 0.3) * d / 2 * rng.uniform(0.88, 1.08)) for k in range(sides)]
-    kink = (side * rng.uniform(-1, 1) + fwd * rng.uniform(-1, 1)) * length * rng.uniform(0.06, 0.22)
+    kink = (side * rng.uniform(-1, 1) + fwd * rng.uniform(-1, 1)) * length * (
+        rng.uniform(0.02, 0.08) if plank else rng.uniform(0.06, 0.22))   # R08 planks stay straight
     blood = min(1.0, rng.choice([0.0, 0.2, 0.35, 0.5, 0.7, 0.95]) * rng.uniform(0.7, 1.2))
     decay = rng.random() ** 1.6
     tint = rng.random()
     tip_scale = {"fang": 0.42, "snapped": 0.8, "chipped": 0.72, "stump": 0.85, "slab": 0.7}[kind]
+    if plank and kind != "fang":
+        tip_scale = 0.5 + 0.5 * tip_scale                # blunt, square-ended planks
     ts = [(-0.2, 0.78), (0.0 - root_exposed, 0.95), (0.22, 1.05), (0.45, 1.0), (0.7, 0.86), (1.0, tip_scale)]
     rings = []
     for idx, (t, s) in enumerate(ts):
@@ -607,7 +610,7 @@ def plank_row(bm, layer, slots, down, out_bias, lean, size, wild=1):
             L *= rng.uniform(1.2, 1.35)
         w = rng.uniform(0.058, 0.088)
         d = rng.uniform(0.042, 0.058)
-        kind = rng.choices(["chipped", "snapped", "slab", "fang", "stump"], [0.36, 0.24, 0.14, 0.16, 0.10])[0]
+        kind = rng.choices(["chipped", "snapped", "slab", "fang", "stump"], [0.40, 0.26, 0.16, 0.06, 0.12])[0]
         crooked = Vector((rng.uniform(-0.22, 0.22), rng.uniform(-0.12, 0.12), 0))
         dvec = down + outward * rng.uniform(*out_bias) + Vector(lean) + crooked
         if i in wild_idx:

@@ -36,35 +36,35 @@ OUT_DIR = os.path.join(HERE, "..", "model")
 # ---- R08-faithful proportions (measured from references/r08_reference_sheet_primary.webp,
 # overall height 2.8 m => ~0.0051 m per sheet pixel). The ONLY intended deviation from R08
 # is the lower jaw: forced / broken open into a Pac-Man-like wedge around its rear hinge.
-JAW_OPEN_DEG = 58.0        # lower jaw forced far past a natural range (R08 is nearly closed)
+JAW_OPEN_DEG = 66.0        # lower jaw forced far past a natural range (R08 is nearly closed)
 JAW_BROKEN_ROLL_DEG = 5.0  # sideways sag of the broken hinge (monster's right lower)
 HEAD_SCALE = 0.633         # head built at reference size, scaled to R08's 0.57 m width
-HEAD_POS = Vector((0.0, -0.44, 2.48))   # centre of the upper gum line: head sits on the torso top
-HEAD_ROT = (math.radians(-9.0), math.radians(-2.0), math.radians(-2.0))  # forward nod, as in R08's side view
+HEAD_POS = Vector((0.0, -0.37, 2.48))   # centre of the upper gum line: head sits on the torso top
+HEAD_ROT = (math.radians(-4.0), math.radians(-2.0), math.radians(-2.0))  # crown near level, as in R08's side view
 
 # Limb paths (shared by the forms, the wounds and the rods): (point, width, depth)
-LONG_ARM = [   # monster's right: hangs out to the elbow, forearm reaches forward to the floor
-    ((-0.66, -0.12, 2.42), 0.36, 0.38),   # shoulder block top
-    ((-0.70, -0.13, 2.28), 0.37, 0.39),
-    ((-0.84, -0.17, 1.86), 0.36, 0.37),
-    ((-0.98, -0.22, 1.44), 0.36, 0.36),   # elbow
-    ((-0.98, -0.40, 1.00), 0.38, 0.37),   # heavy forearm
-    ((-0.95, -0.65, 0.50), 0.39, 0.37),
-    ((-0.93, -0.80, 0.20), 0.40, 0.36),
-    ((-0.92, -0.86, 0.04), 0.37, 0.30),   # club hand resting on the floor
+LONG_ARM = [   # monster's right: hangs out to the elbow, heavy forearm swings forward and back in
+    ((-0.60, -0.07, 2.42), 0.40, 0.38),   # shoulder block top, butted against the torso
+    ((-0.65, -0.08, 2.28), 0.41, 0.39),
+    ((-0.80, -0.12, 1.86), 0.41, 0.38),
+    ((-0.97, -0.17, 1.42), 0.42, 0.37),   # elbow
+    ((-0.95, -0.34, 1.00), 0.45, 0.38),   # heavy forearm
+    ((-0.90, -0.56, 0.52), 0.46, 0.39),
+    ((-0.88, -0.70, 0.33), 0.47, 0.40),   # slightly flared club end
+    ((-0.87, -0.76, 0.20), 0.46, 0.36),   # hovering just off the floor (R08)
 ]
 SHORT_ARM = [  # monster's left: a straight slab hanging to just above the knee
-    ((0.62, -0.18, 2.39), 0.32, 0.34),    # shoulder block top
-    ((0.64, -0.18, 2.24), 0.33, 0.35),
-    ((0.69, -0.20, 1.70), 0.31, 0.32),
-    ((0.73, -0.21, 1.25), 0.31, 0.31),
-    ((0.77, -0.22, 0.76), 0.30, 0.30),    # bloody stump end
+    ((0.59, -0.05, 2.39), 0.35, 0.35),    # shoulder block top, butted against the torso
+    ((0.61, -0.05, 2.24), 0.36, 0.36),
+    ((0.66, -0.06, 1.70), 0.35, 0.34),
+    ((0.71, -0.07, 1.25), 0.34, 0.33),
+    ((0.76, -0.08, 0.76), 0.33, 0.32),    # bloody stump end
 ]
-LEGS = {   # thick straight blocks, slight stance asymmetry
+LEGS = {   # thick straight blocks set well apart, slight stance asymmetry
     "Leg_R": [((-0.20, 0.00, 1.18), 0.33, 0.36), ((-0.20, -0.02, 0.86), 0.33, 0.35),
               ((-0.20, -0.03, 0.56), 0.32, 0.34), ((-0.20, 0.00, 0.12), 0.31, 0.33)],
-    "Leg_L": [((0.24, 0.00, 1.18), 0.37, 0.38), ((0.25, -0.02, 0.86), 0.36, 0.37),
-              ((0.25, -0.04, 0.56), 0.35, 0.36), ((0.25, 0.00, 0.12), 0.34, 0.35)],
+    "Leg_L": [((0.30, 0.00, 1.18), 0.36, 0.37), ((0.305, -0.02, 0.86), 0.36, 0.36),
+              ((0.305, -0.04, 0.56), 0.35, 0.35), ((0.305, 0.00, 0.12), 0.35, 0.35)],
 }
 SPINE = [(0.0, 0.02, 1.10), (0.0, 0.03, 1.50), (0.0, 0.04, 1.90), (0.0, 0.05, 2.30)]
 
@@ -202,23 +202,24 @@ def build_body(M, C, detail):
     ir = (lambda a: a) if detail else (lambda a: 0.0)
     parts = {}
 
-    # Torso (R08): a big, near-vertical, slightly tapered box with a rounded upper back.
+    # Torso (R08): a big, near-vertical, slightly tapered box; flat vertical back, rounded top.
     # The upper front recedes a little behind the jaw (hidden in front view) so the forced-open
     # lower jaw has room to hang in front of the chest.
     bm = bmesh.new()
     loft(bm, [
-        {"p": (0.00, 0.02, 1.10), "w": 0.80, "d": 0.48},
-        {"p": (0.00, 0.02, 1.28), "w": 0.84, "d": 0.50},
-        {"p": (0.00, 0.03, 1.70), "w": 0.88, "d": 0.52},
-        {"p": (0.00, 0.09, 2.02), "w": 0.91, "d": 0.48},
-        {"p": (0.00, 0.12, 2.28), "w": 0.90, "d": 0.44},
-        {"p": (0.00, 0.12, 2.40), "w": 0.80, "d": 0.38},
+        {"p": (0.00, 0.04, 1.10), "w": 0.84, "d": 0.52},
+        {"p": (0.00, 0.04, 1.28), "w": 0.88, "d": 0.52},
+        {"p": (0.00, 0.04, 1.70), "w": 0.92, "d": 0.52},
+        {"p": (0.00, 0.10, 2.02), "w": 0.95, "d": 0.40},
+        {"p": (0.00, 0.13, 2.28), "w": 0.94, "d": 0.34},
+        {"p": (0.00, 0.13, 2.40), "w": 0.90, "d": 0.30},
+        {"p": (0.00, 0.14, 2.45), "w": 0.74, "d": 0.22},
     ], chamfer=0.14, irreg=ir(0.03), step=step, seed=1)
     torso = mesh_object("Torso", bm, C["Body"], [M["shell"]])
     pieces = []
     bm = bmesh.new()   # short hidden neck block tying the back of the skull into the torso top
-    loft(bm, [{"p": (0.00, 0.08, 2.30), "w": 0.46, "d": 0.30},
-              {"p": (0.00, -0.12, 2.52), "w": 0.44, "d": 0.28}], chamfer=0.2, irreg=ir(0.03), seed=2)
+    loft(bm, [{"p": (0.00, 0.10, 2.30), "w": 0.46, "d": 0.30},
+              {"p": (0.00, -0.05, 2.52), "w": 0.44, "d": 0.28}], chamfer=0.2, irreg=ir(0.03), seed=2)
     pieces.append(mesh_object("_neck", bm, C["Body"], [M["shell"]]))
     if False:   # v3: simple structure - no vertebra knobs / scapula plates
         # bony structure pushing through the shell: vertebra knobs and scapula plates

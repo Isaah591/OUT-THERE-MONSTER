@@ -23,8 +23,8 @@ import monster_detail as D
 rng = random.Random(77)
 
 HW, HD, CH = 0.90, 0.95, 0.58          # skull width / depth / height (R08 head is deeper than wide)
-JAW_LEN, JAW_W = 0.90, 0.88            # closed, the jaw spans the head's depth
-HINGE = Vector((0.0, HD / 2 - 0.12, -0.02))   # jaw pivot in cranium space
+JAW_LEN, JAW_W = 0.70, 0.88            # closed, the jaw runs from the hinge to the face front
+HINGE = Vector((0.0, HD / 2 - 0.24, -0.02))   # jaw pivot in cranium space: where R08's jaw line meets the shoulder
 
 
 def skin(bm, profiles, mats=(0, 0, 0), caps=(True, True)):
@@ -75,17 +75,17 @@ def skull_point(x, y, z):
 # starts with an overhanging lip and narrows toward its top, so every boundary reads as
 # a ledge - the layered-rock look of the R08 head.
 STRATA = [(0.00, 0.17, 0.90, 0.95, 0.000, 0.000, 0.0),
-          (0.17, 0.37, 0.91, 0.96, 0.008, -0.006, 2.0),
-          (0.37, 0.535, 0.87, 0.91, -0.006, 0.006, -1.5)]
+          (0.17, 0.37, 0.91, 0.98, 0.008, 0.008, 2.0),
+          (0.37, 0.535, 0.87, 0.95, -0.006, 0.022, -1.5)]
 
 
 def build_skull(M, col, location, rotation):
     rings = []
     for z0, z1, w, d, sx_, sy_, tw in STRATA:
-        for t, k in ((0.0, 1.0), (0.06, 1.022), (0.8, 1.0), (1.0, 0.975)):
+        for t, k in ((0.0, 1.0), (0.06, 1.014), (0.8, 1.0), (1.0, 0.984)):
             rings.append((z0 + (z1 - z0) * t - (0.004 if t == 1.0 else 0.0), w * k, d * k, sx_, sy_, tw))
     rings[0] = (0.0, 0.86, 0.90, 0, 0, 0)
-    rings += [(0.565, 0.80, 0.84, 0, 0, -1.5), (0.585, 0.66, 0.68, 0, 0, -1.5)]
+    rings += [(0.565, 0.80, 0.88, 0, 0.022, -1.5), (0.585, 0.66, 0.72, 0, 0.022, -1.5)]
     rings = [(r[0] * CH_K,) + tuple(r[1:]) for r in rings]
     n = 16
     profiles = []
@@ -115,7 +115,7 @@ def eye_sockets(sk, M, col):
     for ex, ez, k in EYES:
         c, n, u = D.ray_frame(sk, sk.matrix_world @ Vector((ex, -1.2, ez)),
                               sk.matrix_world.to_3x3() @ Vector((0, 1, 0)), (0, 0, 1))
-        a, b = 0.068 * k, 0.058 * k
+        a, b = 0.076 * k, 0.066 * k
         # squarish outline with a few small chips in the rim
         out = []
         for i in range(16):
@@ -140,7 +140,7 @@ def eye_sockets(sk, M, col):
 # ---------------------------------------------------------------------------
 def jaw_h(x):
     sag = 0.035 * max(0.0, -x / (JAW_W / 2))              # broken side hangs deeper
-    return 0.20 + 0.10 * (1 - (x / (JAW_W / 2)) ** 2) + sag
+    return 0.24 + 0.12 * (1 - (x / (JAW_W / 2)) ** 2) + sag      # heavy R08 lower jaw
 
 
 def jaw_front(x):
@@ -241,8 +241,8 @@ def hinges_and_tissue(M, col, sk, jaw):
         for i in range(cols_n):
             u = i / (cols_n - 1)
             # only the rear third of the wedge is bridged, so the profile stays an open '<'
-            top = Vector((sx * (HW / 2 - 0.06), HINGE.y + 0.02 - u * 0.30, 0.005))
-            bot = jm @ Vector((sx * (JAW_W / 2 - 0.05), 0.02 - u * 0.30, -0.01))
+            top = Vector((sx * (HW / 2 - 0.06), HINGE.y + 0.02 - u * 0.24, 0.005))
+            bot = jm @ Vector((sx * (JAW_W / 2 - 0.05), 0.02 - u * 0.24, -0.01))
             row = []
             for j in range(rows_n):
                 v = j / (rows_n - 1)
