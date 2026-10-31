@@ -14,7 +14,8 @@ is editable and the model rebuilds in ~35 s.
 |---|---|---|
 | Blockout, proportion passes, detail v1–v3, R08 forms v1 | superseded, kept | `checkpoints/` |
 | R08 high-fidelity sculpt + broken-open jaw | superseded by the open-jaw sheet, kept | `model/out_there_monster_r08.blend`, `model/renders_r08hd/`, `checkpoints/r08-hd-v1/` |
-| **ASTRA R08 – MORE OPEN JAW (current target)** | **for review** | `model/out_there_monster_openjaw.blend`, `model/renders_openjaw/`, `docs/OPENJAW_NOTES.md` |
+| ASTRA R08 – MORE OPEN JAW, first sheet | superseded, kept | `checkpoints/openjaw-v2/`, `model/renders_openjaw/` |
+| **Approved sheet – MORE OPEN JAW, slightly longer teeth (current target)** | **for review** | `model/out_there_monster_openjaw.blend`, `model/renders_v3/`, `docs/OPENJAW_NOTES.md` |
 | Baked textures + optimised FBX for Roblox | not run (held until the design is approved) | `scripts/bake_export.py`, `docs/ROBLOX_IMPORT.md` |
 | Rigging / animation | not started | |
 

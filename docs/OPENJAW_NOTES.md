@@ -153,3 +153,27 @@ Tooth reach is measured from the geometry: the vertical distance from the gum li
 tip (the part buried in the gum excluded), as a fraction of the mouth opening, as seen in the
 front view. The sheet's values were read on a 6× grid of its front view. The pixel-colour tooth
 coverage used in the previous pass undercounts the sheet's half-shaded teeth, so reach is used here.
+
+Final front-view silhouette check (same measurement as the previous pass): skull / torso 0.72
+(sheet ~0.70, before this pass 0.72), long-forearm / torso 0.44 (sheet 0.43, before 0.45), torso
+width unchanged to the pixel — body proportions and head size are as before.
+
+## Remaining differences against the approved sheet (honest)
+
+From the side-by-side sheets in `model/renders_v3/_v3_vs_*.png`:
+
+- **Head pitch.** In the sheet's side and three-quarter views the head is pitched nose-down
+  (~15–20°); the model's head is near level (−4°). Not changed here because it would alter the
+  head's placement on the neck and the jaw's orientation, which this pass was asked to keep.
+- **Surface texture.** The sheet's shell is a dense jigsaw of flat plates with bright orange plate
+  edges and a fine scaly grain. The model now has larger, cohesive plates with thin orange crackle,
+  as requested, but less of that fine grain, and its plates read smoother.
+- **Skull surface.** The sheet's skull plates are thicker and rockier; the model's skull has the
+  angular shape, brow, sockets and damage layout but flatter plates.
+- **Teeth colour.** The model's tusks are paler and more uniform in hue; the sheet's are more
+  yellow-brown with stronger dark grooves and stains. From the front, the model's long upper tusks
+  read a little like a curtain; the sheet's front row varies more visibly in length.
+- **Presentation.** The sheet uses moody, high-contrast lighting with strong rim lights; the
+  comparisons use the same neutral dark studio for every view, so geometry differences, not
+  lighting, are what show.
+- Not Roblox-ready yet (1.42 M triangles); no export until approval.
