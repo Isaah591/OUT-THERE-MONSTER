@@ -186,12 +186,13 @@ def openjaw_rust(name="M_OJ_Rust"):
     rough = g.maprange(mott.outputs["Fac"], 0.3, 0.8, 0.78, 0.94)
     rough = g.math('SUBTRACT', rough, g.math('MULTIPLY', convex, 0.12))
     rough = g.math('ADD', g.math('MULTIPLY', rough, g.math('SUBTRACT', 1.0, tissue)),
-                   g.math('MULTIPLY', tissue, 0.52))
+                   g.math('MULTIPLY', tissue, 0.66))
     rough = g.math('SUBTRACT', rough, g.math('MULTIPLY', blood, 0.25))
     g.link(rough, g.bsdf.inputs["Roughness"])
+    g.link(g.math('SUBTRACT', 0.5, g.math('MULTIPLY', tissue, 0.32)), g.bsdf.inputs["Specular IOR Level"])
     grain = g.noise(85.0, 4.0, 0.6, coord=pos)
     h = g.math('ADD', grain.outputs["Fac"], g.math('MULTIPLY', crack, -1.5))
-    h = g.math('ADD', h, g.math('MULTIPLY', tissue, g.math('MULTIPLY', fib.outputs["Fac"], 2.0)))
+    h = g.math('ADD', h, g.math('MULTIPLY', tissue, g.math('MULTIPLY', fib.outputs["Fac"], 1.0)))
     g.link(g.bump(h, 0.25, 0.0025), g.bsdf.inputs["Normal"])
     return m
 
