@@ -56,3 +56,40 @@ measured proportions.
 | `Jaw` | 11-section smooth wedge | heavy U loft tapering from the chin to the rami, condyles; ~330 facets; carved mouth floor; broken right side, chipped chin; dislocated 66° hinge |
 | `Bars`, `Crown_Bracket` | thin flat polylines | remeshed, hammered flat bars with rivets and entry wounds |
 | `Teeth_*`, `Gums_*`, `Mouth_*`, `Jaw_Hinges`, `Palate`, `Tongue`, `Throat`, `Eyes` | fitted to the old head | rebuilt for the new skull and jaw: crooked irregular plank teeth, empty hinge sockets with bent pins, torn membranes, tendons, tiny red eyes |
+
+## Validation and refinement
+
+Rendered front / three-quarter / exact side / head / mouth profile / shoulder-torso /
+long-arm views with R08-matched cameras and the dark R08-style studio, compared side by side
+(`model/renders_r08hd/_r08_vs_*.png`). Fixes made from those comparisons before presenting:
+
+- the skull had grown during the rebuild (0.64 m wide, 0.40 m above the gum line, measured):
+  resized back to R08 (0.55–0.58 m wide, 0.36 m), overall height 2.84 m;
+- the strata read as continuous bands (a drum): replaced by one wavy, broken crown cap and a
+  brow ledge on the face only, plus a rounder, asymmetric crown and swollen right cheek;
+- facets too timid: fewer, larger facets with stronger angles;
+- torn edges too busy and too pale: less high-frequency fringe, smaller lifted lips, thicker
+  shell, browner under-layers, darker cavities; the colour palette darkened and given more
+  mottling contrast;
+- the heavier jaw cut into the chest when opened: jaw tapered toward the hinge, upper chest
+  recessed (hidden by the jaw and the short arm), dislocation reduced; teeth, gums and tongue
+  are clear of the body, only the jaw's rear is anchored in the hidden neck block;
+- R08's long-arm club end is heavier, its shoulder caps chiselled: club flared, caps trimmed.
+
+## Remaining differences (honest)
+
+- **Surface crispness.** R08's facets are larger and sharper and its shell plates thicker with
+  cleanly broken edges. Ours are planar with crisp facet edges, but the torn edges are
+  finer-grained and busier, and some lifted rims stack into small blocky steps (most visible
+  around the long-arm elbow).
+- **Material.** R08 reads like a scanned rust texture with high-frequency, high-contrast
+  mottling (red-purple to near black). Ours is procedural: tone and zoning are close, the
+  surface is smoother and a little more orange in places.
+- **Damage pattern.** Same placement as R08 (knees, elbows, forearms, torso sides, belly, upper
+  back), with two strata, fibrous strands and lifted plates, but R08's knees and forearms read
+  as shredded overlapping plates where ours read more as holes with lighter fringes.
+- **Head.** Size, layout, sockets, ledges, fracture and bracket match; R08's crown is chunkier
+  and rockier. The forced-open jaw is the intended change.
+- **Teeth.** Crooked stained planks as in R08; R08's are slightly wider and flatter.
+- **Budget.** 1.56 M triangles: design resolution, to be optimised and baked for Roblox after
+  approval.
