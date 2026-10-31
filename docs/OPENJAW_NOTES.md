@@ -101,5 +101,8 @@ See the comparison sheets in `model/renders_openjaw/_oj_vs_*.png`. Known gaps af
 - The sheet shows more saturated red tissue in long streaks; the model's wounds are placed the
   same way but read darker.
 - The sheet's legs are straighter columns in the front view; the model's knees splay more.
+- The sheet's fangs are fewer and thicker (conical tusks); the model's are thinner and more
+  numerous, which gives the same measured coverage (24% vs 26%) but a finer, busier tooth row.
+- The sheet's skull is chunkier and rockier in close-up; the model's skull reads smoother.
 - The sheet's landmarks are read by eye on a zoomed grid (about ±5% on the side-profile ratios).
 - Not Roblox-ready yet (1.42 M triangles; needs decimation, UVs and baking after approval).
