@@ -88,8 +88,9 @@ def build(out):
     C = {k: collection(k, root) for k in ("Head", "Body", "Hardware")}
     M = MM.build_all()
     M["rust"], M["bar"] = MR.openjaw_rust(), MR.r08_bar()
-    M["gum"] = MR.wet_flesh("M_OJ_Gum", (0.020, 0.003, 0.003), (0.050, 0.007, 0.006), (0.095, 0.016, 0.012), 0.45)
-    M["flesh"] = MR.wet_flesh("M_OJ_Flesh", (0.010, 0.002, 0.002), (0.032, 0.005, 0.004), (0.065, 0.011, 0.009), 0.55)
+    M["teeth"] = MR.openjaw_teeth()
+    M["gum"] = MR.wet_flesh("M_OJ_Gum", (0.025, 0.002, 0.002), (0.075, 0.006, 0.006), (0.150, 0.016, 0.013), 0.22, 0.5)
+    M["flesh"] = MR.wet_flesh("M_OJ_Flesh", (0.022, 0.002, 0.002), (0.065, 0.006, 0.006), (0.125, 0.014, 0.012), 0.32, 0.4)
     M["tongue"] = MR.wet_flesh("M_OJ_Tongue", (0.005, 0.001, 0.001), (0.014, 0.002, 0.002), (0.030, 0.005, 0.004), 0.75, 0.12)
     M["throat"] = MR.wet_flesh("M_OJ_Throat", (0.003, 0.001, 0.001), (0.010, 0.002, 0.002), (0.022, 0.004, 0.003), 0.7, 0.12)
     parts = B.build_body(C["Body"], M["rust"], M["bar"])

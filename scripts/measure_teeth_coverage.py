@@ -1,7 +1,7 @@
 """
 Tooth coverage of the mouth opening in the front view, sheet vs model, with overlays.
 
-    python measure_teeth_coverage.py <out_dir> <model_front.png> [polygon]
+    python measure_teeth_coverage.py <out_dir> <model_front.png> [model polygon] [sheet v1|v2]
 
 The mouth opening is a polygon read off zoomed landmark grids (upper gum line, mouth corners,
 lower gum arc) for the sheet's front panel and for each version of the model's `oj_front`
@@ -16,8 +16,13 @@ from PIL import Image, ImageDraw
 OUT, MODEL_FRONT = sys.argv[1], sys.argv[2]
 POLY = sys.argv[3] if len(sys.argv) > 3 else "openjaw_v2"
 REPO = __import__("os").path.dirname(__import__("os").path.dirname(__import__("os").path.abspath(__file__)))
-SHEET_POLY = [(228, 57), (302, 57), (305, 80), (300, 110), (293, 135), (285, 148), (255, 151),
-              (240, 140), (232, 110), (228, 80)]
+SHEETS = {  # sheet file, mouth polygon in its front panel (crop 0,55,490,550)
+    "v1": ("r08_open_jaw_sheet.webp", [(228, 57), (302, 57), (305, 80), (300, 110), (293, 135), (285, 148),
+                                        (255, 151), (240, 140), (232, 110), (228, 80)]),
+    "v2": ("r08_open_jaw_sheet_v2.webp", [(226, 57), (300, 57), (303, 80), (299, 110), (292, 135), (284, 150),
+                                           (255, 153), (240, 145), (232, 115), (227, 85)]),
+}
+SHEET = sys.argv[4] if len(sys.argv) > 4 else "v2"
 MODEL_POLYS = {
     "openjaw_v1": [(480, 207), (652, 207), (655, 260), (645, 320), (628, 370), (600, 393), (530, 393),
                 (505, 370), (488, 320), (478, 260)],
@@ -45,6 +50,6 @@ def coverage(name, im, poly):
           % (name, max(ys) - min(ys), inside.sum(), 100 * t, 100 * dark.sum() / inside.sum()))
 
 
-sheet = Image.open(REPO + "/references/r08_open_jaw_sheet.webp").convert("RGB").crop((0, 55, 490, 550))
-coverage("sheet", sheet, SHEET_POLY)
+sheet = Image.open(REPO + "/references/" + SHEETS[SHEET][0]).convert("RGB").crop((0, 55, 490, 550))
+coverage("sheet", sheet, SHEETS[SHEET][1])
 coverage("model", Image.open(MODEL_FRONT).convert("RGB"), MODEL_POLYS[POLY])

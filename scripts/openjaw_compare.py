@@ -1,7 +1,7 @@
 """
 Side-by-side sheets against the ASTRA R08 - MORE OPEN JAW sheet (same panel framing).
 
-    python openjaw_compare.py <renders_dir> <references_dir>
+    python openjaw_compare.py <renders_dir> <references_dir> [v1|v2]
 """
 import os
 import sys
@@ -13,19 +13,35 @@ try:
     FONT = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 26)
 except OSError:
     FONT = ImageFont.load_default()
-SHEET = Image.open(os.path.join(refs, "r08_open_jaw_sheet.webp")).convert("RGB")
-PANELS = {  # sheet crops (pixels of the 1484 x 1060 sheet)
-    "front": (0, 55, 490, 550), "34": (495, 55, 978, 550), "side": (985, 55, 1484, 550),
-    "head": (0, 557, 438, 912), "mouth": (629, 595, 862, 862),
-    "arm": (20, 120, 235, 548), "torso": (180, 100, 375, 330),
-}
-PAIRS = [("front", "oj_front", "FRONT (ORTHO)", "_oj_vs_front.png"),
-         ("34", "oj_34", "THREE-QUARTER", "_oj_vs_34.png"),
-         ("side", "oj_side", "EXACT SIDE", "_oj_vs_side.png"),
-         ("head", "oj_head", "HEAD CLOSE-UP", "_oj_vs_head.png"),
-         ("mouth", "oj_mouth_side", "MOUTH, SIDE PROFILE", "_oj_vs_mouth.png"),
-         ("arm", "oj_arm", "LONG ARM", "_oj_vs_arm.png"),
-         ("torso", "oj_torso", "TORSO / WOUNDS", "_oj_vs_torso.png")]
+VERSION = sys.argv[3] if len(sys.argv) > 3 else "v2"
+if VERSION == "v1":      # ASTRA R08 - MORE OPEN JAW (first sheet)
+    SHEET = Image.open(os.path.join(refs, "r08_open_jaw_sheet.webp")).convert("RGB")
+    PANELS = {  # sheet crops (pixels of the 1484 x 1060 sheet)
+        "front": (0, 55, 490, 550), "34": (495, 55, 978, 550), "side": (985, 55, 1484, 550),
+        "head": (0, 557, 438, 912), "mouth": (629, 595, 862, 862),
+        "arm": (20, 120, 235, 548), "torso": (180, 100, 375, 330),
+    }
+    PAIRS = [("front", "oj_front", "FRONT (ORTHO)", "_oj_vs_front.png"),
+             ("34", "oj_34", "THREE-QUARTER", "_oj_vs_34.png"),
+             ("side", "oj_side", "EXACT SIDE", "_oj_vs_side.png"),
+             ("head", "oj_head", "HEAD CLOSE-UP", "_oj_vs_head.png"),
+             ("mouth", "oj_mouth_side", "MOUTH, SIDE PROFILE", "_oj_vs_mouth.png"),
+             ("arm", "oj_arm", "LONG ARM", "_oj_vs_arm.png"),
+             ("torso", "oj_torso", "TORSO / WOUNDS", "_oj_vs_torso.png")]
+else:                    # approved sheet: MORE OPEN JAW VERSION (SLIGHTLY LONGER TEETH ONLY)
+    SHEET = Image.open(os.path.join(refs, "r08_open_jaw_sheet_v2.webp")).convert("RGB")
+    PANELS = {
+        "front": (0, 55, 490, 550), "34": (500, 55, 1008, 550), "side": (1017, 55, 1484, 550),
+        "head": (0, 590, 437, 910), "teeth": (877, 590, 1189, 910), "sideclose": (1198, 590, 1484, 915),
+        "surface": (180, 170, 360, 330),
+    }
+    PAIRS = [("front", "oj_front", "FRONT (ORTHO)", "_v3_vs_front.png"),
+             ("34", "oj_34", "THREE-QUARTER", "_v3_vs_34.png"),
+             ("side", "oj_side", "EXACT SIDE", "_v3_vs_side.png"),
+             ("head", "oj_head", "HEAD CLOSE-UP", "_v3_vs_head.png"),
+             ("teeth", "oj_teeth", "TEETH CLOSE-UP", "_v3_vs_teeth.png"),
+             ("sideclose", "oj_mouth_side", "MOUTH, SIDE PROFILE", "_v3_vs_mouth_side.png"),
+             ("surface", "oj_surface", "SURFACE DAMAGE (TORSO, FRONT)", "_v3_vs_surface.png")]
 
 
 def label(im, text):

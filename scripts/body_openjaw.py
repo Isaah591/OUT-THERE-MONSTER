@@ -140,7 +140,7 @@ DAMAGE = {
         "wound": [on(LL, 0.45, FRONT, 0.16, 0.04, 1.0), on(LL, 0.62, OUT_L, 0.10, 0.035, 1.0)],
     },
 }
-FLAPS = {"Torso": 8, "Arm_R_Long": 8, "Arm_L_Short": 5, "Leg_R": 5, "Leg_L": 5}
+FLAPS = {"Torso": 4, "Arm_R_Long": 4, "Arm_L_Short": 3, "Leg_R": 3, "Leg_L": 3}
 
 # Bars: (part, entry hint, direction, length, half width, half depth)
 BARS = [
@@ -170,15 +170,16 @@ def _sculpt(S, ob, name, axis, seed, faces, jitter=0.016):
     S = SC.Surf(ob)
     if callable(axis):
         axis = axis(S.co)
-    chunk = SC.flakes(S, cell=0.055, crack=0.0035, depth=0.0035, lift=0.005, tilt=0.12, seed=seed + 1)
+    # larger, flatter plates (cohesive shell); damage concentrated in the zones, cleaner torn edges
+    chunk = SC.flakes(S, cell=0.085, crack=0.003, depth=0.003, lift=0.0035, tilt=0.07, seed=seed + 1)
     d = DAMAGE[name]
     SC.damage(S, d["peel"], d["wound"], axis, seed=seed + 2, n_flaps=FLAPS.get(name, 5), chunk=chunk,
-              t1=0.022, t2=0.012, tissue=0.018, lips=0.005, cover=0.42)
+              t1=0.022, t2=0.012, tissue=0.018, lips=0.003, cover=0.05, jag=0.9)
     k = S.blur(S.curvature(), 2)
     cv = SC.smoothstep(6.0, 28.0, k)
     gate = SC.smoothstep(0.2, 1.0, SC._z(SC.fbm(SC.Perlin(seed + 3), S.co * 4.0, 2)))
     SC.damage(S, [], [], axis, seed=seed + 4, t1=0.007, t2=0.003, tissue=0.0, lips=0.0,
-              extra=1.4 * cv * gate - 0.35, tear_amt=0.0, chunk=chunk)
+              extra=0.8 * cv * gate - 0.45, tear_amt=0.0, chunk=chunk)                # localized chips
     SC.blood(S, seed + 5, drips=16)
     SC.finish(S, ob, decimate_ratio=1.0, sharp_deg=25.0)
     SC.add_flaps(ob, getattr(S, "flaps", []), seed + 6)
