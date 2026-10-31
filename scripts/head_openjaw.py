@@ -71,15 +71,15 @@ SKULL_ROWS = [  # z, +x half-width, -x half-width (monster's right fuller), fron
     # angular wedge (approved sheet): tall at the back, the top slopes down to a hard brow edge that
     # overhangs a steep flat front face; cheeks narrow toward the upper jaw. Same size as before.
     (-0.03, 0.400, 0.412, -0.470, 0.500, 6.0),     # upper jaw
-    (0.08, 0.416, 0.428, -0.480, 0.505, 6.5),
-    (0.18, 0.430, 0.442, -0.488, 0.508, 6.5),      # cheeks widen toward the brow
-    (0.26, 0.438, 0.450, -0.495, 0.506, 6.5),
-    (0.31, 0.442, 0.454, -0.530, 0.502, 6.0),      # brow edge, widest, overhanging the sockets
-    (0.345, 0.430, 0.441, -0.440, 0.494, 5.5),     # top face begins, sloping back
-    (0.40, 0.410, 0.420, -0.240, 0.478, 5.0),
-    (0.45, 0.376, 0.385, -0.040, 0.450, 4.5),
-    (0.49, 0.322, 0.330, 0.100, 0.400, 4.0),
-    (0.515, 0.250, 0.256, 0.180, 0.330, 3.5),      # crown, toward the back
+    (0.08, 0.408, 0.419, -0.480, 0.505, 6.5),
+    (0.18, 0.413, 0.424, -0.488, 0.508, 6.5),      # cheeks widen toward the brow
+    (0.26, 0.420, 0.432, -0.495, 0.506, 6.5),
+    (0.31, 0.424, 0.436, -0.530, 0.502, 6.0),      # brow edge, widest, overhanging the sockets
+    (0.345, 0.413, 0.423, -0.440, 0.494, 5.5),     # top face begins, sloping back
+    (0.40, 0.394, 0.403, -0.240, 0.478, 5.0),
+    (0.45, 0.365, 0.373, -0.040, 0.450, 4.5),
+    (0.49, 0.316, 0.323, 0.100, 0.400, 4.0),
+    (0.515, 0.245, 0.251, 0.180, 0.330, 3.5),      # crown, toward the back
 ]
 
 SKULL_DAMAGE = {   # fewer, larger, cohesive sections
@@ -108,8 +108,8 @@ def build_skull(col, rust):
     SC.flatten(S, _m((0.0, -0.486, 0.12)), _m((0.40, 0.08, 0.15)), (0.0, -1.0, 0.03), 0.95)
     SC.flatten(S, _m((0.0, -0.10, 0.452)), _m((0.36, 0.44, 0.08)), (0.03, -0.30, 1.0), 0.85)
     for sx in (-1, 1):
-        SC.flatten(S, _m((sx * 0.430, -0.28, 0.08)), _m((0.06, 0.24, 0.15)), (sx * 1.0, -0.22, -0.20), 0.85)
-        SC.flatten(S, _m((sx * 0.440, 0.10, 0.36)), _m((0.06, 0.30, 0.08)), (sx * 1.0, 0.0, 0.55), 0.7)
+        SC.flatten(S, _m((sx * 0.414, -0.28, 0.08)), _m((0.06, 0.24, 0.15)), (sx * 1.0, -0.22, -0.20), 0.85)
+        SC.flatten(S, _m((sx * 0.423, 0.10, 0.36)), _m((0.06, 0.30, 0.08)), (sx * 1.0, 0.0, 0.55), 0.7)
     SC.push(S, _m((0.0, -0.51, 0.305)), _m((0.40, 0.04, 0.03)), 0.008)              # brow ridge
     # controlled asymmetry: a chunk broken off the left brow corner, two old dents, slight warp
     SC.flatten(S, _m((0.40, -0.48, 0.33)), _m((0.08, 0.08, 0.06)), (0.6, -0.6, 0.55), 1.0)

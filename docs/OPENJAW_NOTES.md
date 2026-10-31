@@ -120,7 +120,7 @@ were changed. Comparison sheets: `model/renders_v3/_v3_vs_*.png`.
 
 | Object | Change |
 |---|---|
-| `Cranium` | Rebuilt as an angular wedge after the sheet: the top slopes down from the crown to a hard brow edge that overhangs deep square sockets; steep flat front face; cheek planes narrowing into the upper jaw (flat planar trims instead of a rounded loft). Fewer, larger surface plates and damage sections (upper-left fracture, torn mouth corner as a gash along the mouth line, right side, back, a brow chip); controlled asymmetry (a broken left brow corner, two dents) instead of noise. Same size and position: 0.543 × 0.617 × 0.323 m vs 0.536 × 0.603 × 0.333 m, gum line unchanged; the extra 1.4 cm of depth is the brow's projection. The three existing crown spikes were moved to the sheet's knobs (no additions). |
+| `Cranium` | Rebuilt as an angular wedge after the sheet: the top slopes down from the crown to a hard brow edge that overhangs deep square sockets; steep flat front face; cheek planes narrowing into the upper jaw (flat planar trims instead of a rounded loft). Fewer, larger surface plates and damage sections (upper-left fracture, torn mouth corner as a gash along the mouth line, right side, back, a brow chip); controlled asymmetry (a broken left brow corner, two dents) instead of noise. Not enlarged: 0.524 × 0.617 × 0.323 m vs 0.536 × 0.603 × 0.333 m before (a first version came out 4% wider across the eyes in the front-view measurement and was narrowed back), gum line unchanged; the extra 1.4 cm of depth is the brow's projection. The three existing crown spikes were moved to the sheet's knobs (no additions). |
 | `Teeth_Upper`, `Teeth_Lower` | Rebuilt as thick, fluted tusks (ridge-and-groove sections, wide roots tapering to points) that curl into the mouth, in an explicit irregular layout instead of generated rows: long tusks, medium crooked ones, short snapped teeth and stumps, uneven spacing, widths and tilts (lower teeth now also lean sideways). 21 upper / 22 lower, all rooted on the existing gum lines; no inner row; jaw opening unchanged. |
 | `Mouth_Corner_Tissue` | Adds inner tissue walls inside the side tooth rows, from the hinge to behind the front teeth, so the forced-open mouth reads as red flesh in profile instead of showing the background through it; the torn outer cheek membranes are kept. |
 | Surface (all shell parts) | The rust-flake pass now makes larger, flatter plates (8.5 cm cells instead of 5.5 cm), damage stays inside its zones (no extra coverage), chips only on a few convex edges, half as many lifted plates; torn edges keep their jaggedness. |
@@ -146,7 +146,7 @@ bvenv/bin/python scripts/measure_jaw_profile.py model/out_there_monster_openjaw.
 | Lower teeth reach, median / longest | ~0.44 / ~0.60 | 0.22 / 0.51 | 0.41 / 0.64 |
 | Teeth (upper / lower) | — | 19 / 16 | 21 / 22 |
 | Jaw opening angle / chin drop | (unchanged by request) | 72° / 0.714 m | 72° / 0.716 m |
-| Skull width × depth × height above the gum line | (not enlarged) | 0.536 × 0.603 × 0.333 m | 0.543 × 0.617 × 0.323 m |
+| Skull width × depth × height above the gum line | (not enlarged) | 0.536 × 0.603 × 0.333 m | 0.524 × 0.617 × 0.323 m |
 | Gum line position | (unchanged) | (0, −1.160, 2.480) | (0, −1.160, 2.480) |
 
 Tooth reach is measured from the geometry: the vertical distance from the gum line to each tooth
