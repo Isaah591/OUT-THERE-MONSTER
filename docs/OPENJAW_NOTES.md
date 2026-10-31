@@ -106,3 +106,50 @@ See the comparison sheets in `model/renders_openjaw/_oj_vs_*.png`. Known gaps af
 - The sheet's skull is chunkier and rockier in close-up; the model's skull reads smoother.
 - The sheet's landmarks are read by eye on a zoomed grid (about ±5% on the side-profile ratios).
 - Not Roblox-ready yet (1.42 M triangles; needs decimation, UVs and baking after approval).
+
+---
+
+# Approved sheet pass ("MORE OPEN JAW VERSION — SLIGHTLY LONGER TEETH ONLY")
+
+Primary target: `references/r08_open_jaw_sheet_v2.webp`. The model before this pass is
+checkpointed in `checkpoints/openjaw-v2/` (.blend, renders, scripts). Body proportions, pose,
+head position and the jaw opening were kept; only the head, the teeth and the surface/materials
+were changed. Comparison sheets: `model/renders_v3/_v3_vs_*.png`.
+
+## What was changed (actual Blender objects)
+
+| Object | Change |
+|---|---|
+| `Cranium` | Rebuilt as an angular wedge after the sheet: the top slopes down from the crown to a hard brow edge that overhangs deep square sockets; steep flat front face; cheek planes narrowing into the upper jaw (flat planar trims instead of a rounded loft). Fewer, larger surface plates and damage sections (upper-left fracture, torn mouth corner as a gash along the mouth line, right side, back, a brow chip); controlled asymmetry (a broken left brow corner, two dents) instead of noise. Same size and position: 0.543 × 0.617 × 0.323 m vs 0.536 × 0.603 × 0.333 m, gum line unchanged; the extra 1.4 cm of depth is the brow's projection. The three existing crown spikes were moved to the sheet's knobs (no additions). |
+| `Teeth_Upper`, `Teeth_Lower` | Rebuilt as thick, fluted tusks (ridge-and-groove sections, wide roots tapering to points) that curl into the mouth, in an explicit irregular layout instead of generated rows: long tusks, medium crooked ones, short snapped teeth and stumps, uneven spacing, widths and tilts (lower teeth now also lean sideways). 21 upper / 22 lower, all rooted on the existing gum lines; no inner row; jaw opening unchanged. |
+| `Mouth_Corner_Tissue` | Adds inner tissue walls inside the side tooth rows, from the hinge to behind the front teeth, so the forced-open mouth reads as red flesh in profile instead of showing the background through it; the torn outer cheek membranes are kept. |
+| Surface (all shell parts) | The rust-flake pass now makes larger, flatter plates (8.5 cm cells instead of 5.5 cm), damage stays inside its zones (no extra coverage), chips only on a few convex edges, half as many lifted plates; torn edges keep their jaggedness. |
+| Materials | `M_OJ_Rust`: darker, saturated reddish-brown with thin orange crackle along the plate edges, localized oxidation and dark corrosion patches, low specular (the previous dark rust read pale grey under the studio lights), per-plate roughness variation, matte exposed layers; exposed layers and tissue are dark red and kept clear of crevice grime. `M_OJ_Teeth`: dirty yellowed bone with dark streaks along each tusk, root grime, decay and old blood. Gums and mouth tissue: wet, darker red. Rods: less metallic sheen. |
+
+## Verification (measured)
+
+```bash
+bvenv/bin/python scripts/measure_teeth_reach.py model/out_there_monster_openjaw.blend
+```
+
+```bash
+bvenv/bin/python scripts/measure_head_size.py model/out_there_monster_openjaw.blend
+```
+
+```bash
+bvenv/bin/python scripts/measure_jaw_profile.py model/out_there_monster_openjaw.blend
+```
+
+| | Approved sheet | Before this pass | After |
+|---|---|---|---|
+| Upper teeth reach into the opening (front view), median / longest | ~0.45 / ~0.64 | 0.29 / 0.58 | 0.48 / 0.66 |
+| Lower teeth reach, median / longest | ~0.44 / ~0.60 | 0.22 / 0.51 | 0.41 / 0.64 |
+| Teeth (upper / lower) | — | 19 / 16 | 21 / 22 |
+| Jaw opening angle / chin drop | (unchanged by request) | 72° / 0.714 m | 72° / 0.716 m |
+| Skull width × depth × height above the gum line | (not enlarged) | 0.536 × 0.603 × 0.333 m | 0.543 × 0.617 × 0.323 m |
+| Gum line position | (unchanged) | (0, −1.160, 2.480) | (0, −1.160, 2.480) |
+
+Tooth reach is measured from the geometry: the vertical distance from the gum line to each tooth
+tip (the part buried in the gum excluded), as a fraction of the mouth opening, as seen in the
+front view. The sheet's values were read on a 6× grid of its front view. The pixel-colour tooth
+coverage used in the previous pass undercounts the sheet's half-shaded teeth, so reach is used here.
