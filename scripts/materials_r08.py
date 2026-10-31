@@ -200,9 +200,12 @@ def openjaw_rust(name="M_OJ_Rust"):
     return m
 
 
-def wet_flesh(name, dark=(0.050, 0.005, 0.004), mid=(0.130, 0.014, 0.011), light=(0.240, 0.040, 0.028), rough=0.28):
-    """Wet crimson tissue (gums, cheek walls, tendons, tongue, throat)."""
+def wet_flesh(name, dark=(0.050, 0.005, 0.004), mid=(0.130, 0.014, 0.011), light=(0.240, 0.040, 0.028), rough=0.28,
+              spec=0.5):
+    """Wet crimson tissue (gums, cheek walls, tendons, tongue, throat). `spec` lowers the sheen of
+    tissue deep in the mouth so it reads as a dark cavity instead of reflecting the studio."""
     m, g = _new(name)
+    g.val(g.bsdf, "Specular IOR Level", spec)
     pos = _pos(g)
     n = g.noise(18.0, 6.0, 0.62, coord=pos)
     col = g.ramp(n.outputs["Fac"], [(0.32, dark), (0.55, mid), (0.75, light)])
