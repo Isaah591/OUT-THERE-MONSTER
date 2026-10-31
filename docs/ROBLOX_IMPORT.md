@@ -22,6 +22,14 @@ keeps the hinge separately animatable.
 > sharp fracture edges; check after import that Roblox kept that split (if everything
 > looks faceted or everything looks soft, re-export with `mesh_smooth_type='OFF'`).
 
+> **R08 high-fidelity pass:** `model/out_there_monster_r08.blend` is a dense design model
+> (~2.0 M triangles; the Torso alone is ~0.5 M). It is **not** export-ready: after the design is
+> approved, each part needs decimation/retopology to well under Roblox's 20k-triangle MeshPart
+> limit, UVs, and baking of the attribute-driven materials (`layer`, `tear`, `tissue`, `convex`,
+> `cavity`, `blood`, `socket` -> Color / Normal / Roughness / Metalness maps). The part split
+> (Torso, Arm_R_Long, Arm_L_Short, Leg_R, Leg_L, Cranium + Jaw for the hinge, Bars) already
+> matches the MeshPart plan below.
+
 ## Steps
 
 1. **Avatar / 3D Importer:** in Studio use *File → Import 3D* and pick the FBX.

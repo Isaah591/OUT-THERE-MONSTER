@@ -37,6 +37,10 @@ VIEWS = {
     "mouth_profile":  ((12.0, -0.52, 2.22), (0.0, -0.52, 2.22), 1.25, None, (1200, 1000)),
     "mouth_34":       ((1.50, -2.80, 2.55), (0.0, -0.50, 2.30), None, 55, (1200, 1000)),
     "wound_shoulder": ((-1.75, -1.55, 2.95), (-0.62, -0.25, 2.22), None, 55, (1200, 1000)),
+    # geometry close-ups matching the R08 sheet's detail panels
+    "torso_close":    ((1.25, -1.55, 2.70), (0.40, -0.12, 2.22), None, 50, (1200, 1000)),
+    "head_close":     ((1.00, -2.30, 2.78), (0.02, -0.52, 2.42), None, 62, (1200, 1000)),
+    "arm_close":      ((-1.95, -1.75, 1.05), (-0.98, -0.45, 1.05), None, 45, (1000, 1100)),
     "wound_back":     ((-1.3, 2.4, 2.9), (-0.25, 0.10, 1.95), None, 50, (1200, 1000)),
 }
 
@@ -58,7 +62,7 @@ def ensure_studio():
     ground = bpy.data.objects.new("Ground", me)
     m = bpy.data.materials.new("M_Studio_Ground")
     dark = os.environ.get("STUDIO") == "dark"     # R08-sheet style presentation backdrop
-    g = 0.045 if dark else 0.30
+    g = 0.018 if dark else 0.30
     m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (g, g, g, 1)
     m.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.9
     me.materials.append(m)
