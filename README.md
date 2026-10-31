@@ -19,6 +19,21 @@ is editable and the model rebuilds in ~35 s.
 
 What changed in this pass and why: `docs/R08_GAP_ANALYSIS.md`.
 
+### Proportions (R08 sheet, overall height 2.8 m, vs the sculpted model, measured)
+
+Depth positions as in R08's side panel, relative to the flat torso back at y = +0.30 m
+(monster faces −Y). Widths are 1st–99th-percentile extents, so lifted plates don't count.
+
+| | R08 sheet | Reconstruction |
+|---|---|---|
+| Overall height | 2.8 m | 2.84 m |
+| Skull width | ~0.57 m | 0.55–0.58 m |
+| Head front … back (side view) | −0.69 … −0.07 m | −0.67 … −0.04 m |
+| Skull above the upper gum line | ~0.33 m | 0.36 m |
+| Torso width | ~0.95 m | 0.92–0.96 m |
+| Short arm ends at | ~0.75 m | 0.74 m |
+| Lower jaw | almost closed | **forced open 66° and dislocated; chin 0.53 m below the gum line** |
+
 ## Layout
 
 | Path | Contents |
@@ -118,8 +133,10 @@ runs. `M_R08_Bar`: scaly dark rust with orange blooms and bare worn steel on the
 
 ## Size
 
-~2.0 M triangles, about 39 MB as a compressed .blend (per-object counts are printed by
-`build_r08.py`). This is a dense, sculpt-resolution design model, not a game mesh.
+1.56 M triangles, 28.5 MB as a compressed .blend. Torso 364k, long arm 263k, jaw 198k,
+legs 168k / 160k, short arm 168k, cranium 160k, bars 53k + crown bracket 17k; teeth, gums,
+tissue, tongue, throat, hinges and eyes under 6k together (printed by `build_r08.py`). This is
+a dense, sculpt-resolution design model, not a game mesh.
 
 ## Known limitations
 

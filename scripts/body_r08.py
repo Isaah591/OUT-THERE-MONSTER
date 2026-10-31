@@ -190,7 +190,7 @@ def _base(ob, voxel=0.011):
     return S
 
 
-def _knife(S, ob, faces, seed, jitter=0.014):
+def _knife(S, ob, faces, seed, jitter=0.019):
     """Large knife facets (low-poly sculpt) re-densified for the damage pass."""
     S.write()
     SC.lowpoly(ob, faces, jitter=jitter, seed=seed, dissolve_deg=4.0, levels=4)
@@ -218,7 +218,7 @@ def build_torso(col, mat):
     SC.push(S, (0.0, -0.05, 1.08), (0.40, 0.30, 0.05), -0.010)               # hem rolls under
     SC.warp(S, 0.012, 1.4, 11)
     SC.dents(S, 9, (0.05, 0.11), (0.006, 0.016), 12)
-    S = _knife(S, ob, 800, 13)
+    S = _knife(S, ob, 560, 13)
     return _finish_part(S, ob, "Torso", np.array([0.0, 0.0, 1.0]), seed=15)
 
 
@@ -244,7 +244,7 @@ def build_long_arm(col, mat):
     SC.push(S, (-0.88, -0.86, 0.14), (0.20, 0.10, 0.10), 0.010)            # blunt club front
     SC.warp(S, 0.012, 1.6, 22)
     SC.dents(S, 10, (0.04, 0.09), (0.006, 0.016), 23)
-    S = _knife(S, ob, 560, 24)
+    S = _knife(S, ob, 400, 24)
     axis = SC.path_axes(S.co, C, T)
     return _finish_part(S, ob, "Arm_R_Long", axis, seed=26)
 
@@ -259,7 +259,7 @@ def build_short_arm(col, mat):
     SC.push(S, (0.70, -0.24, 1.20), (0.08, 0.05, 0.20), -0.008)
     SC.warp(S, 0.011, 1.7, 32)
     SC.dents(S, 7, (0.04, 0.08), (0.006, 0.014), 33)
-    S = _knife(S, ob, 360, 34)
+    S = _knife(S, ob, 260, 34)
     axis = SC.path_axes(S.co, C, T)
     return _finish_part(S, ob, "Arm_L_Short", axis, seed=36)
 
@@ -284,7 +284,7 @@ def build_leg(col, mat, name, seed):
     SC.warp(S, 0.010, 1.8, seed)
     SC.dents(S, 6, (0.04, 0.08), (0.005, 0.012), seed + 1)
     S.co[:, 2] = np.maximum(S.co[:, 2], 0.0)
-    S = _knife(S, ob, 340, seed + 2)
+    S = _knife(S, ob, 250, seed + 2)
     S.co[:, 2] = np.maximum(S.co[:, 2], 0.0)                               # flat sole
     axis = SC.path_axes(S.co, C, T)
     return _finish_part(S, ob, name, axis, seed=seed + 4)

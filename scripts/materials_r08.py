@@ -43,8 +43,11 @@ def r08_rust(name="M_R08_Rust"):
 
     # --- outer rust shell: granular, stone-like, multi-scale -----------------------------
     mott = g.noise(2.4, 7.0, 0.62, coord=pos)
-    shell = g.ramp(mott.outputs["Fac"], [(0.30, (0.020, 0.009, 0.005)), (0.46, (0.052, 0.021, 0.009)),
-                                         (0.60, (0.100, 0.040, 0.016)), (0.76, (0.150, 0.060, 0.023))])
+    shell = g.ramp(mott.outputs["Fac"], [(0.36, (0.018, 0.008, 0.005)), (0.48, (0.050, 0.020, 0.009)),
+                                         (0.58, (0.100, 0.040, 0.016)), (0.70, (0.155, 0.062, 0.024))])
+    mott2 = g.noise(9.0, 5.0, 0.6, coord=pos)                                            # finer mottling
+    shell = g.mix(g.math('MULTIPLY', g.maprange(mott2.outputs["Fac"], 0.50, 0.66), 0.55), shell,
+                  (0.030, 0.013, 0.008))
     oxid = g.maprange(g.noise(0.55, 2.0, 0.5, coord=pos).outputs["Fac"], 0.47, 0.66)      # orange zones
     shell = g.mix(g.math('MULTIPLY', oxid, 0.5), shell, (0.235, 0.085, 0.022))
     brown = g.maprange(g.noise(0.9, 2.0, 0.5, coord=pos).outputs["Fac"], 0.52, 0.70)      # dull brown zones

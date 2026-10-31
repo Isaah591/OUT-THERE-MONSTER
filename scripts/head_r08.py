@@ -67,26 +67,28 @@ def ledge(S, z0, amp, out, seed, front=None, gap=0.0):
 # Skull
 # ---------------------------------------------------------------------------
 SKULL_ROWS = [  # z, +x half-width, -x half-width (monster's right, swollen), front, back, exponent
-    (-0.03, 0.446, 0.462, 0.468, 0.495, 3.0),
-    (0.06, 0.468, 0.486, 0.480, 0.505, 3.3),      # cheeks widest
-    (0.16, 0.466, 0.482, 0.482, 0.508, 3.4),
-    (0.27, 0.447, 0.461, 0.478, 0.500, 3.3),
-    (0.37, 0.423, 0.436, 0.466, 0.482, 3.0),
-    (0.45, 0.388, 0.400, 0.440, 0.450, 2.7),      # rounded, narrower crown
-    (0.51, 0.334, 0.345, 0.396, 0.392, 2.5),
-    (0.545, 0.248, 0.256, 0.300, 0.290, 2.3),
+    # sized so the finished skull (ledges and facets included) stays at R08's ~0.58 m width and
+    # ~0.33 m above the gum line - the head is not enlarged
+    (-0.03, 0.418, 0.432, 0.468, 0.495, 3.0),
+    (0.06, 0.432, 0.448, 0.480, 0.505, 3.3),      # cheeks widest
+    (0.16, 0.430, 0.445, 0.482, 0.508, 3.4),
+    (0.26, 0.417, 0.429, 0.478, 0.500, 3.3),
+    (0.35, 0.394, 0.405, 0.466, 0.482, 3.0),
+    (0.42, 0.362, 0.372, 0.440, 0.450, 2.7),      # rounded, narrower crown
+    (0.465, 0.312, 0.320, 0.396, 0.392, 2.5),
+    (0.49, 0.232, 0.238, 0.300, 0.290, 2.3),
 ]
 
 SKULL_DAMAGE = {
-    "peel": [((0.36, -0.14, 0.50), (0.24, 0.26, 0.16), 1.0),      # big fracture, upper left
+    "peel": [((0.34, -0.14, 0.45), (0.24, 0.26, 0.16), 1.0),      # big fracture, upper left
              ((0.47, -0.05, 0.30), (0.10, 0.22, 0.18), 0.95),
              ((0.46, -0.30, 0.20), (0.08, 0.12, 0.12), 0.85),
              ((0.46, -0.30, 0.06), (0.07, 0.12, 0.09), 1.0),      # torn mouth corner (left)
              ((-0.46, 0.20, 0.30), (0.10, 0.18, 0.15), 0.8),      # right side
              ((0.08, 0.51, 0.36), (0.20, 0.08, 0.13), 0.8),       # back
-             ((-0.20, 0.28, 0.54), (0.15, 0.15, 0.06), 0.7),      # top back
+             ((-0.20, 0.28, 0.48), (0.15, 0.15, 0.06), 0.7),      # top back
              ((-0.30, -0.48, 0.31), (0.08, 0.05, 0.05), 0.6)],    # brow chip
-    "wound": [((0.40, -0.12, 0.49), (0.12, 0.14, 0.09), 1.0),
+    "wound": [((0.38, -0.12, 0.44), (0.12, 0.14, 0.09), 1.0),
               ((0.47, -0.10, 0.32), (0.05, 0.10, 0.08), 1.0),
               ((0.47, -0.28, 0.05), (0.05, 0.08, 0.06), 1.0)],
 }
@@ -95,7 +97,7 @@ SKULL_DAMAGE = {
 def build_skull(col, rust):
     keys = [{"p": (0.0, 0.0, z), "ws": ws, "wn": wn, "df": df, "db": db, "e": e}
             for z, ws, wn, df, db, e in SKULL_ROWS]
-    bm = SC.loft(keys, ref=(0, -1, 0), seg=48, step=0.02, caps=(0.03, 0.06))
+    bm = SC.loft(keys, ref=(0, -1, 0), seg=48, step=0.02, caps=(0.03, 0.05))
     sk = SC.obj_from_bm("Cranium", bm, col, [rust])
     SC.remesh(sk, 0.011)
     S = SC.Surf(sk, U)
@@ -110,9 +112,9 @@ def build_skull(col, rust):
     SC.dents(S, 6, (0.025, 0.05), (0.003, 0.008), 62)
     # irregular, broken strata: a wavy crown ledge that dies out in places, and the brow
     # overhanging the sockets on the face only (no continuous bands - not a drum)
-    ledge(S, 0.385 * U, 0.05 * U, 0.020, 63, gap=0.25)                  # thick, chipped crown cap
-    ledge(S, 0.275 * U, 0.018 * U, 0.013, 64, front=-0.20 * U, gap=0.0)
-    S = _knife_head(S, sk, 330, 65, 0.0085)
+    ledge(S, 0.345 * U, 0.045 * U, 0.018, 63, gap=0.25)                 # thick, chipped crown cap
+    ledge(S, 0.27 * U, 0.016 * U, 0.012, 64, front=-0.20 * U, gap=0.0)
+    S = _knife_head(S, sk, 260, 65, 0.0085)
     _sockets(S)
     _palate(S)
     SC.damage(S, _zones(SKULL_DAMAGE["peel"]), _zones(SKULL_DAMAGE["wound"]),
@@ -474,7 +476,7 @@ def crown_bracket(col, mat, sk):
     me.vertices.foreach_get("co", co)
     co = co.reshape(-1, 3)
     pts = []
-    for hint in ((0.06, -0.26, 0.6), (0.08, 0.22, 0.6)):
+    for hint in ((0.06, -0.26, 0.55), (0.08, 0.22, 0.55)):
         i = int(np.argmin(((co - np.array(hint, np.float32)) ** 2).sum(1)))
         pts.append(Vector(co[i]))
     a, b = pts

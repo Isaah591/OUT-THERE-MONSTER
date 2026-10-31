@@ -23,7 +23,7 @@ keeps the hinge separately animatable.
 > looks faceted or everything looks soft, re-export with `mesh_smooth_type='OFF'`).
 
 > **R08 high-fidelity pass:** `model/out_there_monster_r08.blend` is a dense design model
-> (~2.0 M triangles; the Torso alone is ~0.5 M). It is **not** export-ready: after the design is
+> (1.56 M triangles; the Torso alone is ~0.36 M). It is **not** export-ready: after the design is
 > approved, each part needs decimation/retopology to well under Roblox's 20k-triangle MeshPart
 > limit, UVs, and baking of the attribute-driven materials (`layer`, `tear`, `tissue`, `convex`,
 > `cavity`, `blood`, `socket` -> Color / Normal / Roughness / Metalness maps). The part split

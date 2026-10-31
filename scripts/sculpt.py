@@ -562,8 +562,8 @@ def _z(x):
     return (x - x.mean()) / (x.std() + 1e-9)
 
 
-def damage(S, peel_zones, wound_zones, axis, seed, t1=0.020, t2=0.013, tissue=0.020,
-           cover=0.0, jag=1.0, lips=0.010, fibre_dir=None, w=None, extra=None, tear_amt=1.0,
+def damage(S, peel_zones, wound_zones, axis, seed, t1=0.024, t2=0.013, tissue=0.020,
+           cover=0.0, jag=1.0, lips=0.006, fibre_dir=None, w=None, extra=None, tear_amt=1.0,
            n_flaps=0):
     """Bark-like peel of the rust shell inside `peel_zones` (two stepped strata with torn
     sawtooth edges and partly curled lips) and shallow fibrous tissue inside `wound_zones`.
@@ -574,7 +574,7 @@ def damage(S, peel_zones, wound_zones, axis, seed, t1=0.020, t2=0.013, tissue=0.
     if a.ndim == 1:
         a = np.broadcast_to(a, S.co.shape)
     P1, P2, P3, P4 = Perlin(seed), Perlin(seed + 1), Perlin(seed + 2), Perlin(seed + 3)
-    cells = Cells(S.co.min(0), S.co.max(0), 0.05, seed + 4)
+    cells = Cells(S.co.min(0), S.co.max(0), 0.065, seed + 4)
     tree = cKDTree(S.co)                                          # zone centres sit on the surface
     snapz = lambda zs: [(S.co[tree.query(np.asarray(c, float))[1]], r_, st) for c, r_, st in zs]
     zp0 = zone_field(S.co, snapz(peel_zones))
@@ -588,9 +588,9 @@ def damage(S, peel_zones, wound_zones, axis, seed, t1=0.020, t2=0.013, tissue=0.
     def f1(co):
         q = stretch(co, 2.4)
         chunk = 2 * cells.val[cells.query(co)[2]] - 1               # angular chippy patches
-        v = (2.7 * zp0 - 1.35 + cover + 0.55 * _z(fbm(P1, q * 6.5, 4)) + 0.25 * chunk
-             + 0.30 * jag * _z(P2(stretch(co, 3.5) * 30.0))          # splinters along the limb
-             + 0.12 * jag * _z(P2(q * 70.0 + 5.3)))                  # torn-paper sawtooth
+        v = (2.7 * zp0 - 1.35 + cover + 0.45 * _z(fbm(P1, q * 5.5, 3)) + 0.32 * chunk
+             + 0.22 * jag * _z(P2(stretch(co, 3.5) * 20.0))          # splinters along the limb
+             + 0.06 * jag * _z(P2(q * 55.0 + 5.3)))                  # torn-paper sawtooth
         if extra is not None:
             v = v + extra
         if w is not None:
@@ -623,7 +623,7 @@ def damage(S, peel_zones, wound_zones, axis, seed, t1=0.020, t2=0.013, tissue=0.
     # distance (approx.) outside the torn edge -> curled lips and the light torn fringe
     g1 = S.grad_mag(s1)
     dist = np.where(s1 <= 0, -s1 / g1, 0.0)
-    rim = np.clip(1 - dist / 0.026, 0, 1) ** 0.6 * (s1 <= 0)            # lifted plate edges
+    rim = np.clip(1 - dist / 0.018, 0, 1) ** 0.6 * (s1 <= 0)            # lifted plate edges
     gv = unit(S.grad_vec(s1))
     hang = np.clip(-gv[:, 2], 0, 1)                                      # plate above a hole hangs over it
     lipmask = smoothstep(-0.3, 0.9, _z(fbm(P4, stretch(S.co, 2.4) * 5.0, 2)))
