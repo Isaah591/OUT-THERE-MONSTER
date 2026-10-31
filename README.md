@@ -13,7 +13,8 @@ is editable and the model rebuilds in ~35 s.
 | Stage | State | Where |
 |---|---|---|
 | Blockout, proportion passes, detail v1–v3, R08 forms v1 | superseded, kept | `checkpoints/` |
-| **R08 high-fidelity sculpt + broken-open jaw** | **for review** | `model/out_there_monster_r08.blend`, `model/renders_r08hd/` |
+| R08 high-fidelity sculpt + broken-open jaw | superseded by the open-jaw sheet, kept | `model/out_there_monster_r08.blend`, `model/renders_r08hd/`, `checkpoints/r08-hd-v1/` |
+| **ASTRA R08 – MORE OPEN JAW (current target)** | **for review** | `model/out_there_monster_openjaw.blend`, `model/renders_openjaw/`, `docs/OPENJAW_NOTES.md` |
 | Baked textures + optimised FBX for Roblox | not run (held until the design is approved) | `scripts/bake_export.py`, `docs/ROBLOX_IMPORT.md` |
 | Rigging / animation | not started | |
 
@@ -39,7 +40,9 @@ Depth positions as in R08's side panel, relative to the flat torso back at y = +
 | Path | Contents |
 |---|---|
 | `references/` | Original Roblox screenshots, R08 reference sheet and R08 detail panels |
-| `scripts/build_r08.py` | **Current build** — materials, body, head, clearance check, stats, save |
+| `scripts/build_openjaw.py` | **Current build** (open-jaw sheet) — `body_openjaw.py`, `head_openjaw.py`, flake mosaic, saves `model/out_there_monster_openjaw.blend` |
+| `scripts/openjaw_compare.py` | Side-by-side sheets against `references/r08_open_jaw_sheet.webp` |
+| `scripts/build_r08.py` | R08 high-fidelity build (previous target) — materials, body, head, clearance check, stats, save |
 | `scripts/sculpt.py` | Numpy sculpting toolkit: spline lofts, voxel remesh, brushes, knife facets, layered peels, torn edges, tissue, lifted plates, blood, attributes |
 | `scripts/body_r08.py` | Torso, arms, legs/feet and bars; R08 damage map |
 | `scripts/head_r08.py` | Skull, broken-open jaw, dislocated hinge, mouth tissue, gums, teeth, eyes, crown bracket |
@@ -61,6 +64,20 @@ environment cannot reach download.blender.org. Cycles CPU works; EEVEE/Workbench
 ```bash
 python3.11 -m venv bvenv && bvenv/bin/pip install bpy pillow "scipy<1.14"
 ```
+
+```bash
+bvenv/bin/python scripts/build_openjaw.py
+```
+
+```bash
+STUDIO=dark SAMPLES=24 bvenv/bin/python scripts/render_views.py model/out_there_monster_openjaw.blend model/renders_openjaw oj_front oj_34 oj_side oj_head oj_mouth_side oj_arm oj_torso
+```
+
+```bash
+bvenv/bin/python scripts/openjaw_compare.py model/renders_openjaw references
+```
+
+Previous R08 build:
 
 ```bash
 bvenv/bin/python scripts/build_r08.py

@@ -136,3 +136,76 @@ def r08_bar(name="M_R08_Bar"):
     g.link(g.maprange(wear, 0.0, 1.0, 0.82, 0.38), g.bsdf.inputs["Roughness"])
     g.link(g.bump(g.noise(60.0, 4.0, 0.6, coord=pos).outputs["Fac"], 0.4, 0.002), g.bsdf.inputs["Normal"])
     return m
+
+
+# ---------------------------------------------------------------------------
+# ASTRA R08 - MORE OPEN JAW sheet: flake mosaic, dark red exposed tissue, wet crimson mouth
+# ---------------------------------------------------------------------------
+def openjaw_rust(name="M_OJ_Rust"):
+    """Rust flake mosaic: per-plate tint (`flake`), dark cracks (`crack`), torn orange edges,
+    dark red dried-meat under-layers and wet crimson tissue; same geometry-driven grime/wear."""
+    m, g = _new(name)
+    pos = _pos(g)
+    layer, tissue, tear = _attr(g, "layer"), _attr(g, "tissue"), _attr(g, "tear")
+    convex, cavity, blood = _attr(g, "convex"), _attr(g, "cavity"), _attr(g, "blood")
+    flake, crack = _attr(g, "flake"), _attr(g, "crack")
+
+    mott = g.noise(3.0, 7.0, 0.62, coord=pos)
+    shell = g.ramp(mott.outputs["Fac"], [(0.36, (0.022, 0.008, 0.004)), (0.50, (0.060, 0.021, 0.008)),
+                                         (0.62, (0.112, 0.039, 0.013)), (0.74, (0.165, 0.058, 0.018))])
+    plate = g.ramp(flake, [(0.0, (0.024, 0.010, 0.006)), (0.35, (0.070, 0.025, 0.009)),
+                           (0.70, (0.135, 0.046, 0.015)), (1.0, (0.200, 0.070, 0.020))])
+    shell = g.mix(0.45, shell, plate, 'MULTIPLY')
+    shell = g.mix(0.5, shell, plate)
+    blot = g.maprange(g.noise(2.2, 3.0, 0.55, coord=pos).outputs["Fac"], 0.52, 0.68)
+    shell = g.mix(g.math('MULTIPLY', blot, 0.55), shell, (0.020, 0.009, 0.006))          # dark corrosion
+    speck = g.maprange(g.noise(140.0, 2.0, 0.5, coord=pos).outputs["Fac"], 0.57, 0.66)
+    shell = g.mix(g.math('MULTIPLY', speck, 0.8), shell, (0.012, 0.006, 0.004))
+    shell = g.mix(g.math('MULTIPLY', convex, 0.55), shell, (0.34, 0.15, 0.050))         # sunlit plate edges
+    shell = g.mix(g.math('MULTIPLY', crack, 0.45), shell, (0.022, 0.009, 0.005))        # cracks between flakes
+
+    meat = g.ramp(g.noise(24.0, 5.0, 0.62, coord=_stretched(g, pos, 1.0, 1.0, 0.25)).outputs["Fac"],
+                  [(0.30, (0.060, 0.008, 0.006)), (0.55, (0.160, 0.022, 0.014)), (0.75, (0.280, 0.045, 0.025))])
+    deep = (0.020, 0.004, 0.003)
+    under = g.mix(g.maprange(layer, 0.6, 0.95), meat, deep)
+    col = g.mix(g.maprange(layer, 0.2, 0.3), shell, under)
+    fringe = g.ramp(g.noise(60.0, 3.0, 0.6, coord=pos).outputs["Fac"],
+                    [(0.35, (0.20, 0.080, 0.025)), (0.65, (0.38, 0.170, 0.060))])
+    col = g.mix(g.math('MULTIPLY', tear, 0.8), col, fringe)
+    fib = g.noise(26.0, 6.0, 0.65, coord=_stretched(g, pos, 1.0, 1.0, 0.18))
+    wet = g.ramp(fib.outputs["Fac"], [(0.30, (0.050, 0.004, 0.004)), (0.55, (0.170, 0.016, 0.012)),
+                                      (0.78, (0.320, 0.050, 0.030))])
+    col = g.mix(tissue, col, wet)
+    col = g.mix(g.math('MULTIPLY', blood, 0.85), col, (0.030, 0.004, 0.003))
+    occ = _occlusion(g)
+    grime = g.math('MAXIMUM', g.math('MULTIPLY', cavity, 0.7), g.math('MULTIPLY', occ, 0.85))
+    col = g.mix(grime, col, (0.008, 0.004, 0.003))
+    col = g.mix(_attr(g, "socket"), col, (0.004, 0.002, 0.002))
+    g.link(col, g.bsdf.inputs["Base Color"])
+
+    rough = g.maprange(mott.outputs["Fac"], 0.3, 0.8, 0.78, 0.94)
+    rough = g.math('SUBTRACT', rough, g.math('MULTIPLY', convex, 0.12))
+    rough = g.math('ADD', g.math('MULTIPLY', rough, g.math('SUBTRACT', 1.0, tissue)),
+                   g.math('MULTIPLY', tissue, 0.52))
+    rough = g.math('SUBTRACT', rough, g.math('MULTIPLY', blood, 0.25))
+    g.link(rough, g.bsdf.inputs["Roughness"])
+    grain = g.noise(85.0, 4.0, 0.6, coord=pos)
+    h = g.math('ADD', grain.outputs["Fac"], g.math('MULTIPLY', crack, -1.5))
+    h = g.math('ADD', h, g.math('MULTIPLY', tissue, g.math('MULTIPLY', fib.outputs["Fac"], 2.0)))
+    g.link(g.bump(h, 0.25, 0.0025), g.bsdf.inputs["Normal"])
+    return m
+
+
+def wet_flesh(name, dark=(0.050, 0.005, 0.004), mid=(0.130, 0.014, 0.011), light=(0.240, 0.040, 0.028), rough=0.28):
+    """Wet crimson tissue (gums, cheek walls, tendons, tongue, throat)."""
+    m, g = _new(name)
+    pos = _pos(g)
+    n = g.noise(18.0, 6.0, 0.62, coord=pos)
+    col = g.ramp(n.outputs["Fac"], [(0.32, dark), (0.55, mid), (0.75, light)])
+    rot = g.maprange(g.noise(5.0, 3.0, 0.55, coord=pos).outputs["Fac"], 0.56, 0.68)
+    col = g.mix(g.math('MULTIPLY', rot, 0.7), col, (0.014, 0.003, 0.003))
+    col = g.mix(_occlusion(g, 0.04), col, (0.008, 0.001, 0.001))
+    g.link(col, g.bsdf.inputs["Base Color"])
+    g.link(g.maprange(n.outputs["Fac"], 0.3, 0.8, rough, rough + 0.2), g.bsdf.inputs["Roughness"])
+    g.link(g.bump(n.outputs["Fac"], 0.35, 0.004), g.bsdf.inputs["Normal"])
+    return m

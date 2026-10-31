@@ -279,7 +279,7 @@ def decimate(ob, ratio):
     apply_mods(ob)
 
 
-def lowpoly(ob, target_faces, jitter=0.008, seed=0, dissolve_deg=5.0, levels=4):
+def lowpoly(ob, target_faces, jitter=0.008, seed=0, dissolve_deg=5.0, levels=4, remesh_after=None):
     """Knife-cut facets the way a low-poly sculpt is made: decimate the shaped form down to
     large facets, jitter the vertices so neighbouring planes meet at clear angles, dissolve
     near-coplanar triangles into irregular polygons, then re-densify with SIMPLE subdivision
@@ -307,6 +307,8 @@ def lowpoly(ob, target_faces, jitter=0.008, seed=0, dissolve_deg=5.0, levels=4):
     m.subdivision_type = 'SIMPLE'
     m.levels = m.render_levels = levels
     apply_mods(ob)
+    if remesh_after:                                  # even resolution for the flake mosaic
+        remesh(ob, remesh_after)
 
 
 def set_attr(me, name, vals, domain='POINT'):
@@ -562,9 +564,37 @@ def _z(x):
     return (x - x.mean()) / (x.std() + 1e-9)
 
 
+def flakes(S, cell=0.055, crack=0.005, depth=0.0045, lift=0.0025, tilt=0.06, seed=0, w=None):
+    """Rust flake mosaic: jagged (domain-warped) Voronoi plates with dark cracks between them;
+    each plate is lifted or sunk and tilted a little, so the shell reads as layered flakes.
+    Returns a per-vertex plate value in [-1, 1] so peels can follow the flake outlines."""
+    P = Perlin(seed)
+    warp = np.stack([fbm(P, S.co * 11.0 + o, 2) for o in (0.0, 13.1, 27.7)], 1) * cell * 0.30
+    q = S.co + warp
+    cells = Cells(S.co.min(0), S.co.max(0), cell, seed + 1)
+    d, i = cells.tree.query(q, k=2)
+    edge = d[:, 1] - d[:, 0]                                     # ~0 on a plate border
+    idx = i[:, 0]
+    crackm = smoothstep(crack, 0.0, edge)
+    nrm = S.normals()
+    r = np.random.default_rng(seed + 2)
+    m = len(cells.pts)
+    off = r.uniform(-1, 1, m) * lift
+    tdir = unit(r.normal(size=(m, 3)))
+    tl = ((q - cells.pts[idx]) * tdir[idx]).sum(1) * tilt
+    disp = off[idx] + tl - depth * crackm
+    if w is not None:
+        disp = disp * w
+        crackm = crackm * w
+    S.co += disp[:, None] * nrm
+    S.a["crack"] = np.maximum(S.a.get("crack", np.zeros(S.n)), crackm)
+    S.a["flake"] = cells.val[idx]
+    return 2 * cells.val[idx] - 1
+
+
 def damage(S, peel_zones, wound_zones, axis, seed, t1=0.024, t2=0.013, tissue=0.020,
            cover=0.0, jag=1.0, lips=0.006, fibre_dir=None, w=None, extra=None, tear_amt=1.0,
-           n_flaps=0):
+           n_flaps=0, chunk=None):
     """Bark-like peel of the rust shell inside `peel_zones` (two stepped strata with torn
     sawtooth edges and partly curled lips) and shallow fibrous tissue inside `wound_zones`.
     `axis` is the part's long axis (features stretch along it); `cover` biases coverage;
@@ -587,8 +617,8 @@ def damage(S, peel_zones, wound_zones, axis, seed, t1=0.024, t2=0.013, tissue=0.
 
     def f1(co):
         q = stretch(co, 2.4)
-        chunk = 2 * cells.val[cells.query(co)[2]] - 1               # angular chippy patches
-        v = (2.7 * zp0 - 1.35 + cover + 0.45 * _z(fbm(P1, q * 5.5, 3)) + 0.32 * chunk
+        ch = chunk if chunk is not None else 2 * cells.val[cells.query(co)[2]] - 1   # whole flakes / chips
+        v = (2.7 * zp0 - 1.35 + cover + 0.45 * _z(fbm(P1, q * 5.5, 3)) + (0.55 if chunk is not None else 0.32) * ch
              + 0.22 * jag * _z(P2(stretch(co, 3.5) * 20.0))          # splinters along the limb
              + 0.06 * jag * _z(P2(q * 55.0 + 5.3)))                  # torn-paper sawtooth
         if extra is not None:
