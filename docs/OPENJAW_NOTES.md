@@ -68,8 +68,8 @@ bvenv/bin/python scripts/measure_jaw_profile.py model/out_there_monster_openjaw.
 | Long-forearm thickness / torso width (front) | 0.43 | 0.45 | 0.45 |
 | Long-forearm thickness / skull width (front) | 0.61 | 0.63 | 0.63 |
 | Mouth opening / skull height (front) | 2.1 | 2.13 | 2.0 |
-| Teeth covering the mouth opening (front) | 26% | 49% | 25% |
-| Very dark central cavity (front) | 54% | 33% | 50% |
+| Teeth covering the mouth opening (front) | 26% | 49% | 24% |
+| Very dark central cavity (front) | 54% | 33% | 56% |
 | Lower-jaw length / upper-jaw length (side) | ~1.1 | 1.52 | 1.22 |
 | Opening angle between the jaws (side) | ~70–72° | 57° | 72° |
 | Chin drop / skull height (side) | ~2.0 | 2.55 | 2.28 |
@@ -77,7 +77,9 @@ bvenv/bin/python scripts/measure_jaw_profile.py model/out_there_monster_openjaw.
 
 The first build's numbers showed the proportions and the slim long arm were right but the jaw
 profile and the teeth were not (fangs wider than their spacing, sealing half the opening; jaw too
-long and too shallow, chin under the snout). Those were fixed and re-measured.
+long and too shallow, chin under the snout). Those were fixed and re-measured. With the steeper
+jaw the tongue faced the camera and its wet sheen read as a grey sheet in the open mouth (found
+with a colour-coded diagnostic render); tongue and throat are now near-black and matte.
 
 In absolute terms (final model): skull 0.53 m wide, long arm 0.30–0.32 m thick and 2.66 m long
 with its blunt end on the ground 1.5 m ahead, short arm 0.28 m, legs 0.30 m, overall height 2.86 m
