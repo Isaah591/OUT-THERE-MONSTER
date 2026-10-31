@@ -28,7 +28,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HEAD_SCALE = 0.60                           # compact skull, ~0.55 m wide (sheet: ~0.7 x torso width)
 HEAD_POS = Vector((0.0, -1.16, 2.48))       # centre of the upper gum line, low and thrust ahead
 HEAD_ROT = (math.radians(-4.0), math.radians(-2.0), math.radians(-2.0))
-JAW_OPEN_DEG = 57.0                         # long lower jaw broken far open about its rear hinge
+JAW_OPEN_DEG = 72.0                         # lower jaw broken open ~72 deg about its rear hinge (sheet profile)
 JAW_BROKEN_ROLL_DEG = 5.0                   # sideways sag of the broken right hinge
 
 
@@ -90,8 +90,8 @@ def build(out):
     M["rust"], M["bar"] = MR.openjaw_rust(), MR.r08_bar()
     M["gum"] = MR.wet_flesh("M_OJ_Gum", (0.020, 0.003, 0.003), (0.050, 0.007, 0.006), (0.095, 0.016, 0.012), 0.45)
     M["flesh"] = MR.wet_flesh("M_OJ_Flesh", (0.010, 0.002, 0.002), (0.032, 0.005, 0.004), (0.065, 0.011, 0.009), 0.55)
-    M["tongue"] = MR.wet_flesh("M_OJ_Tongue", (0.025, 0.003, 0.003), (0.070, 0.010, 0.008), (0.130, 0.024, 0.018), 0.5)
-    M["throat"] = MR.wet_flesh("M_OJ_Throat", (0.010, 0.001, 0.001), (0.035, 0.004, 0.003), (0.070, 0.010, 0.008), 0.3)
+    M["tongue"] = MR.wet_flesh("M_OJ_Tongue", (0.008, 0.001, 0.001), (0.024, 0.004, 0.003), (0.050, 0.008, 0.006), 0.55)
+    M["throat"] = MR.wet_flesh("M_OJ_Throat", (0.003, 0.001, 0.001), (0.010, 0.002, 0.002), (0.022, 0.004, 0.003), 0.5)
     parts = B.build_body(C["Body"], M["rust"], M["bar"])
     C["Body"].objects.unlink(parts["Bars"])
     C["Hardware"].objects.link(parts["Bars"])

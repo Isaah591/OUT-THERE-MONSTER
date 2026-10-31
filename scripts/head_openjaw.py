@@ -28,7 +28,7 @@ import sculpt as SC
 rng = random.Random(77)
 U = 0.633                                   # metres per head unit (set by build_head)
 HW, HD = 0.92, 0.98
-JAW_LEN, JAW_W = 1.35, 0.82
+JAW_LEN, JAW_W = 1.02, 0.82
 HINGE = Vector((0.0, 0.40, -0.02))          # at the rear of the skull (the head is thrust ahead)
 DISLOCATE = Vector((0.0, 0.010, -0.030))    # condyles torn out of their sockets
 EYES = [(-0.225, 0.185, 1.10), (0.215, 0.175, 1.00)]    # x, z, size
@@ -176,20 +176,20 @@ def _chips(S, seed):
 # ---------------------------------------------------------------------------
 # Jaw
 # ---------------------------------------------------------------------------
-JAW_ROWS = [  # y, half-width, up, down, exponent - long heavy jaw, thickest at the chin
+JAW_ROWS = [  # y, half-width, up, down, exponent - heavy jaw, thickest at the chin
     (0.06, 0.380, 0.050, 0.140, 3.0),
-    (-0.12, 0.400, 0.055, 0.195, 3.2),
-    (-0.45, 0.405, 0.055, 0.255, 3.4),
-    (-0.78, 0.390, 0.055, 0.305, 3.4),
-    (-1.06, 0.350, 0.055, 0.325, 3.2),
-    (-1.25, 0.270, 0.055, 0.300, 3.0),        # narrower, heavy chin (V-shaped jaw from the front)
+    (-0.09, 0.400, 0.055, 0.195, 3.2),
+    (-0.34, 0.405, 0.055, 0.255, 3.4),
+    (-0.59, 0.390, 0.055, 0.305, 3.4),
+    (-0.80, 0.350, 0.055, 0.325, 3.2),
+    (-0.945, 0.270, 0.055, 0.300, 3.0),       # narrower, heavy chin (V-shaped jaw from the front)
 ]
 JAW_DAMAGE = {
-    "peel": [((-0.41, -0.14, -0.10), (0.08, 0.24, 0.14), 1.0),    # broken right side near the hinge
-             ((0.10, -1.33, -0.22), (0.14, 0.06, 0.12), 0.85),    # chipped chin
-             ((0.0, -0.70, -0.33), (0.20, 0.30, 0.06), 0.7),      # underside
-             ((0.41, -0.62, -0.12), (0.07, 0.22, 0.10), 0.8),
-             ((-0.40, -0.90, -0.15), (0.07, 0.18, 0.10), 0.75)],
+    "peel": [((-0.41, -0.11, -0.10), (0.08, 0.18, 0.14), 1.0),    # broken right side near the hinge
+             ((0.10, -1.00, -0.22), (0.14, 0.06, 0.12), 0.85),    # chipped chin
+             ((0.0, -0.53, -0.33), (0.20, 0.23, 0.06), 0.7),      # underside
+             ((0.41, -0.47, -0.12), (0.07, 0.17, 0.10), 0.8),
+             ((-0.40, -0.68, -0.15), (0.07, 0.14, 0.10), 0.75)],
     "wound": [((-0.44, -0.08, -0.08), (0.05, 0.08, 0.08), 1.0)],
 }
 
@@ -243,13 +243,14 @@ def _trough(S):
     """Carve the mouth floor between the gum rims (crisp rim, snapped)."""
     nrm = S.normals()
     top = nrm[:, 2] > 0.35
-    g = (np.abs(S.co[:, 0]) / (0.28 * U)) ** 4 + (np.abs(S.co[:, 1] + 0.66 * U) / (0.70 * U)) ** 4
+    g = (np.abs(S.co[:, 0]) / (0.28 * U)) ** 4 + (np.abs(S.co[:, 1] + 0.44 * U) / (0.46 * U)) ** 4
     f = np.where(top, 1.0 - g, -1.0)
     f = SC.snap_iso(S, f)
     inside = f > 0
     depth = 0.075 * np.clip(f, 0, 1) ** 0.35
     S.co[:, 2] -= depth * inside
     S.a["tissue"] = np.maximum(S.a["tissue"], inside * 1.0)
+    S.a["socket"] = 0.8 * inside                                 # deep in the open mouth: near black
 
 
 def _chips_jaw(S, seed):
@@ -298,7 +299,7 @@ def hinges_and_tissue(M, col, sk, jaw):
         for i in range(cols_n):
             u = i / (cols_n - 1)
             top = Vector((sx * (HW / 2 - 0.06), HINGE.y + 0.03 - u * 0.50, -0.01))
-            bot = jm @ Vector((sx * (JAW_W / 2 - 0.05), 0.03 - u * 0.62, 0.03))
+            bot = jm @ Vector((sx * (JAW_W / 2 - 0.05), 0.03 - u * 0.47, 0.03))
             row = []
             for j in range(rows_n):
                 v = j / (rows_n - 1)
@@ -323,7 +324,7 @@ def hinges_and_tissue(M, col, sk, jaw):
     # taut tendons straining across the wedge (one snapped per side), and strings of tissue
     tb = bmesh.new()
     for sx in (-1, 1):
-        for i, (ty, by) in enumerate(((-0.08, -0.16), (-0.22, -0.38), (-0.36, -0.60), (-0.50, -0.82))):
+        for i, (ty, by) in enumerate(((-0.08, -0.12), (-0.22, -0.29), (-0.36, -0.45), (-0.50, -0.62))):
             top = Vector((sx * (HW / 2 - 0.07), HINGE.y + ty + rng.uniform(-0.02, 0.02), -0.01))
             bot = jm @ Vector((sx * (JAW_W / 2 - 0.07), by + rng.uniform(-0.03, 0.03), 0.04))
             snapped = i == (1 if sx > 0 else 2)
@@ -363,8 +364,8 @@ def mouth_interior(M, col, sk, jaw):
         D.tube(pb, pts, [0.012, 0.02, 0.016, 0.02, 0.012], 0, sides=5, jitter=0.25)
     D.bm_object("Palate", pb, col, [M["gum"]], parent=sk)
     gb = bmesh.new()                                     # rotted tongue lying in the jaw trough
-    pts = [Vector((0.02, -0.16, -0.04)), Vector((0.0, -0.40, -0.055)), Vector((-0.03, -0.64, -0.06)),
-           Vector((0.02, -0.88, -0.05)), Vector((0.05, -1.06, -0.03))]
+    pts = [Vector((0.02, -0.12, -0.06)), Vector((0.0, -0.30, -0.075)), Vector((-0.03, -0.48, -0.08)),
+           Vector((0.02, -0.66, -0.07)), Vector((0.05, -0.80, -0.05))]
     rings = []
     for i, p in enumerate(pts):
         w = (0.15, 0.15, 0.13, 0.11, 0.06)[i]
@@ -401,7 +402,7 @@ def fang_row(bm, layer, slots, down, lean, wild=2):
     down = Vector(down)
     wild_idx = set(rng.sample(range(len(slots)), min(wild, len(slots))))
     for i, (base, outward, L) in enumerate(slots):
-        w = rng.uniform(0.074, 0.115)
+        w = rng.uniform(0.050, 0.078)
         d = w * rng.uniform(0.72, 0.95)
         kind = rng.choices(["fang", "chipped", "snapped", "stump"], [0.62, 0.18, 0.13, 0.07])[0]
         crooked = Vector((rng.uniform(-0.28, 0.28), rng.uniform(-0.18, 0.18), 0))
@@ -422,9 +423,9 @@ def gums_and_teeth(M, col, sk, jaw):
                   [(-side_up, y) for y in (-0.10, 0.28)])
     front_lo = -JAW_LEN + 0.085
     lo_front = lambda x: front_lo + 0.16 * (abs(x) / wall) ** 2              # V-shaped chin
-    lower_path = ([(wall, y) for y in (-0.08, -1.06)] +
+    lower_path = ([(wall, y) for y in (-0.08, -0.80)] +
                   [(x, lo_front(x)) for x in (wall * 0.62, 0.12, 0.0, -0.12, -wall * 0.62)] +
-                  [(-wall, y) for y in (-1.06, -0.08)])
+                  [(-wall, y) for y in (-0.80, -0.08)])
     for name, path, parent, z in (("Gums_Upper", upper_path, sk, -0.025), ("Gums_Lower", lower_path, jaw, 0.06)):
         gb = bmesh.new()
         dense = []
@@ -452,10 +453,10 @@ def gums_and_teeth(M, col, sk, jaw):
         return sl
 
     # upper jaw: a long front row hanging down, a staggered second row behind it, side teeth
-    up = row(-HW / 2 + 0.10, HW / 2 - 0.09, (0.060, 0.090), lambda x: front_up + 0.004, -0.03, (0, -0.35, 0), (0.30, 0.56))
-    up += row(-0.30, 0.30, (0.09, 0.13), lambda x: front_up + 0.08, -0.03, (0, -0.4, 0), (0.20, 0.36))
+    up = row(-HW / 2 + 0.10, HW / 2 - 0.09, (0.080, 0.110), lambda x: front_up + 0.004, -0.03, (0, -0.35, 0), (0.30, 0.56))
+    up += row(-0.24, 0.24, (0.15, 0.21), lambda x: front_up + 0.08, -0.03, (0, -0.4, 0), (0.16, 0.30))
     for sx in (-1, 1):
-        for y in (-0.28, -0.16, -0.04, 0.08, 0.20):
+        for y in (-0.26, -0.10, 0.06, 0.20):
             up.append((Vector((sx * side_up, y + rng.uniform(-0.015, 0.015), -0.03)), (sx, 0, 0), rng.uniform(0.16, 0.32)))
     bm, layer = D.new_tooth_bm()
     fang_row(bm, layer, up, down=(0, 0, -1), lean=(0, 0.10, 0), wild=1)
@@ -463,13 +464,13 @@ def gums_and_teeth(M, col, sk, jaw):
 
     # lower jaw: teeth aimed up into the opening once the jaw is forced open (lean back in
     # jaw space), long front row, staggered second row, side teeth
-    lo = row(-wall * 0.66, wall * 0.66, (0.058, 0.085), lo_front, 0.065, (0, -0.5, 0), (0.28, 0.50))
-    lo += row(-wall * 0.5, wall * 0.5, (0.09, 0.13), lambda x: lo_front(x) + 0.08, 0.065, (0, -0.3, 0), (0.18, 0.32))
+    lo = row(-wall * 0.66, wall * 0.66, (0.078, 0.108), lo_front, 0.065, (0, -0.5, 0), (0.28, 0.50))
+    lo += row(-wall * 0.45, wall * 0.45, (0.15, 0.21), lambda x: lo_front(x) + 0.08, 0.065, (0, -0.3, 0), (0.16, 0.28))
     for sx in (-1, 1):
-        for y in (-1.04, -0.88, -0.72, -0.56, -0.40, -0.26):
+        for y in (-0.74, -0.56, -0.38, -0.20):
             lo.append((Vector((sx * wall, y + rng.uniform(-0.015, 0.015), 0.065)), (sx, 0, 0), rng.uniform(0.14, 0.27)))
     bm, layer = D.new_tooth_bm()
-    fang_row(bm, layer, lo, down=(0, 0, 1), lean=(0, 1.15, 0), wild=3)
+    fang_row(bm, layer, lo, down=(0, 0, 1), lean=(0, 0.9, 0), wild=2)
     D.bm_object("Teeth_Lower", bm, col, [M["teeth"]], parent=jaw)
 
 

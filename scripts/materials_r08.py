@@ -188,8 +188,11 @@ def openjaw_rust(name="M_OJ_Rust"):
     rough = g.math('ADD', g.math('MULTIPLY', rough, g.math('SUBTRACT', 1.0, tissue)),
                    g.math('MULTIPLY', tissue, 0.66))
     rough = g.math('SUBTRACT', rough, g.math('MULTIPLY', blood, 0.25))
-    g.link(rough, g.bsdf.inputs["Roughness"])
-    g.link(g.math('SUBTRACT', 0.5, g.math('MULTIPLY', tissue, 0.32)), g.bsdf.inputs["Specular IOR Level"])
+    socket = _attr(g, "socket")                                   # eye sockets, deep mouth floor: matte
+    g.link(g.math('ADD', rough, g.math('MULTIPLY', socket, 0.4), clamp=True), g.bsdf.inputs["Roughness"])
+    spec = g.math('SUBTRACT', 0.5, g.math('MULTIPLY', tissue, 0.32))
+    g.link(g.math('MULTIPLY', spec, g.math('SUBTRACT', 1.0, g.math('MULTIPLY', socket, 0.95))),
+           g.bsdf.inputs["Specular IOR Level"])
     grain = g.noise(85.0, 4.0, 0.6, coord=pos)
     h = g.math('ADD', grain.outputs["Fac"], g.math('MULTIPLY', crack, -1.5))
     h = g.math('ADD', h, g.math('MULTIPLY', tissue, g.math('MULTIPLY', fib.outputs["Fac"], 1.0)))
