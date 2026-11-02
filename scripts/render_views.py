@@ -54,6 +54,13 @@ VIEWS = {
     "oj_face":        ((-0.01, -12.0, 2.42), (-0.01, 0.0, 2.42), 0.95, None, (1000, 1150)),
     # the face as seen in the sheet's three-quarter panel (same direction as oj_34, framed on the head)
     "oj_face34":      ((2.30, -5.80, 2.10), (-0.02, -1.15, 2.28), None, 135, (1000, 1260)),
+    # the approved sheet's three-quarter camera, fitted to its silhouette with fit_camera.py:
+    # ref34 = fitted on the head, shoulders and upper torso (IoU 0.81), the view used to compare the
+    # face; ref34_body = fitted on the whole figure (IoU 0.67; the painting's legs and long arm are
+    # posed differently, which pulls that fit ~11 deg further round). Same location, lens and lens
+    # shift as the reference panel, at twice its resolution.
+    "ref34":          ((1.6734, -4.74, 2.1633), (-0.15, -0.55, 1.45), None, 46.27, (1016, 990), (0.0478, 0.0149)),
+    "ref34_body":     ((3.9392, -6.4692, 2.3411), (-0.15, -0.55, 1.45), None, 80.88, (1016, 990), (0.0254, 0.0314)),
     "arm_close":      ((-1.95, -1.75, 1.05), (-0.98, -0.45, 1.05), None, 45, (1000, 1100)),
     "wound_back":     ((-1.3, 2.4, 2.9), (-0.25, 0.10, 1.95), None, 50, (1200, 1000)),
 }
@@ -104,7 +111,7 @@ def ensure_studio():
     return col
 
 
-def camera(name, col, loc, target, ortho, lens):
+def camera(name, col, loc, target, ortho, lens, shift=(0.0, 0.0)):
     if name in bpy.data.objects:
         bpy.data.objects.remove(bpy.data.objects[name])
     cd = bpy.data.cameras.new(name)
@@ -112,6 +119,9 @@ def camera(name, col, loc, target, ortho, lens):
         cd.type, cd.ortho_scale = 'ORTHO', ortho
     else:
         cd.lens = lens
+        cd.sensor_fit = 'HORIZONTAL'
+        cd.sensor_width = 36.0
+    cd.shift_x, cd.shift_y = shift
     ob = bpy.data.objects.new(name, cd)
     ob.location = loc
     look_at(ob, target)
@@ -135,8 +145,9 @@ def main():
     sc.view_settings.view_transform = 'AgX'
     sc.view_settings.look = 'AgX - Base Contrast'
     for n in names:
-        loc, tgt, ortho, lens, res = VIEWS[n]
-        cam = camera("CAM_" + n, col, loc, tgt, ortho, lens)
+        loc, tgt, ortho, lens, res = VIEWS[n][:5]
+        shift = VIEWS[n][5] if len(VIEWS[n]) > 5 else (0.0, 0.0)
+        cam = camera("CAM_" + n, col, loc, tgt, ortho, lens, shift)
         sc.camera = cam
         sc.render.resolution_x, sc.render.resolution_y = res
         sc.render.filepath = os.path.join(out, n + ".png")

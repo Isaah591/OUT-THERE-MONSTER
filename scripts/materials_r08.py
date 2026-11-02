@@ -258,3 +258,106 @@ def wet_flesh(name, dark=(0.050, 0.005, 0.004), mid=(0.130, 0.014, 0.011), light
     g.link(g.maprange(n.outputs["Fac"], 0.3, 0.8, rough, rough + 0.2), g.bsdf.inputs["Roughness"])
     g.link(g.bump(n.outputs["Fac"], 0.35, 0.004), g.bsdf.inputs["Normal"])
     return m
+
+
+# ---------------------------------------------------------------------------
+# v5 variation: continuous corroded shell, aged ivory fangs, dim eyes
+# ---------------------------------------------------------------------------
+def v5_rust(name="M_V5_Rust"):
+    """Continuous weathered rust (same brown palette as M_OJ_Rust): little per-plate tint, thin
+    dark cracks (`crack`), dark rust pits (`pit`), localized oxidation and corrosion patches,
+    worn edges; dark-red exposed layers and tissue in the (shallow) torn regions."""
+    m, g = _new(name)
+    pos = _pos(g)
+    layer, tissue, tear = _attr(g, "layer"), _attr(g, "tissue"), _attr(g, "tear")
+    convex, cavity, blood = _attr(g, "convex"), _attr(g, "cavity"), _attr(g, "blood")
+    flake, crack, socket, pit = _attr(g, "flake"), _attr(g, "crack"), _attr(g, "socket"), _attr(g, "pit")
+
+    mott = g.noise(3.0, 7.0, 0.62, coord=pos)
+    shell = g.ramp(mott.outputs["Fac"], [(0.34, (0.022, 0.0085, 0.004)), (0.50, (0.052, 0.019, 0.007)),
+                                         (0.64, (0.088, 0.032, 0.010)), (0.78, (0.125, 0.046, 0.014))])
+    plate = g.ramp(flake, [(0.0, (0.040, 0.014, 0.005)), (1.0, (0.100, 0.036, 0.011))])
+    shell = g.mix(0.22, shell, plate)                                                     # faint, not tiled
+    blot = g.maprange(g.noise(1.6, 3.0, 0.55, coord=pos).outputs["Fac"], 0.50, 0.68)
+    shell = g.mix(g.math('MULTIPLY', blot, 0.7), shell, (0.014, 0.006, 0.003))          # corrosion patches
+    ox = g.maprange(g.noise(0.9, 2.0, 0.5, coord=pos).outputs["Fac"], 0.56, 0.70)
+    shell = g.mix(g.math('MULTIPLY', ox, 0.35), shell, (0.200, 0.068, 0.016))          # localized oxidation
+    speck = g.maprange(g.noise(140.0, 2.0, 0.5, coord=pos).outputs["Fac"], 0.57, 0.66)
+    shell = g.mix(g.math('MULTIPLY', speck, 0.65), shell, (0.010, 0.005, 0.003))       # fine pitting
+    shell = g.mix(g.math('MULTIPLY', convex, 0.30), shell, (0.230, 0.090, 0.028))      # worn edges
+    shell = g.mix(g.math('MULTIPLY', crack, 0.75), shell, (0.010, 0.004, 0.003))       # thin dark cracks
+    shell = g.mix(g.math('MULTIPLY', pit, 0.85), shell, (0.006, 0.003, 0.002))         # rust pits
+
+    meat = g.ramp(g.noise(24.0, 5.0, 0.62, coord=_stretched(g, pos, 1.0, 1.0, 0.25)).outputs["Fac"],
+                  [(0.30, (0.040, 0.006, 0.004)), (0.55, (0.085, 0.013, 0.008)), (0.75, (0.130, 0.024, 0.013))])
+    under = g.mix(g.maprange(layer, 0.6, 0.95), meat, (0.030, 0.005, 0.004))
+    col = g.mix(g.maprange(layer, 0.2, 0.3), shell, under)
+    fringe = g.ramp(g.noise(60.0, 3.0, 0.6, coord=pos).outputs["Fac"],
+                    [(0.35, (0.10, 0.038, 0.013)), (0.65, (0.18, 0.070, 0.024))])
+    col = g.mix(g.math('MULTIPLY', tear, 0.5), col, fringe)
+    fib = g.noise(26.0, 6.0, 0.65, coord=_stretched(g, pos, 1.0, 1.0, 0.18))
+    wet = g.ramp(fib.outputs["Fac"], [(0.30, (0.030, 0.003, 0.003)), (0.55, (0.090, 0.009, 0.008)),
+                                      (0.78, (0.160, 0.022, 0.017))])
+    col = g.mix(tissue, col, wet)
+    col = g.mix(g.math('MULTIPLY', blood, 0.8), col, (0.026, 0.004, 0.003))
+    occ = _occlusion(g)
+    grime = g.math('MAXIMUM', g.math('MULTIPLY', cavity, 0.7), g.math('MULTIPLY', occ, 0.85))
+    exposed = g.math('MAXIMUM', g.maprange(layer, 0.2, 0.3), tissue)
+    grime = g.math('MULTIPLY', grime, g.math('SUBTRACT', 1.0, g.math('MULTIPLY', exposed, 0.7)))
+    col = g.mix(grime, col, (0.007, 0.003, 0.002))
+    col = g.mix(socket, col, (0.002, 0.001, 0.001))                                       # black voids
+    g.link(col, g.bsdf.inputs["Base Color"])
+
+    rough = g.math('ADD', g.maprange(mott.outputs["Fac"], 0.3, 0.8, 0.70, 0.92), g.maprange(flake, 0.0, 1.0, -0.04, 0.04))
+    rough = g.math('SUBTRACT', rough, g.math('MULTIPLY', convex, 0.10))
+    rough = g.math('ADD', rough, g.math('MULTIPLY', g.maprange(layer, 0.2, 0.3), 0.12))
+    rough = g.math('ADD', g.math('MULTIPLY', rough, g.math('SUBTRACT', 1.0, tissue)), g.math('MULTIPLY', tissue, 0.55))
+    rough = g.math('SUBTRACT', rough, g.math('MULTIPLY', blood, 0.2))
+    g.link(g.math('ADD', rough, g.math('MULTIPLY', socket, 0.4), clamp=True), g.bsdf.inputs["Roughness"])
+    spec = g.math('SUBTRACT', 0.24, g.math('MULTIPLY', g.math('MAXIMUM', g.maprange(layer, 0.2, 0.3), tissue), 0.12))
+    g.link(g.math('MULTIPLY', spec, g.math('SUBTRACT', 1.0, g.math('MULTIPLY', socket, 0.97))),
+           g.bsdf.inputs["Specular IOR Level"])
+    grain = g.noise(85.0, 4.0, 0.6, coord=pos)
+    h = g.math('ADD', grain.outputs["Fac"], g.math('MULTIPLY', crack, -0.8))
+    h = g.math('ADD', h, g.math('MULTIPLY', g.maprange(g.noise(140.0, 2.0, 0.5, coord=pos).outputs["Fac"], 0.57, 0.66), -0.6))
+    h = g.math('ADD', h, g.math('MULTIPLY', tissue, g.math('MULTIPLY', fib.outputs["Fac"], 1.0)))
+    g.link(g.bump(h, 0.25, 0.0025), g.bsdf.inputs["Normal"])
+    return m
+
+
+def v5_teeth(name="M_V5_Teeth"):
+    """Aged ivory / yellow fangs: warm yellowed bone, faint lengthwise streaks, darker roots,
+    a little decay; no bright white, little blood."""
+    m, g = _new(name)
+    pos = _pos(g)
+    a = g.attr("tooth")
+    t = g.n("ShaderNodeSeparateColor")
+    g.link(a.outputs["Color"], t.inputs[0])
+    tpos, tblood, tdecay = t.outputs[0], t.outputs[1], t.outputs[2]
+    tint = a.outputs["Alpha"]
+    n = g.noise(14.0, 5.0, 0.6, coord=pos).outputs["Fac"]
+    col = g.ramp(n, [(0.30, (0.24, 0.150, 0.045)), (0.60, (0.36, 0.250, 0.080)), (0.85, (0.47, 0.340, 0.120))])
+    col = g.mix(g.math('MULTIPLY', tint, 0.5), col, (0.28, 0.170, 0.045))                # per-tooth yellowing
+    flute = g.noise(22.0, 3.0, 0.5, coord=_stretched(g, pos, 1.0, 1.0, 0.08))
+    col = g.mix(g.maprange(flute.outputs["Fac"], 0.48, 0.64, 0.0, 0.65), col, (0.10, 0.062, 0.022))  # streaks
+    root = g.maprange(tpos, 0.30, 0.0)
+    col = g.mix(g.math('MULTIPLY', root, 0.8), col, (0.075, 0.042, 0.016))
+    dec = g.math('MULTIPLY', tdecay, g.maprange(g.noise(9.0, 4.0, coord=pos).outputs["Fac"], 0.52, 0.64), clamp=True)
+    col = g.mix(g.math('MULTIPLY', dec, 0.6), col, (0.05, 0.03, 0.012))
+    bl = g.maprange(g.math('SUBTRACT', g.math('MULTIPLY', tblood, 0.6), tpos), -0.05, 0.08)
+    col = g.mix(g.math('MULTIPLY', bl, 0.6), col, (0.05, 0.006, 0.004))
+    col = g.mix(g.math('MULTIPLY', _occlusion(g, 0.05), 0.7), col, (0.04, 0.025, 0.010))
+    g.link(col, g.bsdf.inputs["Base Color"])
+    g.link(g.maprange(n, 0.3, 0.8, 0.45, 0.65), g.bsdf.inputs["Roughness"])
+    g.val(g.bsdf, "Specular IOR Level", 0.35)
+    g.link(g.bump(flute.outputs["Fac"], 0.15, 0.002), g.bsdf.inputs["Normal"])
+    return m
+
+
+def v5_eye(name="M_V5_Eye"):
+    """Tiny dim red pupil glowing far inside the socket."""
+    m, g = _new(name)
+    g.val(g.bsdf, "Base Color", (0.02, 0.0, 0.0, 1.0))
+    g.val(g.bsdf, "Emission Color", (1.0, 0.04, 0.02, 1.0))
+    g.val(g.bsdf, "Emission Strength", 1.6)
+    return m
