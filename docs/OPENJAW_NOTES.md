@@ -219,3 +219,17 @@ model's face read symmetrical and neat. Only the head was reshaped; the previous
 | Skull / torso width (front) | 0.70 | 0.72 | 0.71 |
 | Long forearm / torso width (front) | 0.43 | 0.44 | 0.45 |
 | Torso width in the front render | — | 239 px | 238 px |
+
+## Remaining differences after the face pass (honest)
+
+From `model/renders_face/_face_vs_*.png`:
+
+- **Crown.** The sheet's crown is domed with layered plates; the model's is narrower and ridged
+  but still flatter on top.
+- **Teeth.** The model's teeth now vary strongly and leave dark gaps, but they are slimmer than the
+  sheet's thick conical tusks, which pack more densely in the three-quarter close-up.
+- **Mouth corners.** The wet gum swellings still catch the light as small glossy beads; the sheet's
+  corner tissue reads as one wet mass.
+- **Wound colour.** The enlarged body wounds read as a brighter red than the sheet's darker red tears.
+- **Presentation.** The sheet uses moody, high-contrast lighting; the comparisons use the same
+  neutral studio for every view, so differences shown are geometry and material, not lighting.
