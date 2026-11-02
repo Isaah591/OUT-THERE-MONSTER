@@ -50,6 +50,10 @@ VIEWS = {
     "oj_torso":       ((1.75, -1.60, 2.45), (0.30, -0.15, 1.95), None, 42, (1100, 1000)),
     "oj_teeth":       ((0.40, -2.35, 1.95), (0.0, -1.20, 2.20), None, 55, (1000, 1030)),
     "oj_surface":     ((0.02, -12.0, 1.80), (0.02, 0.0, 1.80), 1.05, None, (1100, 980)),
+    # the face, front orthographic (same direction as oj_front, framed on the head)
+    "oj_face":        ((-0.01, -12.0, 2.42), (-0.01, 0.0, 2.42), 0.95, None, (1000, 1150)),
+    # the face as seen in the sheet's three-quarter panel (same direction as oj_34, framed on the head)
+    "oj_face34":      ((2.30, -5.80, 2.10), (-0.02, -1.15, 2.28), None, 135, (1000, 1260)),
     "arm_close":      ((-1.95, -1.75, 1.05), (-0.98, -0.45, 1.05), None, 45, (1000, 1100)),
     "wound_back":     ((-1.3, 2.4, 2.9), (-0.25, 0.10, 1.95), None, 50, (1200, 1000)),
 }

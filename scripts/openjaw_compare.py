@@ -1,7 +1,7 @@
 """
 Side-by-side sheets against the ASTRA R08 - MORE OPEN JAW sheet (same panel framing).
 
-    python openjaw_compare.py <renders_dir> <references_dir> [v1|v2]
+    python openjaw_compare.py <renders_dir> <references_dir> [v1|v2|face]
 """
 import os
 import sys
@@ -28,6 +28,16 @@ if VERSION == "v1":      # ASTRA R08 - MORE OPEN JAW (first sheet)
              ("mouth", "oj_mouth_side", "MOUTH, SIDE PROFILE", "_oj_vs_mouth.png"),
              ("arm", "oj_arm", "LONG ARM", "_oj_vs_arm.png"),
              ("torso", "oj_torso", "TORSO / WOUNDS", "_oj_vs_torso.png")]
+elif VERSION == "face":  # face pass: matched front view and face close-ups against the approved sheet
+    SHEET = Image.open(os.path.join(refs, "r08_open_jaw_sheet_v2.webp")).convert("RGB")
+    PANELS = {
+        "front": (0, 55, 490, 550), "face": (200, 60, 330, 220), "head": (0, 590, 437, 910),
+        "face34": (630, 85, 820, 325),
+    }
+    PAIRS = [("front", "oj_front", "FRONT (ORTHO)", "_face_vs_front.png"),
+             ("face", "oj_face", "FACE, FRONT", "_face_vs_face_front.png"),
+             ("head", "oj_head", "FACE, THREE-QUARTER CLOSE-UP", "_face_vs_face_34.png"),
+             ("face34", "oj_face34", "FACE, THREE-QUARTER (BODY VIEW)", "_face_vs_face_34_body.png")]
 else:                    # approved sheet: MORE OPEN JAW VERSION (SLIGHTLY LONGER TEETH ONLY)
     SHEET = Image.open(os.path.join(refs, "r08_open_jaw_sheet_v2.webp")).convert("RGB")
     PANELS = {

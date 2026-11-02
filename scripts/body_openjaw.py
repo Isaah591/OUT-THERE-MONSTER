@@ -171,9 +171,11 @@ def _sculpt(S, ob, name, axis, seed, faces, jitter=0.016):
     if callable(axis):
         axis = axis(S.co)
     # larger, flatter plates (cohesive shell); damage concentrated in the zones, cleaner torn edges
-    chunk = SC.flakes(S, cell=0.085, crack=0.003, depth=0.003, lift=0.0035, tilt=0.07, seed=seed + 1)
+    chunk = SC.flakes(S, cell=0.12, crack=0.003, depth=0.004, lift=0.0045, tilt=0.08, seed=seed + 1)
     d = DAMAGE[name]
-    SC.damage(S, d["peel"], d["wound"], axis, seed=seed + 2, n_flaps=FLAPS.get(name, 5), chunk=chunk,
+    grow = lambda zs, k: [(c, tuple(np.asarray(r) * k), st) for c, r, st in zs]   # larger, cohesive regions
+    SC.damage(S, grow(d["peel"], 1.15), grow(d["wound"], 1.25), axis, seed=seed + 2, n_flaps=FLAPS.get(name, 5),
+              chunk=chunk,
               t1=0.022, t2=0.012, tissue=0.018, lips=0.003, cover=0.05, jag=0.9)
     k = S.blur(S.curvature(), 2)
     cv = SC.smoothstep(6.0, 28.0, k)

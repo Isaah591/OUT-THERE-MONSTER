@@ -154,18 +154,18 @@ def openjaw_rust(name="M_OJ_Rust"):
     flake, crack, socket = _attr(g, "flake"), _attr(g, "crack"), _attr(g, "socket")
 
     mott = g.noise(3.0, 7.0, 0.62, coord=pos)
-    shell = g.ramp(mott.outputs["Fac"], [(0.34, (0.026, 0.007, 0.003)), (0.50, (0.060, 0.016, 0.006)),
-                                         (0.64, (0.100, 0.027, 0.009)), (0.78, (0.142, 0.040, 0.012))])
-    plate = g.ramp(flake, [(0.0, (0.030, 0.008, 0.004)), (0.35, (0.068, 0.018, 0.007)),
-                           (0.70, (0.110, 0.030, 0.010)), (1.0, (0.158, 0.045, 0.013))])
+    shell = g.ramp(mott.outputs["Fac"], [(0.34, (0.020, 0.0075, 0.0035)), (0.50, (0.046, 0.0165, 0.006)),
+                                         (0.64, (0.076, 0.027, 0.009)), (0.78, (0.108, 0.039, 0.012))])
+    plate = g.ramp(flake, [(0.0, (0.024, 0.0085, 0.004)), (0.35, (0.052, 0.018, 0.0065)),
+                           (0.70, (0.084, 0.030, 0.010)), (1.0, (0.118, 0.042, 0.013))])
     shell = g.mix(0.55, shell, plate)
     blot = g.maprange(g.noise(1.6, 3.0, 0.55, coord=pos).outputs["Fac"], 0.50, 0.68)
-    shell = g.mix(g.math('MULTIPLY', blot, 0.6), shell, (0.014, 0.006, 0.004))          # dark corrosion patches
+    shell = g.mix(g.math('MULTIPLY', blot, 0.75), shell, (0.012, 0.005, 0.003))         # dark corrosion patches
     ox = g.maprange(g.noise(0.9, 2.0, 0.5, coord=pos).outputs["Fac"], 0.56, 0.70)
     shell = g.mix(g.math('MULTIPLY', ox, 0.35), shell, (0.200, 0.058, 0.014))          # localized oxidation
     speck = g.maprange(g.noise(140.0, 2.0, 0.5, coord=pos).outputs["Fac"], 0.58, 0.66)
     shell = g.mix(g.math('MULTIPLY', speck, 0.6), shell, (0.010, 0.005, 0.003))
-    shell = g.mix(g.math('MULTIPLY', crack, 0.55), shell, (0.240, 0.085, 0.026))        # thin orange crackle
+    shell = g.mix(g.math('MULTIPLY', crack, 0.40), shell, (0.200, 0.070, 0.022))        # orange crackle on plate edges
     shell = g.mix(g.math('MULTIPLY', convex, 0.30), shell, (0.260, 0.095, 0.030))       # worn plate edges
 
     meat = g.ramp(g.noise(24.0, 5.0, 0.62, coord=_stretched(g, pos, 1.0, 1.0, 0.25)).outputs["Fac"],
@@ -221,10 +221,12 @@ def openjaw_teeth(name="M_OJ_Teeth"):
     tint = a.outputs["Alpha"]
     n = g.noise(14.0, 5.0, 0.6, coord=pos).outputs["Fac"]
     col = g.ramp(n, [(0.30, (0.19, 0.12, 0.045)), (0.60, (0.32, 0.22, 0.085)), (0.85, (0.44, 0.32, 0.13))])
-    col = g.mix(g.math('MULTIPLY', tint, 0.45), col, (0.22, 0.13, 0.04))                # per-tooth yellowing
+    col = g.mix(g.math('MULTIPLY', tint, 0.65), col, (0.15, 0.085, 0.028))              # per-tooth yellowing / browning
     col = g.mix(g.maprange(tpos, 0.6, 1.0, 0.0, 0.25), col, (0.48, 0.37, 0.18))         # slightly paler tips
     flute = g.noise(26.0, 3.0, 0.5, coord=_stretched(g, pos, 1.0, 1.0, 0.08))           # streaks along the tooth
-    col = g.mix(g.maprange(flute.outputs["Fac"], 0.47, 0.62, 0.0, 0.85), col, (0.070, 0.044, 0.018))
+    col = g.mix(g.maprange(flute.outputs["Fac"], 0.45, 0.60, 0.0, 0.9), col, (0.055, 0.032, 0.012))
+    stain = g.maprange(g.noise(5.0, 4.0, 0.6, coord=pos).outputs["Fac"], 0.50, 0.66)              # old brown stains
+    col = g.mix(g.math('MULTIPLY', stain, 0.7), col, (0.075, 0.045, 0.016))
     root = g.maprange(tpos, 0.35, 0.0)
     col = g.mix(g.math('MULTIPLY', root, 0.9), col, (0.050, 0.028, 0.012))
     dec = g.math('MULTIPLY', tdecay, g.maprange(g.noise(9.0, 4.0, coord=pos).outputs["Fac"], 0.48, 0.6), clamp=True)
