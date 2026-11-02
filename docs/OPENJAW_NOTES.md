@@ -177,3 +177,45 @@ From the side-by-side sheets in `model/renders_v3/_v3_vs_*.png`:
   comparisons use the same neutral dark studio for every view, so geometry differences, not
   lighting, are what show.
 - Not Roblox-ready yet (1.42 M triangles); no export until approval.
+
+---
+
+# Face pass (expression)
+
+Target: the approved sheet's face, which reads threatening and irregular where the previous
+model's face read symmetrical and neat. Only the head was reshaped; the previous model is in
+`checkpoints/approved-v3/`. Comparisons: `model/renders_face/_face_vs_*.png`.
+
+## What the front-view comparison showed
+
+| Feature | Approved sheet | Previous model |
+|---|---|---|
+| Brow | slopes down toward the nose (a scowl) and drops into a nasal ridge | one straight horizontal ledge (reads surprised) |
+| Sockets | irregular slanted trapezoids, ~21% of the head width each, set wide apart and low, deep, eyes in shadow | level rectangles, ~27–30% of the head width, close together (read like goggles) |
+| Head outline (front) | shield: narrower ridged crown, widest at the cheeks and mouth corners | a box |
+| Mouth outline | wide at the top, tapering to a V at the chin, teeth lining both sides of the V | a rectangle with a U-shaped bottom |
+| Teeth | mixed long, medium and broken teeth, uneven spacing and lean, dark gaps | long teeth hanging parallel like a curtain |
+
+## What was changed (actual geometry)
+
+| Object | Change |
+|---|---|
+| `Cranium` | Slanted, asymmetric trapezoid sockets (inner top corners lower; the monster's right socket larger and lower), sized and placed from the sheet (~0.19 head units wide, centres ~0.28 from the midline, low on the face), carved ~0.09 deep with the floor deepest under the brow and chipped rims. The horizontal brow ledge was removed; a heavy brow follows each socket's slanted top and meets low over the nose in a V; a nasal ridge runs down to the upper jaw with hollows beside it and cheekbones at the outer corners. Narrower, slightly lower crown with a ridge (shield-shaped from the front). Larger plates with relief, fewer small fragments. |
+| `Eyes` | Deep in the sockets, up under the brow. |
+| `Jaw` | Tapers to a V at the chin (half-width 0.39 → 0.115 head units); the chin reaches as far as before, so the jaw opening (72°) and the vertical opening (chin drop 0.723 m vs 0.716 m) are unchanged. |
+| `Teeth_*` | Hand-placed: strongly varied length, width, spacing and lean; long tusks, medium crooked teeth, snapped teeth, stumps, notches; irregular dark gaps; the lower teeth line both sides of the V and meet at the chin (18 upper, 16 lower). Older, browner, more stained enamel. |
+| `Gums_*`, mouth tissue, tongue, tendons | Follow the V jaw; the upper gum line arches down at the corners; smaller, sparser swellings. |
+| Body surface (no shape change) | Larger plates with relief and subtler crackle; the existing damage regions are larger with more dark-red tissue (no new damage); browner, darker rust. |
+
+## Verification (measured)
+
+| | Sheet | Before this pass | After |
+|---|---|---|---|
+| Skull width × depth × height | (do not enlarge) | 0.524 × 0.617 × 0.323 m | 0.520 × 0.616 × 0.311 m |
+| Gum line (head position) | (unchanged) | (0, −1.160, 2.480) | (0, −1.160, 2.480) |
+| Jaw opening / chin drop | (unchanged) | 72° / 0.716 m | 72° / 0.723 m |
+| Upper teeth reach, median / longest | ~0.45 / ~0.64 | 0.48 / 0.66 | 0.44 / 0.68 |
+| Lower teeth reach, median / longest | ~0.44 / ~0.60 | 0.41 / 0.64 | 0.40 / 0.65 |
+| Skull / torso width (front) | 0.70 | 0.72 | 0.71 |
+| Long forearm / torso width (front) | 0.43 | 0.44 | 0.45 |
+| Torso width in the front render | — | 239 px | 238 px |
