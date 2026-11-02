@@ -1,21 +1,19 @@
 """
-v5 head (corrective variation of head_openjaw.py, which is kept unchanged): after the approved
-sheet's three-quarter view - a unified, rounded, damaged cranium (no stacked plates, bolts or
-protruding fragments; damage embedded as cracks, pits and shallow torn regions), rectangular void
-sockets with tiny dim red pupils far inside, thin, naturally tapered, slightly curved fangs in
-aged ivory, thin dark gums and restrained dark tissue only at the hinges and inner edges.
-The jaw opening, the V-shaped lower jaw and the head's size and position are as in head_openjaw.
+v5 head (corrective variation of head_openjaw.py, which is kept unchanged), matched to the
+approved sheet's three-quarter view: a unified, rounded, damaged cranium (crown over the front
+half, sloping down at the back; flush plates with thin cracks and a slight tilt each, recessed
+edge chips, pits and a few deep holes; no stacked plates, bolts or protruding fragments),
+rectangular void sockets with tiny dim red pupils far inside, naturally tapered conical fangs in
+aged ivory, thin dark-red gums and restrained dark tissue only at the hinges and inner edges.
+Head size and position and the 72 deg jaw opening are as in head_openjaw.
 
 Cranium-local space, head units (1 unit = HEAD_SCALE metres): origin at the centre of the upper
 gum line, front -Y, Z up. The jaw is parented to the cranium and pivots at its own origin.
 
-Skull: compact, asymmetric rounded block (front flatter, crown narrower, back rounded),
-irregular broken strata ledges (crown cap, brow over the sockets), dents and warps, large knife
-facets, deep square sockets with tiny red eyes, a vaulted palate, a big fracture on the upper
-left exposing the rust strata and tissue, structural damage on the back and right side.
-Jaw: heavy U-shaped block with rami and condyles, carved mouth floor, knife facets, the broken
-right side, chipped chin. It hangs from a dislocated hinge: the condyles have slid down out of
-their sockets, so the drop is larger than a clean rotation and torn tissue bridges the gap.
+Jaw: heavy block tapering to a broad U at the chin (sheet front and three-quarter views), carved
+mouth floor, knife facets, the broken right side. It hangs from a hinge about two-thirds of the
+way back under the skull, dislocated downward, so the chin sits under the face (sheet side view:
+chin ~0.5 skull lengths behind the snout) and the opening is tall; it sags a little to its left.
 """
 import math
 import random
@@ -33,13 +31,13 @@ rng = random.Random(77)
 U = 0.633                                   # metres per head unit (set by build_head)
 HW, HD = 0.92, 0.98
 JAW_LEN, JAW_W = 1.02, 0.82
-HINGE = Vector((0.0, 0.40, -0.02))          # at the rear of the skull (the head is thrust ahead)
-DISLOCATE = Vector((0.0, 0.010, -0.030))    # condyles torn out of their sockets
+HINGE = Vector((0.0, 0.18, -0.02))          # ~2/3 back under the skull (sheet side view: chin ~0.5 skull lengths behind the snout)
+DISLOCATE = Vector((0.0, 0.010, -0.115))    # condyles torn out of their sockets: the jaw hangs lower
 # Eye sockets as slanted trapezoids in the face plane (x, z; head units), outer-top, inner-top,
 # inner-bottom, outer-bottom: the top edges slope down toward the nose (a scowl, not a stare), the
 # monster's right socket is larger and sits a little lower; depth into the skull.
 SOCKETS = [([(-0.384, 0.226), (-0.178, 0.204), (-0.182, 0.066), (-0.378, 0.060)], 0.100, 1.10),
-           ([(0.370, 0.232), (0.174, 0.212), (0.178, 0.080), (0.364, 0.076)], 0.095, 1.00)]
+           ([(0.352, 0.232), (0.174, 0.212), (0.178, 0.080), (0.346, 0.076)], 0.095, 1.00)]
 EYES = [(sum(p[0] for p in q) / 4, sum(p[1] for p in q) / 4, k) for q, _, k in SOCKETS]    # x, z, size
 
 
@@ -79,14 +77,14 @@ def ledge(S, z0, amp, out, seed, front=None, gap=0.0):
 SKULL_ROWS = [  # z, +x half-width, -x half-width, front y, back y, exponent - a rounded, domed cranium
     (-0.03, 0.400, 0.412, -0.470, 0.500, 4.2),     # upper jaw
     (0.08, 0.408, 0.419, -0.480, 0.505, 4.4),
-    (0.18, 0.413, 0.424, -0.488, 0.508, 4.4),
-    (0.26, 0.416, 0.428, -0.493, 0.506, 4.2),      # broad forehead
-    (0.31, 0.405, 0.417, -0.490, 0.500, 3.6),
-    (0.35, 0.385, 0.396, -0.468, 0.490, 3.2),      # the brow rounds over into the dome
-    (0.39, 0.350, 0.360, -0.420, 0.470, 2.8),
-    (0.43, 0.296, 0.305, -0.340, 0.438, 2.5),
-    (0.46, 0.228, 0.236, -0.240, 0.390, 2.3),
-    (0.485, 0.150, 0.156, -0.120, 0.310, 2.1),     # crown, a little behind the middle
+    (0.18, 0.413, 0.424, -0.488, 0.498, 4.4),
+    (0.26, 0.416, 0.428, -0.493, 0.478, 4.0),      # broad forehead; the back already rounds off
+    (0.31, 0.405, 0.417, -0.490, 0.450, 3.4),
+    (0.35, 0.385, 0.396, -0.472, 0.412, 3.0),      # the brow rounds over into the dome
+    (0.39, 0.350, 0.360, -0.436, 0.362, 2.7),
+    (0.43, 0.296, 0.305, -0.374, 0.292, 2.5),
+    (0.46, 0.228, 0.236, -0.300, 0.214, 2.3),
+    (0.485, 0.150, 0.156, -0.214, 0.116, 2.1),     # crown over the front half; the back slopes down
 ]
 
 SKULL_DAMAGE = {   # a few shallow torn regions embedded in the shell (no flesh-heavy wounds)
@@ -114,15 +112,18 @@ def build_skull(col, rust):
     SC.push(S, _m((-0.20, 0.05, 0.44)), _m((0.10, 0.12, 0.06)), -0.008)
     SC.push(S, _m((0.26, 0.24, 0.40)), _m((0.08, 0.10, 0.08)), -0.006)
     SC.warp(S, 0.003, 3.0, 61)
-    S = _knife_head(S, sk, 340, 65, 0.0025)                     # low-poly, but fewer harsh planes
+    S = _knife_head(S, sk, 220, 65, 0.0045)                     # low-poly: broad, readable planes
     _sockets(S)
     _palate(S)
     keep = (S.a["socket"] < 0.5) * (S.a["tissue"] < 0.5) * 1.0
-    chunk = SV.crack_network(S, cell=0.065, width=0.0016, depth=0.0022, seed=60, w=keep)
+    # flush plates separated by visible dark cracks (integrated, not stacked)
+    chunk = SV.crack_network(S, cell=0.080, width=0.0025, depth=0.0030, seed=60, w=keep, tilt=0.035)
     SC.damage(S, _zones(SKULL_DAMAGE["peel"]), _zones(SKULL_DAMAGE["wound"]),
               np.array([0.0, 0.0, 1.0]), seed=66, t1=0.008, t2=0.005, tissue=0.010, lips=0.0,
               w=(S.a["socket"] < 0.5) * 1.0, n_flaps=0, chunk=chunk, jag=0.7)
-    SV.pits(S, per_m2=110, size=(0.007, 0.018), depth=(0.003, 0.007), seed=62, w=keep)
+    _chips(S, 67, amount=1.0, bias=-0.42)                       # recessed chips along the edges (broken outline)
+    SV.pits(S, per_m2=14, size=(0.016, 0.032), depth=(0.007, 0.012), seed=69, w=keep)   # a few deep holes
+    SV.pits(S, per_m2=90, size=(0.007, 0.018), depth=(0.003, 0.007), seed=62, w=keep)
     SV.erode(S, amp=0.0018, freq=11.0, seed=63, w=keep)
     SC.blood(S, 68, drips=6, near=0.03)
     SC.finish(S, sk, decimate_ratio=1.0, sharp_deg=6.0)
@@ -216,24 +217,24 @@ def _palate(S):
     S.a["tissue"] = np.maximum(S.a["tissue"], SC.smoothstep(1.05, 0.85, g) * bottom)
 
 
-def _chips(S, seed):
+def _chips(S, seed, amount=0.6, bias=-0.6):
     k = S.blur(S.curvature(), 2)
     cv = SC.smoothstep(6.0, 28.0, k)
     gate = SC.smoothstep(0.2, 1.0, SC._z(SC.fbm(SC.Perlin(seed), S.co * 6.0, 2)))
     SC.damage(S, [], [], np.array([0.0, 0.0, 1.0]), seed=seed, t1=0.006, t2=0.003, tissue=0.0, lips=0.0,
-              extra=0.6 * cv * gate - 0.6, tear_amt=0.0, w=(S.a["socket"] < 0.5) * 1.0)   # few, localized chips
+              extra=amount * cv * gate + bias, tear_amt=0.0, w=(S.a["socket"] < 0.5) * 1.0)   # recessed edge chips
 
 
 # ---------------------------------------------------------------------------
 # Jaw
 # ---------------------------------------------------------------------------
-JAW_ROWS = [  # y, half-width, up, down, exponent - heavy jaw tapering to a V at the chin (sheet)
+JAW_ROWS = [  # y, half-width, up, down, exponent - heavy jaw, tapering to a broad U at the chin (sheet)
     (0.06, 0.385, 0.050, 0.140, 3.0),
     (-0.09, 0.392, 0.055, 0.195, 3.2),
-    (-0.34, 0.335, 0.055, 0.255, 3.4),
-    (-0.59, 0.255, 0.055, 0.300, 3.4),
-    (-0.82, 0.180, 0.055, 0.310, 3.2),
-    (-0.975, 0.115, 0.055, 0.280, 3.0),       # narrow, heavy chin
+    (-0.34, 0.380, 0.055, 0.255, 3.4),
+    (-0.59, 0.356, 0.055, 0.300, 3.4),
+    (-0.82, 0.322, 0.055, 0.310, 3.4),
+    (-0.955, 0.270, 0.055, 0.280, 3.4),       # broad, heavy U-shaped chin (rounded end cap)
 ]
 
 
@@ -258,7 +259,7 @@ def jaw_top(x):
 
 def build_jaw(col, rust, sk, open_deg, roll_deg):
     keys = [{"p": (0.0, y, 0.0), "w": w, "df": up, "db": dn, "e": e} for y, w, up, dn, e in JAW_ROWS]
-    bm = SC.loft(keys, ref=(0, -1, 0), seg=44, step=0.02, caps=(0.05, 0.08))
+    bm = SC.loft(keys, ref=(0, -1, 0), seg=44, step=0.02, caps=(0.05, 0.11))
     for sx in (-1, 1):                                   # rami rising to the condyles
         ramus = SC.loft([{"p": (sx * 0.395, 0.02, -0.14), "w": 0.045, "d": 0.075, "e": 3.0},
                          {"p": (sx * 0.405, 0.01, -0.05), "w": 0.042, "d": 0.065, "e": 3.0},
@@ -275,14 +276,14 @@ def build_jaw(col, rust, sk, open_deg, roll_deg):
     SC.warp(S, 0.006, 3.0, 71)
     SC.dents(S, 5, (0.025, 0.05), (0.003, 0.008), 72)
     S.write()
-    SC.lowpoly(jaw, 420, jitter=0.0025 / U, seed=73, dissolve_deg=4.0, levels=1, remesh_after=0.0050 / U)
+    SC.lowpoly(jaw, 300, jitter=0.0040 / U, seed=73, dissolve_deg=4.0, levels=1, remesh_after=0.0050 / U)
     S = SC.Surf(jaw, U)
     _trough(S)
     keep = (S.a["tissue"] < 0.5) * 1.0
-    chunk = SV.crack_network(S, cell=0.06, width=0.0016, depth=0.0022, seed=70, w=keep)
+    chunk = SV.crack_network(S, cell=0.075, width=0.0035, depth=0.0035, seed=70, w=keep)
     SC.damage(S, _zones(JAW_DAMAGE["peel"]), _zones(JAW_DAMAGE["wound"]), np.array([1.0, 0.0, 0.0]),
               seed=74, t1=0.008, t2=0.005, tissue=0.010, lips=0.0, w=keep, n_flaps=0, chunk=chunk, jag=0.7)
-    SV.pits(S, per_m2=110, size=(0.007, 0.018), depth=(0.003, 0.007), seed=75, w=keep)
+    SV.pits(S, per_m2=90, size=(0.007, 0.018), depth=(0.003, 0.007), seed=75, w=keep)
     SV.erode(S, amp=0.0018, freq=11.0, seed=76, w=keep)
     S.a_socket_final = np.zeros(S.n)
     rot = Matrix.Rotation(math.radians(open_deg), 3, 'X')
@@ -302,7 +303,7 @@ def _trough(S):
     nrm = S.normals()
     top = nrm[:, 2] > 0.35
     inner = np.maximum(jaw_half(S.co[:, 1] / U) - 0.10, 0.04) * U          # follows the V taper
-    g = (np.abs(S.co[:, 0]) / inner) ** 4 + (np.abs(S.co[:, 1] + 0.455 * U) / (0.475 * U)) ** 4
+    g = (np.abs(S.co[:, 0]) / inner) ** 4 + (np.abs(S.co[:, 1] + 0.465 * U) / (0.490 * U)) ** 4
     f = np.where(top, 1.0 - g, -1.0)
     f = SC.snap_iso(S, f)
     inside = f > 0
@@ -400,7 +401,7 @@ def mouth_interior(M, col, sk, jaw):
            Vector((0.02, -0.66, -0.07)), Vector((0.05, -0.80, -0.05))]
     rings = []
     for i, p in enumerate(pts):
-        w = (0.15, 0.13, 0.10, 0.07, 0.04)[i]                   # narrows with the V jaw
+        w = (0.15, 0.14, 0.12, 0.10, 0.07)[i]                   # follows the U jaw
         h = (0.06, 0.07, 0.065, 0.05, 0.03)[i]
         rings.append([p + Vector((math.cos(a) * w * rng.uniform(0.85, 1.15), 0,
                                   math.sin(a) * h * rng.uniform(0.8, 1.2)))
@@ -429,8 +430,8 @@ def mouth_interior(M, col, sk, jaw):
 
 
 def tusk(bm, layer, base, direction, length, width, kind, curl_dir=None):
-    """Thin, naturally tapered fang (approved sheet): round-ish section, slight bulge above the
-    gum, long taper to a sharp point, gently curved toward `curl_dir`. 'snapped' teeth end in a
+    """Naturally tapered conical fang (approved sheet): round-ish section, full above the gum,
+    narrowing to a sharp point, gently curved toward `curl_dir`. 'snapped' teeth end in a
     tilted fracture. Colour attribute: (t root->tip, blood, decay, tint)."""
     d = Vector(direction).normalized()
     side = Matrix.Rotation(rng.uniform(0, 2 * math.pi), 3, d) @ d.orthogonal().normalized()
@@ -446,7 +447,7 @@ def tusk(bm, layer, base, direction, length, width, kind, curl_dir=None):
     curl = c_dir.normalized() * length * rng.uniform(0.07, 0.15)
     cut = rng.uniform(0.55, 0.75) if kind == "snapped" else 1.0
     ts = [-0.15, 0.0, 0.12, 0.26, 0.40, 0.54, 0.68, 0.80, 0.90, 0.96]
-    rad = lambda t: (1.0 - max(t, 0.0)) ** 1.15 * (1.0 + 0.06 * math.sin(math.pi * min(max(t, 0.0) / 0.4, 1.0)))
+    rad = lambda t: (1.0 - max(t, 0.0)) ** 0.80 * (1.0 + 0.08 * math.sin(math.pi * min(max(t, 0.0) / 0.4, 1.0)))
     ts = [t for t in ts if t < cut - 0.02] + ([cut] if cut < 1.0 else [])
     blood = min(1.0, rng.choice([0.0, 0.0, 0.2, 0.35]) * rng.uniform(0.7, 1.2))
     decay, tint = rng.random() ** 1.4, rng.random()
@@ -493,13 +494,16 @@ UPPER_SIDES = {1: [(-0.24, "fang", 0.40, 0.090), (0.04, "fang", 0.30, 0.078)],
                -1: [(-0.22, "fang", 0.36, 0.084), (0.02, "snapped", 0.30, 0.081)]}
 # lower teeth line both sides of the V-shaped jaw (y along the jaw) and meet at the chin;
 # shorter near the hinge, longest toward the chin
-LOWER_SIDES = {1: [(-0.20, "fang", 0.26, 0.078), (-0.32, "fang", 0.40, 0.087), (-0.44, "snapped", 0.44, 0.090),
-                   (-0.55, "fang", 0.56, 0.101), (-0.66, "fang", 0.42, 0.084), (-0.76, "fang", 0.50, 0.092),
-                   (-0.86, "fang", 0.54, 0.098)],
-               -1: [(-0.22, "fang", 0.32, 0.081), (-0.35, "fang", 0.36, 0.084), (-0.47, "fang", 0.58, 0.104),
-                    (-0.58, "fang", 0.44, 0.087), (-0.68, "snapped", 0.40, 0.087), (-0.78, "fang", 0.52, 0.095),
-                    (-0.88, "fang", 0.46, 0.090)]}
-LOWER_CHIN = [(0.012, -0.935, "fang", 0.46, 0.095)]
+LOWER_SIDES = {1: [(-0.22, "fang", 0.28, 0.078), (-0.36, "fang", 0.42, 0.087), (-0.49, "snapped", 0.44, 0.090),
+                   (-0.61, "fang", 0.56, 0.101), (-0.73, "fang", 0.44, 0.084), (-0.84, "fang", 0.52, 0.095)],
+               -1: [(-0.24, "fang", 0.32, 0.081), (-0.38, "fang", 0.40, 0.084), (-0.51, "fang", 0.58, 0.104),
+                    (-0.63, "fang", 0.44, 0.087), (-0.74, "snapped", 0.40, 0.087), (-0.85, "fang", 0.50, 0.092)]}
+# across the front of the U (x, y): long ones at the chin
+LOWER_CHIN = [(0.135, -0.942, "fang", 0.50, 0.092), (-0.010, -0.968, "fang", 0.44, 0.095),
+              (-0.150, -0.936, "fang", 0.54, 0.098)]
+
+
+TOOTH_W, TOOTH_L = 1.00, 0.86       # full cones, a little shorter than the tables (three-quarter match)
 
 
 def _tilted(d, ax, ay):
@@ -515,7 +519,7 @@ def gums_and_teeth(M, col, sk, jaw):
                   [(x, front_up) for x in (HW / 2 - 0.12, 0.22, 0.05, -0.12, -0.28, -HW / 2 + 0.12)] +
                   [(-side_up, y) for y in (-0.10, 0.28)])
     lys = (-0.06, -0.25, -0.45, -0.65, -0.80)
-    lower_path = ([(float(wall(y)), y) for y in lys] + [(0.04, -0.915), (-0.04, -0.915)] +
+    lower_path = ([(float(wall(y)), y) for y in lys] + [(0.15, -0.928), (0.0, -0.962), (-0.15, -0.928)] +
                   [(-float(wall(y)), y) for y in lys[::-1]])
     for name, path, parent, zf in (("Gums_Upper", upper_path, sk, lambda x: up_z(x)),
                                    ("Gums_Lower", lower_path, jaw, lambda x: 0.06)):
@@ -528,19 +532,19 @@ def gums_and_teeth(M, col, sk, jaw):
                 xx, yy = x0 + (x1 - x0) * t, y0 + (y1 - y0) * t
                 dense.append(Vector((xx, yy + rng.uniform(-0.006, 0.006), zf(xx) + rng.uniform(-0.006, 0.006))))
         dense.append(Vector((path[-1][0], path[-1][1], zf(path[-1][0]))))
-        radii = [rng.uniform(0.024, 0.034) for _ in dense]                   # thin dark gum band
+        radii = [rng.uniform(0.028, 0.038) for _ in dense]                   # thin dark-red gum / lip band
         D.tube(gb, dense, radii, 0, sides=8, jitter=0.15, frame_ref=(0, 0, 1))
         D.bm_object(name, gb, col, [M["gum"]], parent=parent)
 
     bm, layer = D.new_tooth_bm()
     for x, kind, L, w, ax, ay in UPPER_FRONT:                  # hang down, crooked, uneven
         base = Vector((x, front_up + rng.uniform(-0.02, 0.012), up_z(x) - 0.005))
-        tusk(bm, layer, base, _tilted((0, -0.08, -1), 0.6 * ax, ay), L, w, kind, curl_dir=(0, 1, 0))
+        tusk(bm, layer, base, _tilted((0, -0.08, -1), 0.6 * ax, ay), L * TOOTH_L, w * TOOTH_W, kind, curl_dir=(0, 1, 0))
     for sx, teeth in UPPER_SIDES.items():
         for y, kind, L, w in teeth:
             base = Vector((sx * side_up, y + rng.uniform(-0.012, 0.012), -0.03))
-            tusk(bm, layer, base, _tilted((sx * 0.04, -0.05, -1), rng.uniform(-6, 6), rng.uniform(-6, 6)), L, w, kind,
-                 curl_dir=(-sx, 0.3, 0))
+            tusk(bm, layer, base, _tilted((sx * 0.04, -0.05, -1), rng.uniform(-6, 6), rng.uniform(-6, 6)),
+                 L * TOOTH_L, w * TOOTH_W, kind, curl_dir=(-sx, 0.3, 0))
     D.bm_object("Teeth_Upper", bm, col, [M["teeth"]], parent=sk)
 
     bm, layer = D.new_tooth_bm()
@@ -548,11 +552,11 @@ def gums_and_teeth(M, col, sk, jaw):
         for y, kind, L, w in teeth:
             yy = y + rng.uniform(-0.012, 0.012)
             base = Vector((sx * float(wall(yy)), yy, 0.065))
-            tusk(bm, layer, base, _tilted((-sx * 0.12, 0.85, 1), rng.uniform(-7, 7), rng.uniform(-7, 7)), L, w,
-                 kind, curl_dir=(-sx * 0.5, 1.0, 0))
+            tusk(bm, layer, base, _tilted((-sx * 0.16, 1.05, 1), rng.uniform(-7, 7), rng.uniform(-7, 7)),
+                 L * TOOTH_L, w * TOOTH_W, kind, curl_dir=(-sx * 0.5, 1.0, 0))
     for x, y, kind, L, w in LOWER_CHIN:
-        tusk(bm, layer, Vector((x, y, 0.065)), _tilted((0, 0.9, 1), rng.uniform(-8, 8), rng.uniform(-10, 10)), L, w,
-             kind, curl_dir=(0, 1, -0.3))
+        tusk(bm, layer, Vector((x, y, 0.065)), _tilted((-x * 0.6, 1.05, 1), rng.uniform(-8, 8), rng.uniform(-8, 8)),
+             L * TOOTH_L, w * TOOTH_W, kind, curl_dir=(-x, 1, -0.3))
     D.bm_object("Teeth_Lower", bm, col, [M["teeth"]], parent=jaw)
 
 

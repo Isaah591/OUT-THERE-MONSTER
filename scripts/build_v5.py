@@ -1,8 +1,9 @@
 """
 v5 variation of the OUT THERE monster: a corrective pass toward the approved sheet's
-three-quarter view (unified rounded cranium, rectangular void sockets with tiny dim pupils, thin
-tapered fangs, restrained dark tissue, continuous corroded shell). Same forms, proportions, pose,
-head position and jaw opening as the open-jaw build, which is kept unchanged
+three-quarter view (unified rounded cranium, rectangular void sockets with tiny dim pupils,
+naturally tapered conical fangs, a tall mouth with a broad U-shaped lower jaw hanging under the
+face, restrained dark tissue, continuous corroded shell). Same body forms, proportions and pose,
+head size and position and 72 deg jaw opening as the open-jaw build, which is kept unchanged
 (build_openjaw.py -> model/out_there_monster_openjaw.blend).
 
     python build_v5.py                         (with the `bpy` module, Blender 5.0)
@@ -31,7 +32,7 @@ HEAD_SCALE = 0.60                           # compact skull, ~0.55 m wide (sheet
 HEAD_POS = Vector((0.0, -1.16, 2.48))       # centre of the upper gum line, low and thrust ahead
 HEAD_ROT = (math.radians(-4.0), math.radians(-2.0), math.radians(-2.0))
 JAW_OPEN_DEG = 72.0                         # lower jaw broken open ~72 deg about its rear hinge (sheet profile)
-JAW_BROKEN_ROLL_DEG = 5.0                   # sideways sag of the broken right hinge
+JAW_BROKEN_ROLL_DEG = -3.5                  # slight sideways sag toward the left hinge (chin under the face, sheet 3/4)
 
 
 def collection(name, parent=None):
@@ -92,7 +93,7 @@ def build(out):
     M["rust"], M["bar"] = MR.v5_rust(), MR.r08_bar()
     M["teeth"] = MR.v5_teeth()
     M["eye"] = MR.v5_eye()
-    M["gum"] = MR.wet_flesh("M_V5_Gum", (0.018, 0.002, 0.002), (0.045, 0.005, 0.005), (0.085, 0.010, 0.009), 0.35, 0.35)
+    M["gum"] = MR.wet_flesh("M_V5_Gum", (0.024, 0.003, 0.003), (0.060, 0.007, 0.006), (0.115, 0.014, 0.012), 0.35, 0.35)
     M["flesh"] = MR.wet_flesh("M_V5_Flesh", (0.010, 0.001, 0.001), (0.028, 0.003, 0.003), (0.055, 0.007, 0.006), 0.5, 0.25)
     M["tongue"] = MR.wet_flesh("M_OJ_Tongue", (0.005, 0.001, 0.001), (0.014, 0.002, 0.002), (0.030, 0.005, 0.004), 0.75, 0.12)
     M["throat"] = MR.wet_flesh("M_OJ_Throat", (0.003, 0.001, 0.001), (0.010, 0.002, 0.002), (0.022, 0.004, 0.003), 0.7, 0.12)

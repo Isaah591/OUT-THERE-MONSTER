@@ -176,13 +176,14 @@ def _sculpt(S, ob, name, axis, seed, faces, jitter=0.016):
     S = SC.Surf(ob)
     if callable(axis):
         axis = axis(S.co)
-    chunk = SV.crack_network(S, cell=0.075, width=0.0018, depth=0.0026, seed=seed + 1)
+    chunk = SV.crack_network(S, cell=0.085, width=0.0024, depth=0.0028, seed=seed + 1, tilt=0.03)
     d = DAMAGE[name]
     wounds = [(c, tuple(np.asarray(r) * 0.85), st) for c, r, st in d["wound"]]       # restrained flesh
-    SC.damage(S, d["peel"], wounds, axis, seed=seed + 2, n_flaps=0, chunk=chunk,
+    peels = [(c, tuple(np.asarray(r) * 0.80), st) for c, r, st in d["peel"]]          # smaller torn regions
+    SC.damage(S, peels, wounds, axis, seed=seed + 2, n_flaps=0, chunk=chunk,
               t1=0.014, t2=0.008, tissue=0.014, lips=0.0, cover=0.05, jag=0.7)
     keep = (S.a["tissue"] < 0.5) * 1.0
-    SV.pits(S, per_m2=85, size=(0.008, 0.024), depth=(0.003, 0.008), seed=seed + 3, w=keep)
+    SV.pits(S, per_m2=70, size=(0.008, 0.024), depth=(0.003, 0.008), seed=seed + 3, w=keep)
     SV.erode(S, amp=0.0022, freq=8.0, seed=seed + 4, w=keep)
     SC.blood(S, seed + 5, drips=10)
     SC.finish(S, ob, decimate_ratio=1.0, sharp_deg=25.0)
