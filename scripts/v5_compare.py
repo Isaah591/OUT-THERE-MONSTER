@@ -3,6 +3,9 @@ Validation sheets for the v5 variation against the approved sheet (ASTRA R08 - M
 references/r08_open_jaw_sheet_v2.webp), with the current (unchanged) open-jaw model alongside.
 
     python v5_compare.py <v5_renders_dir> <current_renders_dir> <references_dir> <out_dir>
+    python v5_compare.py model/renders_v5 model/renders_v5 references model/renders_v5
+
+(the current model's renders are current_<name>.png if present, else <name>.png)
 
 The three-quarter comparisons use the `ref34` camera of render_views.py, fitted to the sheet's
 three-quarter panel with fit_camera.py and rendered at exactly twice the panel's resolution,
@@ -67,14 +70,19 @@ def row(items, h, gap=10):
     return out
 
 
-def render(d, name):
-    return Image.open(os.path.join(d, name + ".png")).convert("RGB")
+def render(d, name, current=False):
+    """<name>.png in d. For the current model, current_<name>.png is preferred when present (that
+    is how its renders are stored beside v5's in model/renders_v5/)."""
+    p = os.path.join(d, name + ".png")
+    if current and os.path.exists(os.path.join(d, "current_" + name + ".png")):
+        p = os.path.join(d, "current_" + name + ".png")
+    return Image.open(p).convert("RGB")
 
 
 panel = SHEET.crop(PANEL34)
 pw, ph = panel.size
 v5_34 = render(V5, "ref34").resize((pw, ph), Image.LANCZOS)          # onto the panel's pixel grid
-cur_34 = render(CUR, "ref34").resize((pw, ph), Image.LANCZOS)
+cur_34 = render(CUR, "ref34", current=True).resize((pw, ph), Image.LANCZOS)
 
 # 1. whole panel, same pixels
 big = (pw * 2, ph * 2)
@@ -143,7 +151,7 @@ row([label(panel.resize(big, Image.LANCZOS), "APPROVED SHEET - THREE-QUARTER"),
 # 6. front / side: pose and proportions unchanged, head from the other sheet views
 for key, box, name, title in (("oj_front", PANEL_FRONT, "_v5_vs_front.png", "FRONT"),
                               ("oj_side", PANEL_SIDE, "_v5_vs_side.png", "EXACT SIDE")):
-    row([label(SHEET.crop(box), "SHEET - " + title), label(render(CUR, key), "CURRENT - " + title),
+    row([label(SHEET.crop(box), "SHEET - " + title), label(render(CUR, key, current=True), "CURRENT - " + title),
          label(render(V5, key), "V5 - " + title)], 760).save(os.path.join(OUT, name))
 
 # 7. face, front

@@ -15,7 +15,8 @@ is editable and the model rebuilds in ~35 s.
 | Blockout, proportion passes, detail v1–v3, R08 forms v1 | superseded, kept | `checkpoints/` |
 | R08 high-fidelity sculpt + broken-open jaw | superseded by the open-jaw sheet, kept | `model/out_there_monster_r08.blend`, `model/renders_r08hd/`, `checkpoints/r08-hd-v1/` |
 | ASTRA R08 – MORE OPEN JAW, first sheet | superseded, kept | `checkpoints/openjaw-v2/`, `model/renders_openjaw/` |
-| **Approved sheet – MORE OPEN JAW, slightly longer teeth (current target)** | **for review** | `model/out_there_monster_openjaw.blend`, `model/renders_v3/`, `docs/OPENJAW_NOTES.md` |
+| Approved sheet – MORE OPEN JAW, slightly longer teeth: current model (face pass) | kept unchanged | `model/out_there_monster_openjaw.blend`, `model/renders_face/`, `checkpoints/face-v4/` |
+| **v5 corrective variation, matched to the approved sheet's three-quarter view** | **for review** | `model/out_there_monster_v5.blend`, `model/renders_v5/`, `docs/OPENJAW_NOTES.md` (last section) |
 | Baked textures + optimised FBX for Roblox | not run (held until the design is approved) | `scripts/bake_export.py`, `docs/ROBLOX_IMPORT.md` |
 | Rigging / animation | not started | |
 
@@ -41,7 +42,11 @@ Depth positions as in R08's side panel, relative to the flat torso back at y = +
 | Path | Contents |
 |---|---|
 | `references/` | Original Roblox screenshots, R08 reference sheet and R08 detail panels |
-| `scripts/build_openjaw.py` | **Current build** (open-jaw sheet) — `body_openjaw.py`, `head_openjaw.py`, flake mosaic, saves `model/out_there_monster_openjaw.blend` |
+| `scripts/build_v5.py` | **v5 variation** — `body_v5.py`, `head_v5.py`, `surface_v5.py` (embedded cracks, pits, erosion), v5 materials in `materials_r08.py`; saves `model/out_there_monster_v5.blend` |
+| `scripts/fit_camera.py` | Fits a camera to a reference panel by silhouette overlap (gives the `ref34` view of `render_views.py`) |
+| `scripts/v5_compare.py`, `measure_ref34_landmarks.py` | v5 comparison sheets against the approved sheet (same camera, same pixels) and automatic landmarks (pupils, skull top, teeth) |
+| `scripts/measure_mouth_taper.py`, `measure_body_bounds.py` | Front-view taper of the mouth; body forms / pose unchanged between two builds |
+| `scripts/build_openjaw.py` | Current model (open-jaw sheet, face pass) — `body_openjaw.py`, `head_openjaw.py`, flake mosaic, saves `model/out_there_monster_openjaw.blend` |
 | `scripts/openjaw_compare.py` | Side-by-side sheets against `references/r08_open_jaw_sheet.webp` |
 | `scripts/build_r08.py` | R08 high-fidelity build (previous target) — materials, body, head, clearance check, stats, save |
 | `scripts/sculpt.py` | Numpy sculpting toolkit: spline lofts, voxel remesh, brushes, knife facets, layered peels, torn edges, tissue, lifted plates, blood, attributes |
@@ -65,6 +70,22 @@ environment cannot reach download.blender.org. Cycles CPU works; EEVEE/Workbench
 ```bash
 python3.11 -m venv bvenv && bvenv/bin/pip install bpy pillow "scipy<1.14"
 ```
+
+v5 variation (render from a copy: `render_views.py` saves the file it renders):
+
+```bash
+bvenv/bin/python scripts/build_v5.py
+```
+
+```bash
+cp model/out_there_monster_v5.blend /tmp/v5_copy.blend && STUDIO=dark SAMPLES=32 bvenv/bin/python scripts/render_views.py /tmp/v5_copy.blend model/renders_v5 ref34 ref34_body oj_front oj_side oj_face oj_face34
+```
+
+```bash
+bvenv/bin/python scripts/v5_compare.py model/renders_v5 model/renders_v5 references model/renders_v5
+```
+
+Current model (open-jaw sheet):
 
 ```bash
 bvenv/bin/python scripts/build_openjaw.py

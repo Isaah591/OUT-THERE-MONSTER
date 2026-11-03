@@ -47,3 +47,7 @@ print("J opening angle between the jaws (side view) %.0f deg | chin drop below t
       % (ang, gum[2] - low[2], (gum[2] - low[2]) / skull_h))
 print("J front of the lower jaw sits %.3f m behind the snout front (%.2f x upper jaw length)"
       % (front - snout, (front - snout) / up_len))
+skull_len = np.percentile(c[:, 1], 99.5) - snout                   # snout front -> back of the skull
+print("J lowest chin point sits %.3f m behind the snout front = %.2f skull lengths (skull length %.3f m); "
+      "hinge at %.0f%% of the skull length from the front"
+      % (low[1] - snout, (low[1] - snout) / skull_len, skull_len, 100 * (hinge[1] - snout) / skull_len))

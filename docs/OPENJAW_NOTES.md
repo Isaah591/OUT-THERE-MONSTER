@@ -233,3 +233,137 @@ From `model/renders_face/_face_vs_*.png`:
 - **Wound colour.** The enlarged body wounds read as a brighter red than the sheet's darker red tears.
 - **Presentation.** The sheet uses moody, high-contrast lighting; the comparisons use the same
   neutral studio for every view, so differences shown are geometry and material, not lighting.
+
+# v5 corrective variation (matched to the sheet's three-quarter view)
+
+Target: the approved sheet (`references/r08_open_jaw_sheet_v2.webp`, pixel-identical to the last
+uploaded image; no new image came with this request) and its three-quarter panel as the
+definitive visual target. **New file:** `model/out_there_monster_v5.blend` (`scripts/build_v5.py`).
+**The current model is unchanged:** `model/out_there_monster_openjaw.blend` (md5
+`42cbdae6e7354456c848d18fa06aec02`, also frozen with its renders and scripts in
+`checkpoints/face-v4/`). Renders and comparison sheets: `model/renders_v5/`.
+
+## The exact three-quarter camera
+
+`scripts/fit_camera.py` fits a camera to the sheet's three-quarter panel (the 508 x 495 crop at
+(500, 55)) by silhouette overlap (IoU): Nelder-Mead over azimuth, elevation, distance, focal
+length and lens shift.
+
+- Whole figure: IoU 0.67 at 34.6 deg azimuth. The painting's legs and long arm are posed
+  differently from the model (and from the sheet's own front and side views), which drags the
+  fit round.
+- Head, shoulders and upper torso (panel rows 0-260): IoU 0.81, 23.5 deg azimuth, 8.9 deg
+  elevation, 46.3 mm lens. This is `ref34` in `render_views.py`, rendered at exactly twice the
+  panel's resolution, so the sheet and the render share one pixel grid. Every three-quarter
+  comparison below uses it.
+
+## What the comparison showed (current model vs sheet, same camera)
+
+| Feature | Sheet | Current model |
+|---|---|---|
+| Upper skull | rounded dome, highest over the face, sloping down at the back | flat-topped wedge of stacked plates, 5 px lower |
+| Sockets | small dark rectangles, pupils 40 px apart | similar voids, pupils 46 px apart, rims of stacked plates |
+| Mouth / lower jaw | tall opening; a U-shaped lower jaw hangs under the face, teeth on both sides | a narrow V hanging back to the right of the face; lowest tooth 19 px higher |
+| Teeth | full conical fangs | flat triangular blades, half the ivory area |
+| Tissue | thin dark-red lip and inner edges | glossy bright-red tissue, metal bolts at the hinges |
+| Surface | one continuous weathered shell | overlapping armour plates |
+
+## What was changed (actual geometry, v5 files only)
+
+| Object | Change |
+|---|---|
+| `Cranium` | Crown moved over the front half and the back sloped down (dome rows); broad forehead and flat face kept; knife facets (~220 planes); flush plates separated by thin cracks, each turned slightly (no lifted or stacked plates); recessed chips along the edges, clustered irregular pits, a few deep holes, inward-only erosion, 4 shallow torn regions. No bolts, flaps or protruding fragments. |
+| Sockets | Same slanted rectangular voids, each moved 0.035 head units inward: centres ~0.24 from the midline, 0.55 skull widths apart as on the sheet (the face pass had placed them against the nominal head width, which is wider than the actual skull). |
+| `Eyes` | Tiny (~9 mm) dim red points at the back wall of each void. |
+| `Jaw` | A U tapering toward the chin instead of the narrow V (front view below). Hinge moved 0.13 m forward, from 88 % to 67 % of the skull length, and dislocated ~2 cm lower; the 72 deg opening is unchanged; a slight sag (3.5 deg) toward its left hinge. Slimmer rami. |
+| `Teeth_*` | Same idea (long upper and lower fangs, snapped ones, uneven spacing and lean), 16 upper + 15 lower (was 18 + 16); full, naturally tapered round cones with a slight curve instead of flat blades; lower teeth more upright, converging on the U; upper row drawn in from the corners (0.85 of the skull width). Aged ivory / ochre. |
+| Gums, tissue | A thin, irregular dark-red gum and lip band; a ragged dark web from the skull's side to the jaw at each hinge (closes the back of the wedge); dark inner cheek walls; no metal hinge parts or tendon strings; the throat sits behind the forward hinge; matte (no wet sheen). |
+| Body | Forms, proportions and pose unchanged. Continuous shell: thin cracks between flush plates, clustered pits, erosion; torn regions 20 % smaller and dark maroon instead of bright red; no flaps. |
+| Materials | `M_V5_Rust`: warm orange-brown rust, per-plate tone, mottling, sparse dark corrosion spots, subtle cracks. `M_V5_Teeth`: aged ivory / ochre. `M_V5_Eye`: dim red. |
+
+## Validation: the exact three-quarter camera
+
+Panel pixels (508 x 495). "auto" = `scripts/measure_ref34_landmarks.py`; "grid" = read on
+`model/renders_v5/_v5_ref34_grid.png` (the painting's jaw blends into the body, so the mouth
+outline is read by eye).
+
+| # | Focus | Sheet | Current model | v5 |
+|---|---|---|---|---|
+| 1 | Skull top over the forehead (auto) | y 48 | y 53 | y 47 |
+| | Skull shape | dome, highest over the face, sloping back | flat-topped wedge, stacked plates | dome, highest over the face, sloping back |
+| 2 | Pupils (auto) | (170.1, 81.7), (210.5, 76.0) | (168.7, 75.9), (214.8, 68.9) | (170.0, 78.7), (214.0, 72.3) |
+| | Pupil spacing | 40.4 px | 46.1 px | 44.0 px |
+| | Sockets (grid) | 160-172 x 72-87, 200-218 x 66-82 | 153-167 x 70-90, 205-225 x 63-83 | 157-172 x 72-90, 203-222 x 63-80 |
+| 3 | Mouth height, upper gum to lower lip (grid) | 97 to 210 (113 px) | 97 to ~198 (~101 px, narrow V) | 98 to ~207 (~109 px) |
+| | Teeth extent, x (auto) | 158-237 | 158-225 | 162-245 |
+| 4 | Bottom of the lower jaw's U (grid) | x 178-230, y ~210, under the face | V tip at x ~230, y ~198, behind and right | x ~184-238, y ~207, under the face |
+| | Lowest tooth (auto) | y 204 | y 185 | y 207 |
+| 5 | Ivory (teeth) area in the mouth (auto) | 2793 px | 1435 px (-49 %) | 3170 px (+13 %) |
+| | Tooth shape | full conical fangs | flat triangular blades | full tapered cones, slightly curved |
+| 6 | Cohesion | one shell, recessed damage | stacked plates, bolts, glossy red tissue | one shell, recessed damage, restrained dark tissue |
+
+Colour, mean of the warm pixels over the whole panel: sheet (83, 51, 35), current (70, 43, 32),
+v5 (87, 55, 34). Teeth: sheet (154, 117, 71), current (134, 112, 80), v5 (149, 120, 75).
+The 50/50 blend and the silhouette outlines (`_v5_ref34_alignment.png`) show the skull, sockets,
+tooth rows and the jaw's U coinciding; the torso, legs and long arm do not, because the camera is
+fitted on the head and the body pose was kept on purpose.
+
+## Verification on the geometry (`.blend` files)
+
+| | Sheet | Current model | v5 |
+|---|---|---|---|
+| Skull width x depth x height above the gum line (`measure_head_size.py`) | (do not enlarge) | 0.520 x 0.616 x 0.311 m | 0.511 x 0.602 x 0.317 m |
+| Gum line (head position) | (unchanged) | (0, -1.160, 2.480) | (0, -1.160, 2.480) |
+| Jaw opening / chin drop (`measure_jaw_profile.py`) | ~70-72 deg | 72 deg / 0.723 m | 72 deg / 0.740 m |
+| Lowest chin point behind the snout (skull lengths) | ~0.50 (exact side view) | 0.70 | 0.49 |
+| Hinge position (skull length from the front) | ~76 % | 88 % | 67 % |
+| Front view, lower gum width 15 / 35 / 55 / 75 % down the opening (`measure_mouth_taper.py`) | ~0.80 / 0.72 / 0.67 / 0.59 | 0.83 / 0.72 / 0.52 / 0.27 | 0.82 / 0.80 / 0.71 / 0.59 |
+| Front-view teeth reach, upper median / longest (`measure_teeth_reach.py`) | ~0.45 / ~0.64 | 0.44 / 0.68 | 0.37 / 0.57 |
+| Front-view teeth reach, lower median / longest | ~0.44 / ~0.60 | 0.40 / 0.65 | 0.39 / 0.49 |
+| Body parts vs the current model (`measure_body_bounds.py`) | | | extents within 10 mm, centroids within 2.1 mm (torso, both arms, both legs) |
+| Jaw / teeth / gums / tongue faces inside the body | | rear of the jaw anchored in the neck block | 0 |
+
+## Remaining differences (honest)
+
+- **The sheet is not one consistent object.** In its three-quarter panel the head is turned
+  ~11 deg further toward the viewer than the body, and the legs and long arm are posed
+  differently from its front and side views. The head comparison uses a camera fitted on the
+  head and shoulders; the body does not overlap in that view (pose kept, as requested).
+- **Lower jaw.** The three-quarter panel puts the chin further forward than its exact side view
+  allows. v5 follows the side view (0.49 vs ~0.50 skull lengths), so in the three-quarter view
+  its U sits ~5 px right of the sheet's and its right-hand mouth edge ~3-8 px further right.
+- **Teeth.** v5's ivory area is 13 % larger in the three-quarter view (fuller cones). In the
+  front view they reach ~15-20 % less far into the opening than the sheet's, which also packs
+  more, slimmer teeth into the bottom of the U.
+- **Front-view taper.** The mouth tapers from 0.82 to 0.59 of the skull width; the sheet keeps
+  narrowing to ~0.48 at the bottom of the U.
+- **Sockets.** The monster's left socket is ~3 px higher and ~15 % wider than the sheet's in
+  the three-quarter view.
+- **Lip.** The sheet's lower lip reads as a thin red line; v5's is darker and less visible
+  (restrained tissue, as requested).
+- **Surface.** The sheet shows a dense chip mosaic with stronger contrast; v5 is a continuous
+  shell (as requested) with a finer crack network, and its skull outline is chipped but smoother
+  than the sheet's broken silhouette.
+- **Presentation.** The sheet's lighting is darker and moodier; the renders use the same studio
+  as earlier passes, so the differences shown are geometry and material.
+- Not done, held for approval: baked textures, Roblox export, rig.
+
+## Rebuilding v5
+
+```bash
+bvenv/bin/python scripts/build_v5.py
+```
+
+Render from a copy (`render_views.py` saves the file it renders, adding its studio):
+
+```bash
+cp model/out_there_monster_v5.blend /tmp/v5_copy.blend && STUDIO=dark SAMPLES=32 bvenv/bin/python scripts/render_views.py /tmp/v5_copy.blend model/renders_v5 ref34 ref34_body oj_front oj_side oj_face oj_face34
+```
+
+```bash
+bvenv/bin/python scripts/v5_compare.py model/renders_v5 model/renders_v5 references model/renders_v5
+```
+
+```bash
+bvenv/bin/python scripts/measure_ref34_landmarks.py references model/renders_v5/current_ref34.png model/renders_v5/ref34.png
+```
