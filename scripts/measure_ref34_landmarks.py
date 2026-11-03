@@ -5,7 +5,7 @@ camera (render_views.py), on the same pixel grid (panel pixels, 508 x 495).
     python measure_ref34_landmarks.py <references_dir> <ref34.png> [<other_ref34.png> ...]
 
 Measured automatically (no hand tuning per image):
-  pupils       centroids of the red glowing points (strongly red pixels inside dark sockets)
+  pupils       red glowing point inside a dark void, searched in a window around each socket
   skull top    top of the cranium over the forehead columns 178-200 (clear of the crown knobs)
   teeth        ivory pixels (hue 19-40 on PIL's 0-255 scale, bright, saturated) in the mouth
                region: bounding box, lowest tooth pixel, and the area in panel pixels
@@ -33,22 +33,26 @@ def load_render(p):
     return np.asarray(Image.open(p).convert("RGB").resize((508, 495), Image.LANCZOS))
 
 
+SOCKET_WINDOWS = [(150, 60, 188, 100), (192, 52, 236, 96)]     # panel px around each eye socket
+
+
 def pupils(x):
-    """Red glowing points inside dark surroundings (the sockets): strongly red pixels whose 9x9
-    neighbourhood is dark; the two largest clusters."""
-    x0, y0, x1, y1 = HEAD
-    a = x[y0:y1, x0:x1].astype(float)
-    lum = a.mean(2)
-    dark = ndi.uniform_filter(lum, 9) < 70
-    red = (a[..., 0] > 90) & (a[..., 0] > 2.0 * a[..., 1]) & (a[..., 0] > 2.0 * a[..., 2]) & dark
-    lab, n = ndi.label(ndi.binary_dilation(red, iterations=1))
+    """The red glowing point in each eye socket: within a window around each socket, strongly red
+    pixels whose 9x9 neighbourhood is dark (the void), red-weighted centroid of the largest cluster."""
     out = []
-    for i in range(1, n + 1):
-        ys, xs = np.nonzero((lab == i) & red)
-        w = a[ys, xs, 0]
-        out.append(((xs * w).sum() / w.sum() + x0, (ys * w).sum() / w.sum() + y0, len(xs)))
-    out.sort(key=lambda c: -c[2])
-    return sorted(out[:2])
+    for x0, y0, x1, y1 in SOCKET_WINDOWS:
+        a = x[y0:y1, x0:x1].astype(float)
+        dark = ndi.uniform_filter(a.mean(2), 9) < 70
+        red = (a[..., 0] > 90) & (a[..., 0] > 2.0 * a[..., 1]) & (a[..., 0] > 2.0 * a[..., 2]) & dark
+        lab, n = ndi.label(ndi.binary_dilation(red, iterations=1))
+        best = None
+        for i in range(1, n + 1):
+            ys, xs = np.nonzero((lab == i) & red)
+            if best is None or len(xs) > best[2]:
+                w = a[ys, xs, 0]
+                best = ((xs * w).sum() / w.sum() + x0, (ys * w).sum() / w.sum() + y0, len(xs))
+        out.append(best if best else (float("nan"), float("nan"), 0))
+    return out
 
 
 def skull_top(x):

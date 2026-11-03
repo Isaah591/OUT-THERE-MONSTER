@@ -78,12 +78,32 @@ def ensure_studio():
     bpy.context.scene.collection.children.link(col)
 
     me = bpy.data.meshes.new("Ground")
-    s = 12.0
-    me.from_pydata([(-s, -s, 0), (s, -s, 0), (s, s, 0), (-s, s, 0)], [], [(0, 1, 2, 3)])
+    if os.environ.get("STUDIO") == "sheet":
+        # seamless cyclorama facing the sheet's three-quarter camera: the floor bends up into a
+        # back wall, so there is no horizon line (as in the sheet's painted backdrop)
+        prof = [(-14.0, 0.0), (2.6, 0.0)]
+        prof += [(2.6 + 3.4 * math.sin(a), 3.4 - 3.4 * math.cos(a)) for a in [math.pi / 2 * k / 12 for k in range(1, 13)]]
+        prof += [(6.0, 14.0)]
+        az = math.radians(23.5)
+        rot = lambda x, y: (x * math.cos(az) - y * math.sin(az), x * math.sin(az) + y * math.cos(az))
+        verts, faces = [], []
+        for x in (-20.0, 20.0):
+            for y, z in prof:
+                rx, ry = rot(x, y - 0.3)
+                verts.append((rx, ry, z))
+        n = len(prof)
+        faces = [(i, i + 1, n + i + 1, n + i) for i in range(n - 1)]
+        me.from_pydata(verts, [], faces)
+        for p_ in me.polygons:
+            p_.use_smooth = True
+    else:
+        s = 12.0
+        me.from_pydata([(-s, -s, 0), (s, -s, 0), (s, s, 0), (-s, s, 0)], [], [(0, 1, 2, 3)])
     ground = bpy.data.objects.new("Ground", me)
     m = bpy.data.materials.new("M_Studio_Ground")
-    dark = os.environ.get("STUDIO") == "dark"     # R08-sheet style presentation backdrop
-    g = 0.018 if dark else 0.30
+    sheet = os.environ.get("STUDIO") == "sheet"   # approximates the approved sheet's three-quarter panel
+    dark = os.environ.get("STUDIO") == "dark" or sheet   # R08-sheet style presentation backdrop
+    g = 0.006 if sheet else (0.018 if dark else 0.30)
     m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (g, g, g, 1)
     m.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.9
     me.materials.append(m)
@@ -97,14 +117,20 @@ def ensure_studio():
         look_at(ob, target)
         col.objects.link(ob)
 
-    k = 1.25 if dark else 1.0
-    area("Key", (-4.5, -6.0, 5.5), 900 * k, 4.0)
-    area("Fill", (5.5, -4.5, 3.0), 380 * k, 5.0)
-    area("Rim", (1.5, 6.0, 5.0), 700 * k, 4.0)
-    area("Top", (0.0, -1.0, 8.0), 250 * k, 6.0)
+    if sheet:   # dark charcoal backdrop, key from the upper left front, weak fill, warm-neutral rim
+        area("Key", (-4.0, -5.2, 5.6), 1250, 3.2)
+        area("Fill", (3.2, -5.6, 1.7), 260, 5.0)
+        area("Rim", (3.0, 4.6, 4.6), 620, 3.0)
+        area("Top", (0.0, -1.0, 8.0), 120, 6.0)
+    else:
+        k = 1.25 if dark else 1.0
+        area("Key", (-4.5, -6.0, 5.5), 900 * k, 4.0)
+        area("Fill", (5.5, -4.5, 3.0), 380 * k, 5.0)
+        area("Rim", (1.5, 6.0, 5.0), 700 * k, 4.0)
+        area("Top", (0.0, -1.0, 8.0), 250 * k, 6.0)
 
     world = bpy.data.worlds.new("StudioWorld")
-    bg = (0.028, 0.030, 0.033, 1) if dark else (0.32, 0.34, 0.37, 1)
+    bg = (0.014, 0.015, 0.017, 1) if sheet else ((0.028, 0.030, 0.033, 1) if dark else (0.32, 0.34, 0.37, 1))
     world.node_tree.nodes["Background"].inputs["Color"].default_value = bg
     world.node_tree.nodes["Background"].inputs["Strength"].default_value = 1.0 if dark else 0.6
     bpy.context.scene.world = world
