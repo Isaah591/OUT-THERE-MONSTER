@@ -17,7 +17,8 @@ is editable and the model rebuilds in ~35 s.
 | ASTRA R08 – MORE OPEN JAW, first sheet | superseded, kept | `checkpoints/openjaw-v2/`, `model/renders_openjaw/` |
 | Approved sheet – MORE OPEN JAW, slightly longer teeth: current model (face pass) | kept unchanged | `model/out_there_monster_openjaw.blend`, `model/renders_face/`, `checkpoints/face-v4/` |
 | v5 corrective variation, matched to the approved sheet's three-quarter view (head) | kept unchanged | `model/out_there_monster_v5.blend`, `model/renders_v5/`, `docs/OPENJAW_NOTES.md` (last section) |
-| **v6 proportional variation: pose, limbs, head and jaw rebuilt from the sheet's three-quarter view** | **for review** | `model/out_there_monster_v6.blend`, `model/renders_v6/`, `docs/V6_NOTES.md` |
+| v6 proportional variation: pose, limbs, head and jaw rebuilt from the sheet's three-quarter view | kept unchanged | `model/out_there_monster_v6.blend`, `model/renders_v6/`, `docs/V6_NOTES.md` |
+| **v7 reference accuracy pass: body and head rebuilt from the sheet's front, side and three-quarter views together** | **for review** | `model/out_there_monster_v7.blend`, `model/renders_v7/`, `docs/V7_NOTES.md` |
 | Baked textures + optimised FBX for Roblox | not run (held until the design is approved) | `scripts/bake_export.py`, `docs/ROBLOX_IMPORT.md` |
 | Rigging / animation | not started | |
 
@@ -43,7 +44,9 @@ Depth positions as in R08's side panel, relative to the flat torso back at y = +
 | Path | Contents |
 |---|---|
 | `references/` | Original Roblox screenshots, R08 reference sheet and R08 detail panels |
-| `scripts/build_v6.py` | **v6 variation** — `body_v6.py` (pose solved on the reference's lines of sight), `head_v6.py`, v6 materials in `materials_r08.py`; saves `model/out_there_monster_v6.blend` |
+| `scripts/build_v7.py` | **v7 variation** — `body_v7.py` (torso slices and limbs from the sheet's measured views and solved joints), `head_v7.py` (long angular skull, V-tapered hanging jaw, 36 irregular teeth); saves `model/out_there_monster_v7.blend` (`V7_FAST=1`: base forms only) |
+| `scripts/sheet_blueprint.py`, `sheet_views.py`, `v7_compare.py` | Three-view blueprint solve (joints + cameras, `data/sheet_blueprint_R_forward.json`); silhouette overlap with the sheet's front, side and three-quarter panels (fitted cameras, IoU per region, overlays, FIT34 strings for `render_views.py`); v7 comparison sheets |
+| `scripts/build_v6.py` | v6 variation — `body_v6.py` (pose solved on the reference's lines of sight), `head_v6.py`, v6 materials in `materials_r08.py`; saves `model/out_there_monster_v6.blend` |
 | `scripts/ref34_camera.py`, `silhouette_ref34.py`, `v6_compare.py` | The fitted three-quarter camera as geometry; silhouette overlap with the reference (IoU, overlays); v6 comparison sheets |
 | `scripts/build_v5.py` | v5 variation — `body_v5.py`, `head_v5.py`, `surface_v5.py` (embedded cracks, pits, erosion), v5 materials in `materials_r08.py`; saves `model/out_there_monster_v5.blend` |
 | `scripts/fit_camera.py` | Fits a camera to a reference panel by silhouette overlap (gives the `ref34` view of `render_views.py`) |
@@ -72,6 +75,12 @@ environment cannot reach download.blender.org. Cycles CPU works; EEVEE/Workbench
 
 ```bash
 python3.11 -m venv bvenv && bvenv/bin/pip install bpy pillow "scipy<1.14"
+```
+
+v7 variation (validation and render commands in `docs/V7_NOTES.md`):
+
+```bash
+bvenv/bin/python scripts/build_v7.py
 ```
 
 v6 variation (validation commands in `docs/V6_NOTES.md`):

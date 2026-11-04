@@ -62,8 +62,24 @@ VIEWS = {
     "ref34":          ((1.6734, -4.74, 2.1633), (-0.15, -0.55, 1.45), None, 46.27, (1016, 990), (0.0478, 0.0149)),
     "ref34_body":     ((3.9392, -6.4692, 2.3411), (-0.15, -0.55, 1.45), None, 80.88, (1016, 990), (0.0254, 0.0314)),
     "arm_close":      ((-1.95, -1.75, 1.05), (-0.98, -0.45, 1.05), None, 45, (1000, 1100)),
+    # the approved sheet's front and exact side panels as orthographic cameras, framed and scaled
+    # like those panels (sheet_blueprint.py: front 160 px/m, side 150.2 px/m; pelvis-centred x),
+    # at twice their resolution
+    "sheet_front":    ((-0.2498, -12.0, 1.3451), (-0.2498, 0.0, 1.3451), 3.0625, None, (980, 990)),
+    "sheet_side":     ((12.0, -0.5058, 1.4566), (0.0, -0.5058, 1.4566), 3.1094, None, (934, 990)),
     "wound_back":     ((-1.3, 2.4, 2.9), (-0.25, 0.10, 1.95), None, 50, (1200, 1000)),
 }
+
+
+def fit34_view():
+    """A three-quarter camera fitted to the sheet's three-quarter panel by sheet_views.py / the v7
+    validation (FIT34="az,el,dist,lens,sx,sy[,tx,ty,tz]": radians, metres, mm, lens shift in the
+    fitting convention, look-at target), at twice the panel's resolution."""
+    p = [float(c) for c in os.environ["FIT34"].split(",")]
+    az, el, dist, lens, sx, sy = p[:6]
+    t = Vector(p[6:9]) if len(p) >= 9 else Vector((-0.15, -0.55, 1.45))
+    loc = t + dist * Vector((math.cos(el) * math.sin(az), -math.cos(el) * math.cos(az), math.sin(el)))
+    return (tuple(loc), tuple(t), None, lens, (1016, 990), (-sx, -sy))
 
 
 def look_at(ob, target):
@@ -104,8 +120,11 @@ def ensure_studio():
     sheet = os.environ.get("STUDIO") == "sheet"   # approximates the approved sheet's three-quarter panel
     dark = os.environ.get("STUDIO") == "dark" or sheet   # R08-sheet style presentation backdrop
     g = 0.006 if sheet else (0.018 if dark else 0.30)
+    g = float(os.environ.get("STUDIO_BG", g))     # backdrop albedo override
     m.node_tree.nodes["Principled BSDF"].inputs["Base Color"].default_value = (g, g, g, 1)
     m.node_tree.nodes["Principled BSDF"].inputs["Roughness"].default_value = 0.9
+    if "STUDIO_BG" in os.environ:   # a matte backdrop: a distant, low camera (fit34) sees the floor and wall
+        m.node_tree.nodes["Principled BSDF"].inputs["Specular IOR Level"].default_value = 0.0   # at grazing angles
     me.materials.append(m)
     col.objects.link(ground)
 
@@ -171,6 +190,8 @@ def main():
     sc.view_settings.view_transform = 'AgX'
     sc.view_settings.look = 'AgX - Base Contrast'
     for n in names:
+        if n == "fit34":
+            VIEWS[n] = fit34_view()
         loc, tgt, ortho, lens, res = VIEWS[n][:5]
         shift = VIEWS[n][5] if len(VIEWS[n]) > 5 else (0.0, 0.0)
         cam = camera("CAM_" + n, col, loc, tgt, ortho, lens, shift)
