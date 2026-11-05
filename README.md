@@ -19,7 +19,8 @@ is editable and the model rebuilds in ~35 s.
 | v5 corrective variation, matched to the approved sheet's three-quarter view (head) | kept unchanged | `model/out_there_monster_v5.blend`, `model/renders_v5/`, `docs/OPENJAW_NOTES.md` (last section) |
 | v6 proportional variation: pose, limbs, head and jaw rebuilt from the sheet's three-quarter view | kept unchanged | `model/out_there_monster_v6.blend`, `model/renders_v6/`, `docs/V6_NOTES.md` |
 | v7 reference accuracy pass: body and head rebuilt from the sheet's front, side and three-quarter views together | kept unchanged | `model/out_there_monster_v7.blend`, `model/renders_v7/`, `docs/V7_NOTES.md` |
-| **v8 head-only correction on v7's unchanged body: skull silhouette, forehead, sockets, mouth, jaw and teeth** | **for review** | `model/out_there_monster_v8.blend`, `model/renders_v8/`, `docs/V8_NOTES.md` |
+| v8 head-only correction on v7's unchanged body: skull silhouette, forehead, sockets, mouth, jaw and teeth | kept unchanged | `model/out_there_monster_v8.blend`, `model/renders_v8/`, `docs/V8_NOTES.md` |
+| **v9 head reconstruction on v8's unchanged body: damaged skull with the side view's dome profile, broken mouth frame, elongated skeletal jaw on the side view's diagonal, re-arranged teeth, restrained red tissue** | **for review** | `model/out_there_monster_v9.blend`, `model/renders_v9/`, `docs/V9_NOTES.md` |
 | Baked textures + optimised FBX for Roblox | not run (held until the design is approved) | `scripts/bake_export.py`, `docs/ROBLOX_IMPORT.md` |
 | Rigging / animation | not started | |
 
@@ -45,7 +46,9 @@ Depth positions as in R08's side panel, relative to the flat torso back at y = +
 | Path | Contents |
 |---|---|
 | `references/` | Original Roblox screenshots, R08 reference sheet and R08 detail panels |
-| `scripts/build_v8.py` | **v8 variation** — opens v7, replaces only the head with `head_v8.py` (uneven, tapering skull; wedge face and orbits; irregular sockets; lean asymmetric jaw; 36 re-arranged teeth), checks the body is vertex-identical to v7; saves `model/out_there_monster_v8.blend` (`V8_FAST=1`: base forms only) |
+| `scripts/build_v9.py` | **v9 variation** — opens v8, replaces only the head with `head_v9.py` (rounded skull sections with the side view's dome profile, fragments and breaks; jagged upper-jaw rim, torn cheeks; elongated, thin, pointed jaw opened 64°; 36 teeth re-arranged 16 upper / 20 lower; dark red gums, hinge webs and strands), checks the body is vertex-identical to v8; saves `model/out_there_monster_v9.blend` (`V9_FAST=1`: base forms only) |
+| `scripts/measure_side_profile_v9.py`, `v9_compare.py` | Exact-side forehead/snout profile, top outline and jaw angle against the sheet; the v9 head comparison sheets (sheet, v8, v9) |
+| `scripts/build_v8.py` | v8 variation — opens v7, replaces only the head with `head_v8.py` (uneven, tapering skull; wedge face and orbits; irregular sockets; lean asymmetric jaw; 36 re-arranged teeth), checks the body is vertex-identical to v7; saves `model/out_there_monster_v8.blend` (`V8_FAST=1`: base forms only) |
 | `scripts/measure_head_v8.py`, `v8_compare.py` | Head-only comparison with the sheet in three views (IoU, outline distances, pupil offsets, overlays) and the v8 head comparison sheets |
 | `scripts/build_v7.py` | v7 variation — `body_v7.py` (torso slices and limbs from the sheet's measured views and solved joints), `head_v7.py` (long angular skull, V-tapered hanging jaw, 36 irregular teeth); saves `model/out_there_monster_v7.blend` (`V7_FAST=1`: base forms only) |
 | `scripts/sheet_blueprint.py`, `sheet_views.py`, `v7_compare.py` | Three-view blueprint solve (joints + cameras, `data/sheet_blueprint_R_forward.json`); silhouette overlap with the sheet's front, side and three-quarter panels (fitted cameras, IoU per region, overlays, FIT34 strings for `render_views.py`); v7 comparison sheets |
@@ -78,6 +81,12 @@ environment cannot reach download.blender.org. Cycles CPU works; EEVEE/Workbench
 
 ```bash
 python3.11 -m venv bvenv && bvenv/bin/pip install bpy pillow "scipy<1.14"
+```
+
+v9 variation (head only; render and measurement commands in `docs/V9_NOTES.md`):
+
+```bash
+bvenv/bin/python scripts/build_v9.py
 ```
 
 v8 variation (head only; render and measurement commands in `docs/V8_NOTES.md`):
