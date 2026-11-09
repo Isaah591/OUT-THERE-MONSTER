@@ -21,7 +21,8 @@ is editable and the model rebuilds in ~35 s.
 | v7 reference accuracy pass: body and head rebuilt from the sheet's front, side and three-quarter views together | kept unchanged | `model/out_there_monster_v7.blend`, `model/renders_v7/`, `docs/V7_NOTES.md` |
 | v8 head-only correction on v7's unchanged body: skull silhouette, forehead, sockets, mouth, jaw and teeth | kept unchanged | `model/out_there_monster_v8.blend`, `model/renders_v8/`, `docs/V8_NOTES.md` |
 | v9 head reconstruction on v8's unchanged body: damaged skull with the side view's dome profile, broken mouth frame, elongated skeletal jaw on the side view's diagonal, re-arranged teeth, restrained red tissue | kept unchanged | `model/out_there_monster_v9.blend`, `model/renders_v9/`, `docs/V9_NOTES.md` |
-| **v10 approved-head replication on v9's unchanged body: new base shapes - planar, blocky, broken skull with square sockets and torn sides; broad skeletal U jaw; thick faceted fangs; flesh-lined mouth (analysis of v9's geometric differences in the notes)** | **for review** | `model/out_there_monster_v10.blend`, `model/renders_v10/`, `docs/V10_NOTES.md` |
+| v10 approved-head replication on v9's unchanged body: new base shapes - planar, blocky, broken skull with square sockets and torn sides; broad skeletal U jaw; thick faceted fangs; flesh-lined mouth (analysis of v9's geometric differences in the notes) | kept unchanged | `model/out_there_monster_v10.blend`, `model/renders_v10/`, `docs/V10_NOTES.md` |
+| **v11 head anatomy correction on v10's unchanged body: the jaw and every tooth solved from the sheet's own panels - asymmetric mouth outline, lower jaw hung from under the cheek on the side view's line, 16 upper / 18 lower teeth where the sheet shows them (a crowded lower bundle; no tooth passes through another), a dark tissue interior** | **for review** | `model/out_there_monster_v11.blend`, `model/renders_v11/`, `docs/V11_NOTES.md` |
 | Baked textures + optimised FBX for Roblox | not run (held until the design is approved) | `scripts/bake_export.py`, `docs/ROBLOX_IMPORT.md` |
 | Rigging / animation | not started | |
 
@@ -47,7 +48,9 @@ Depth positions as in R08's side panel, relative to the flat torso back at y = +
 | Path | Contents |
 |---|---|
 | `references/` | Original Roblox screenshots, R08 reference sheet and R08 detail panels |
-| `scripts/build_v10.py` | **v10 variation** — opens v9, replaces only the head with `head_v10.py` (signed-distance skull and jaw from planes and boxes via `blocks_v10.py`: wedge face plate, gable crown, stepped notches, block mosaic, square sockets, torn sides; broad U jaw; 36 faceted fangs, 16 upper / 20 lower; maroon gums, cheek flesh, jaw floor, strands), checks the body is vertex-identical to v9; saves `model/out_there_monster_v10.blend` (`V10_FAST=1`: coarser voxels) |
+| `scripts/build_v11.py` | **v11 variation** — opens v10, replaces only the head with `head_v11.py` (the sheet's anatomy as data: the jaw's pose from the side panel's chin, its asymmetric U from the front panel's mouth outline, every tooth from roots and tips read off the front, side and three-quarter panels; no tooth passes through another), checks the body is vertex-identical to v10; saves `model/out_there_monster_v11.blend` (`V11_FAST=1`: coarser voxels) |
+| `scripts/v11_anatomy_check.py`, `v11_teeth_check.py`, `v11_compare.py` | The tooth plan against the sheet's readings, with the readings drawn over renders; teeth passing through each other in the built meshes, and the brightness of the mouth's interior against the sheet's; the v11 comparison sheets (sheet, v10, v11) |
+| `scripts/build_v10.py` | v10 variation — opens v9, replaces only the head with `head_v10.py` (signed-distance skull and jaw from planes and boxes via `blocks_v10.py`: wedge face plate, gable crown, stepped notches, block mosaic, square sockets, torn sides; broad U jaw; 36 faceted fangs, 16 upper / 20 lower; maroon gums, cheek flesh, jaw floor, strands), checks the body is vertex-identical to v9; saves `model/out_there_monster_v10.blend` (`V10_FAST=1`: coarser voxels) |
 | `scripts/blocks_v10.py` | Signed-distance block modelling: voxel grid, plane / box / ellipsoid primitives, union / intersection / subtraction, a rectilinear plate mosaic (raised, sunken and missing plates, seams), marching cubes (scikit-image) to a mesh |
 | `scripts/measure_mouth_v10.py`, `v10_compare.py` | Interior head features against the sheet (pixel classes rust / teeth / voids / tissue: sockets, mouth outline and overlap, teeth and tissue areas) and the v10 comparison sheets (sheet, v9, v10) |
 | `scripts/build_v9.py` | v9 variation — opens v8, replaces only the head with `head_v9.py` (rounded skull sections with the side view's dome profile, fragments and breaks; jagged upper-jaw rim, torn cheeks; elongated, thin, pointed jaw opened 64°; 36 teeth re-arranged 16 upper / 20 lower; dark red gums, hinge webs and strands), checks the body is vertex-identical to v8; saves `model/out_there_monster_v9.blend` (`V9_FAST=1`: base forms only) |
@@ -85,6 +88,12 @@ environment cannot reach download.blender.org. Cycles CPU works; EEVEE/Workbench
 
 ```bash
 python3.11 -m venv bvenv && bvenv/bin/pip install bpy pillow "scipy<1.14" scikit-image
+```
+
+v11 variation (head only, needs scikit-image; render and check commands in `docs/V11_NOTES.md`):
+
+```bash
+bvenv/bin/python scripts/build_v11.py
 ```
 
 v10 variation (head only, needs scikit-image; render and measurement commands in `docs/V10_NOTES.md`):
