@@ -23,7 +23,8 @@ is editable and the model rebuilds in ~35 s.
 | v9 head reconstruction on v8's unchanged body: damaged skull with the side view's dome profile, broken mouth frame, elongated skeletal jaw on the side view's diagonal, re-arranged teeth, restrained red tissue | kept unchanged | `model/out_there_monster_v9.blend`, `model/renders_v9/`, `docs/V9_NOTES.md` |
 | v10 approved-head replication on v9's unchanged body: new base shapes - planar, blocky, broken skull with square sockets and torn sides; broad skeletal U jaw; thick faceted fangs; flesh-lined mouth (analysis of v9's geometric differences in the notes) | kept unchanged | `model/out_there_monster_v10.blend`, `model/renders_v10/`, `docs/V10_NOTES.md` |
 | v11 head anatomy correction on v10's unchanged body: the jaw and every tooth solved from the sheet's own panels - asymmetric mouth outline, lower jaw hung from under the cheek on the side view's line, 16 upper / 18 lower teeth where the sheet shows them (a crowded lower bundle; no tooth passes through another), a dark tissue interior | kept unchanged | `model/out_there_monster_v11.blend`, `model/renders_v11/`, `docs/V11_NOTES.md` |
-| **v12 jaw and tooth correction on v11 (mouth only): the lower jaw's side silhouette traced from the exact side panel (steep, curving into a broken chin), every tooth with the sheet's own width, height and lean (an uneven upper row on a broken gum; a lower bundle fanning from the chin as the side panel's fan), thin torn tissue instead of a smooth red outline** | **for review** | `model/out_there_monster_v12.blend`, `model/renders_v12/`, `docs/V12_NOTES.md` |
+| v12 jaw and tooth correction on v11 (mouth only): the lower jaw's side silhouette traced from the exact side panel (steep, curving into a broken chin), every tooth with the sheet's own width, height and lean (an uneven upper row on a broken gum; a lower bundle fanning from the chin as the side panel's fan), thin torn tissue instead of a smooth red outline | kept unchanged | `model/out_there_monster_v12.blend`, `model/renders_v12/`, `docs/V12_NOTES.md` |
+| **v13 ("Experimental 09") mouth and eye-socket reconstruction on v12: the lower jaw at the side panel's own height (as low as the sheet draws it) and narrowed into the sheet's crooked V - its tooth row fitted to the sheet's lower gum line in the front and three-quarter panels - with the lower teeth crowded into the narrow chin; the eye sockets restored to small horizontal rectangles without the stepped frame; no body visible through the mouth; the upper jaw, pupils, rest of the head and body unchanged** | **for review** | `model/out_there_monster_v13.blend`, `model/renders_v13/`, `docs/V13_NOTES.md` |
 | Baked textures + optimised FBX for Roblox | not run (held until the design is approved) | `scripts/bake_export.py`, `docs/ROBLOX_IMPORT.md` |
 | Rigging / animation | not started | |
 
@@ -49,7 +50,9 @@ Depth positions as in R08's side panel, relative to the flat torso back at y = +
 | Path | Contents |
 |---|---|
 | `references/` | Original Roblox screenshots, R08 reference sheet and R08 detail panels |
-| `scripts/build_v12.py` | **v12 variation** — opens v11, replaces only the mouth (lower jaw, teeth, gums, mouth tissue) with `head_v12.py`'s: the jaw's side profile from the exact side panel's trace, each tooth with its own width, root height and lean from the sheet, gum collars and torn strips; checks the body and the rest of the head are vertex-identical to v11; saves `model/out_there_monster_v12.blend` (`V12_FAST=1`: coarser voxels) |
+| `scripts/build_v13.py` | **v13 variation** ("Experimental 09") — opens v12, re-cuts the eye sockets in the cranium (every vertex away from them stays v12's, attributes included) and replaces the lower jaw, lower teeth and gums and the mouth's tissue with `head_v13.py`'s: the jaw at the side panel's own height, its tooth row fitted to the sheet's lower gum line in the front and three-quarter panels; checks the body, the upper jaw, the pupils and the rest of the head are vertex-identical to v12; saves `model/out_there_monster_v13.blend` (`V13_FAST=1`: coarser voxels for the jaw) |
+| `scripts/v13_anatomy_check.py`, `v13_mouth_check.py`, `v13_compare.py` | The v13 jaw and lower-tooth plan against the sheet's readings in all three panels, drawn over renders with the solved rim; body seen through the mouth (ray casts) and the eye sockets against the sheet's; the v13 comparison sheets (sheet, v12, v13) |
+| `scripts/build_v12.py` | v12 variation — opens v11, replaces only the mouth (lower jaw, teeth, gums, mouth tissue) with `head_v12.py`'s: the jaw's side profile from the exact side panel's trace, each tooth with its own width, root height and lean from the sheet, gum collars and torn strips; checks the body and the rest of the head are vertex-identical to v11; saves `model/out_there_monster_v12.blend` (`V12_FAST=1`: coarser voxels) |
 | `scripts/v12_anatomy_check.py`, `v12_jaw_check.py`, `v12_compare.py` | The v12 tooth plan against the sheet's readings, with the readings drawn over renders; the lower jaw's side silhouette (rear edge, chin, tooth-root line, angle) against the side panel's trace; the v12 comparison sheets (sheet, v11, v12) |
 | `scripts/build_v11.py` | v11 variation — opens v10, replaces only the head with `head_v11.py` (the sheet's anatomy as data: the jaw's pose from the side panel's chin, its asymmetric U from the front panel's mouth outline, every tooth from roots and tips read off the front, side and three-quarter panels; no tooth passes through another), checks the body is vertex-identical to v10; saves `model/out_there_monster_v11.blend` (`V11_FAST=1`: coarser voxels) |
 | `scripts/v11_anatomy_check.py`, `v11_teeth_check.py`, `v11_compare.py` | The tooth plan against the sheet's readings, with the readings drawn over renders; teeth passing through each other in the built meshes, and the brightness of the mouth's interior against the sheet's; the v11 comparison sheets (sheet, v10, v11) |
@@ -91,6 +94,13 @@ environment cannot reach download.blender.org. Cycles CPU works; EEVEE/Workbench
 
 ```bash
 python3.11 -m venv bvenv && bvenv/bin/pip install bpy pillow "scipy<1.14" scikit-image
+```
+
+v13 variation ("Experimental 09": mouth and eye sockets, needs scikit-image; render and check commands in
+`docs/V13_NOTES.md`):
+
+```bash
+bvenv/bin/python scripts/build_v13.py
 ```
 
 v12 variation (mouth only, needs scikit-image; render and check commands in `docs/V12_NOTES.md`):
