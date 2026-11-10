@@ -141,6 +141,8 @@ def ensure_studio():
         area("Fill", (3.2, -5.6, 1.7), 260, 5.0)
         area("Rim", (3.0, 4.6, 4.6), 620, 3.0)
         area("Top", (0.0, -1.0, 8.0), 120, 6.0)
+        if os.environ.get("SIDE_KEY"):   # the sheet's exact-side panel is lit from the camera's side (front, high):
+            area("SideKey", (6.5, -3.8, 4.2), float(os.environ.get("SIDE_KEY")), 3.0, target=(0.0, -1.1, 2.0))
     else:
         k = 1.25 if dark else 1.0
         area("Key", (-4.5, -6.0, 5.5), 900 * k, 4.0)
