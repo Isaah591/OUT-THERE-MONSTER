@@ -93,8 +93,9 @@ if __name__ == "__main__":
         right.append("SILHOUETTE OVERLAP WITH THE SHEET: FRONT %.2f / THREE-QUARTER %.2f / SIDE %.2f" % (
             iou["front"]["as_framed"], iou["tq"]["as_framed"], iou["side"]["as_framed"]))
     if "model_head" in fill:
-        right.append("TEETH COVER %.0f%% OF THE MOUTH OPENING IN THE HEAD CLOSE-UP (SHEET: %.0f%%)" % (
-            fill["model_head"]["teeth"] * 100, fill["sheet_head_closeup"]["teeth"] * 100))
+        right.append("HEAD CLOSE-UP: TEETH COVER %.0f%% OF THE MOUTH OPENING (SHEET: %.0f%%), DARK %.0f%% (SHEET: %.0f%%)" % (
+            fill["model_head"]["teeth"] * 100, fill["sheet_head_closeup"]["teeth"] * 100,
+            fill["model_head"]["dark"] * 100, fill["sheet_head_closeup"]["dark"] * 100))
         right.append("LARGEST UNBROKEN DARK PATCH: %.0f%% OF THE OPENING (SHEET: %.0f%%)" % (
             fill["model_head"]["largest_dark"] * 100, fill["sheet_head_closeup"]["largest_dark"] * 100))
     right.append(f"TEETH PASSING THROUGH ONE ANOTHER: {t['clashes_after_relaxing']} (WAS {t['clashes_as_placed']} PAIRS BEFORE EASING APART)")
