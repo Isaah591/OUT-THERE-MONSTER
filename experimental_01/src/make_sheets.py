@@ -45,7 +45,13 @@ def label(d, xy, text, size, fill=FG, bold=True, shadow=True):
 
 
 def model_sheet(rdir, facts, out, k=2):
-    W, H = 1484 * k, 1060 * k
+    W = 1484 * k
+    row = [("head", "HEAD CLOSE-UP"), ("mouth", "MOUTH CLOSE-UP"), ("mouthside", "MOUTH - EXACT SIDE PROFILE"),
+           ("jawside", "JAW - SIDE ANGLE"), ("sideclose", "SIDE ANGLE CLOSE-UP")]
+    ims = [Image.open(os.path.join(rdir, key + ".png")).convert("RGB") for key, _ in row]
+    gap = 8 * k
+    hh = int((W - gap * (len(ims) - 1)) / sum(i.width / i.height for i in ims))
+    H = 556 * k + hh + 16 * k + (30 + 17 * max(len(facts["left"]), len(facts["right"]))) * k
     im = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(im)
     label(d, (22 * k, 12 * k), "ASTRA R08 - EXPERIMENTAL MODEL 01", 15 * k)
@@ -59,12 +65,6 @@ def model_sheet(rdir, facts, out, k=2):
         im.paste(fit(r, (x1 - x0) * k, (y1 - y0) * k), (x0 * k, y0 * k))
         label(d, ((x0 + 20) * k, (y0 + 12) * k), text, 10 * k)
     # close-ups: one row, equal height
-    row = [("head", "HEAD CLOSE-UP"), ("mouth", "MOUTH CLOSE-UP"), ("mouthside", "MOUTH - EXACT SIDE PROFILE"),
-           ("jawside", "JAW - SIDE ANGLE"), ("sideclose", "SIDE ANGLE CLOSE-UP")]
-    ims = [Image.open(os.path.join(rdir, key + ".png")).convert("RGB") for key, _ in row]
-    gap = 8 * k
-    tot = sum(i.width / i.height for i in ims)
-    hh = int((W - gap * (len(ims) - 1)) / tot)
     x, y = 0, 556 * k
     for (key, text), r in zip(row, ims):
         w = int(round(r.width / r.height * hh))
@@ -77,7 +77,7 @@ def model_sheet(rdir, facts, out, k=2):
     label(d, (22 * k, y), "WHAT THIS IS", 10 * k)
     for i, line in enumerate(facts["left"]):
         label(d, (22 * k, y + (22 + 17 * i) * k), u"•  " + line, int(7.2 * k), fill=(214, 214, 210), bold=False, shadow=False)
-    d.line([(760 * k, y + 2 * k), (760 * k, y + 116 * k)], fill=(120, 122, 120), width=k)
+    d.line([(760 * k, y + 2 * k), (760 * k, H - 14 * k)], fill=(120, 122, 120), width=k)
     label(d, (782 * k, y), "CHECKED AGAINST THE APPROVED SHEET", 10 * k)
     for i, line in enumerate(facts["right"]):
         label(d, (782 * k, y + (22 + 17 * i) * k), u"•  " + line, int(7.2 * k), fill=(214, 214, 210), bold=False, shadow=False)

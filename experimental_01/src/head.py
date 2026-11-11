@@ -16,7 +16,8 @@ import numpy as np
 import kernel as K
 
 # ---- placement (fit_pose.py, then eased toward the front view's centre line) -----------------
-HEAD = dict(origin=np.array([-0.010, -1.760, 2.410]), pitch=0.0549, yaw=np.radians(0.0), scale=1.0)
+HEAD = dict(origin=np.array([-0.010, -1.760, 2.410]), pitch=0.0549, yaw=np.radians(0.0), scale=0.96)
+TOOTH_SLIM = 0.87          # the sheet's teeth are slimmer for their length than the first tables gave
 
 HEADP = dict(cell=0.0105, plate=(0.100, 0.085),
              layers=((0.003, 0.008, 1.00, 0.00), (0.011, 0.017, 0.66, 0.05), (0.019, 0.027, 0.30, 0.10), (0.029, 0.040, 0.11, 0.14)),
@@ -65,7 +66,7 @@ def hexa(name, P8, kind="plate", rng=None, jit=0.0, kinds=None):
 # ---- the mask (front view crop: 620 px across the face = 0.52 m) ------------------------------
 # columns: mask edge | right socket outer | inner | lip point | left socket inner | outer | mask edge
 COLX = np.array([-0.262, -0.235, -0.124, -0.056, 0.070, 0.205, 0.262])
-LIP = np.array([0.006, -0.012, -0.060, -0.094, -0.036, 0.002, 0.020])     # the dip of the upper lip
+LIP = np.array([0.006, -0.006, -0.024, -0.096, -0.012, 0.004, 0.020])     # the lip stays high under the sockets and dips between them
 SOCB = np.array([0.034, 0.021, 0.013, 0.004, 0.026, 0.034, 0.044])        # socket floors
 SOCT = np.array([0.158, 0.148, 0.108, 0.096, 0.124, 0.160, 0.168])        # socket tops: inner corners low
 BROW = np.array([0.188, 0.190, 0.172, 0.162, 0.178, 0.194, 0.188])        # top of the mask
@@ -122,7 +123,7 @@ def build_mask(rng):
 
 # ---- cranium (exact side view and side close-up: steep forehead into a dome) ------------------
 #        b      wb     wc     hc     wt     ht     wi     hi     hr     hbc
-CRAN = [(0.118, 0.272, 0.290, 0.095, 0.266, 0.226, 0.140, 0.292, 0.312, 0.072),
+CRAN = [(0.118, 0.272, 0.290, 0.095, 0.264, 0.218, 0.140, 0.268, 0.282, 0.072),
         (0.180, 0.280, 0.298, 0.102, 0.268, 0.250, 0.150, 0.328, 0.356, 0.078),
         (0.290, 0.288, 0.308, 0.110, 0.268, 0.262, 0.155, 0.356, 0.392, 0.082),
         (0.440, 0.288, 0.308, 0.115, 0.258, 0.262, 0.145, 0.362, 0.400, 0.062),
@@ -159,7 +160,7 @@ def build_cranium(rng):
             if jx in (8, 9):
                 kind = "void" if b0 < MOUTH_BACK else "core"
             co.f([a[jx], a[(jx + 1) % 10], c[(jx + 1) % 10], c[jx]], kind=kind, grain=gb, tag=f"cr{jx}")
-    co.f(rings[0][::-1], kind="plate", grain=Hd(1, 0, 0), tag="front")
+    co.f(rings[0][::-1], kind="socket", tag="front")
     co.f(rings[-1], kind="plate", grain=Hd(1, 0, 0), tag="back")
     return co
 
@@ -208,8 +209,8 @@ def build_lower_jaw(rng):
 # three-quarter and head close-up panels: long at the right corner, the longest fang at the lip
 # point, one thick fang left of centre, uneven in between.
 UPPER_FRONT = [(-0.240, 0.235, 0.030, 3, 5), (-0.196, 0.292, 0.033, 2, 3), (-0.150, 0.196, 0.025, 7, 2),
-               (-0.108, 0.160, 0.026, 2, 1), (-0.048, 0.385, 0.040, 1, -1), (-0.004, 0.182, 0.024, 7, 0),
-               (0.040, 0.305, 0.033, 3, -1), (0.092, 0.215, 0.027, 6, -2), (0.140, 0.285, 0.036, 2, -2),
+               (-0.108, 0.160, 0.026, 2, 1), (-0.048, 0.385, 0.040, 1, -1), (-0.004, 0.232, 0.026, 7, 0),
+               (0.040, 0.345, 0.034, 3, -1), (0.092, 0.262, 0.028, 6, -2), (0.140, 0.300, 0.036, 2, -2),
                (0.190, 0.158, 0.024, 6, -3), (0.236, 0.196, 0.027, 3, -5)]
 # Upper sides: (side, b, length, radius, splay out deg).  The exact side view shows the rear teeth
 # as long as the front ones, and the brief asks for it.
@@ -218,19 +219,19 @@ UPPER_SIDE = [(-1, 0.105, 0.300, 0.033, 5), (-1, 0.195, 0.205, 0.027, 8), (-1, 0
 # Upper inner row, behind and between the main teeth: (x, b offset, length, radius)
 UPPER_INNER = [(-0.218, 0.060, 0.170, 0.021), (-0.128, 0.052, 0.215, 0.023), (-0.026, 0.056, 0.230, 0.024),
                (0.066, 0.052, 0.225, 0.023), (0.166, 0.058, 0.200, 0.022), (0.215, 0.090, 0.160, 0.020),
-               (0.108, 0.082, 0.265, 0.026), (0.018, 0.100, 0.255, 0.024), (-0.085, 0.092, 0.240, 0.024), (0.180, 0.108, 0.225, 0.022),
-               (-0.150, 0.110, 0.230, 0.023), (0.062, 0.125, 0.290, 0.025)]
+               (0.108, 0.082, 0.300, 0.026), (0.018, 0.100, 0.305, 0.025), (-0.085, 0.092, 0.250, 0.024), (0.180, 0.108, 0.240, 0.022),
+               (-0.150, 0.110, 0.230, 0.023), (0.062, 0.125, 0.320, 0.026)]
 # Lower teeth: (rim parameter 0..1 from the right hinge round the chin to the left hinge, length,
 # radius, elevation above the forward direction deg, lean toward +x deg)
 LOWER = [(0.085, 0.200, 0.025, 72, 8), (0.150, 0.262, 0.029, 68, 10), (0.215, 0.300, 0.032, 63, 7), (0.275, 0.262, 0.028, 66, 12),
          (0.335, 0.325, 0.034, 62, 8), (0.390, 0.280, 0.029, 62, 12), (0.440, 0.340, 0.035, 60, 5), (0.487, 0.270, 0.028, 64, 2),
-         (0.530, 0.372, 0.036, 60, -2), (0.575, 0.305, 0.030, 64, -7), (0.620, 0.350, 0.034, 62, -6), (0.668, 0.300, 0.030, 63, -11),
+         (0.530, 0.385, 0.036, 62, -2), (0.575, 0.330, 0.030, 66, -7), (0.620, 0.372, 0.034, 64, -6), (0.668, 0.322, 0.030, 65, -11),
          (0.718, 0.340, 0.035, 60, -8), (0.772, 0.302, 0.031, 64, -11), (0.828, 0.325, 0.033, 62, -7), (0.882, 0.270, 0.028, 67, -10),
          (0.932, 0.210, 0.025, 72, -8)]
 # Lower inner row: (rim parameter, length, radius, elevation)
 LOWER_INNER = [(0.245, 0.215, 0.021, 74), (0.365, 0.250, 0.023, 70), (0.465, 0.285, 0.025, 72), (0.555, 0.275, 0.025, 70),
                (0.645, 0.255, 0.023, 72), (0.745, 0.235, 0.022, 74), (0.855, 0.200, 0.020, 76),
-               (0.420, 0.300, 0.025, 68), (0.510, 0.315, 0.026, 66), (0.600, 0.295, 0.025, 68)]
+               (0.420, 0.310, 0.025, 70), (0.510, 0.345, 0.026, 72), (0.600, 0.330, 0.025, 72), (0.555, 0.360, 0.026, 78)]
 
 
 def rim_point(u):
@@ -321,6 +322,7 @@ def build_teeth(m):
         k = rng.normal(0, 0.052, 3) * (1.9 if rng.random() < 0.16 else 1.0)
         d = K.unit(d + k - (k @ d) * d)
         bd = np.asarray(bend_dir, float)
+        L, r = L * HEAD["scale"], r * HEAD["scale"] * TOOTH_SLIM
         specs.append(dict(root=np.asarray(root, float), dir=d, L=L, r=r, bd=K.unit(bd - (bd @ d) * d), bend=bend, jaw=jaw, sink=sink))
 
     # upper front arc: neighbours stand at alternate depths in the thick lip, so crowded teeth overlap
@@ -489,7 +491,7 @@ def build_soft(m):
             ((0.065, 0.305, -0.570), (0.075, 0.275, -0.33), (0.070, 0.245, -0.12), (0.05, 0.23, 0.05), 0.058),
             ((0.000, 0.250, -0.540), (0.005, 0.215, -0.33), (0.000, 0.190, -0.13), (0.0, 0.18, 0.05), 0.050)]
     for (a, b_, c, d, r) in cols:
-        cord(lin, [a, b_, c, d], [r * 0.8, r, r * 0.95, r * 0.7], rng, sides=8, wob=0.10, hint=Hd(1, 0, 0), wander=0.012, n=14)
+        cord(lin, [a, b_, c, d], [r * 0.30, r, r * 0.95, r * 0.7], rng, sides=8, wob=0.10, hint=Hd(1, 0, 0), wander=0.012, n=14)
 
 
 def build_eyes(m):
@@ -526,7 +528,7 @@ def build_head(m):
                    (-0.106, -0.014, 0.176), (0.052, -0.014, 0.186), (0.048, 0.128, 0.292), (-0.102, 0.128, 0.290)],
         kinds=dict(bottom="core", left="core", right="core"))
     # nasal plate between the eyes, running down into the lip point
-    blk("nose", [(-0.090, -0.006, -0.092), (-0.024, -0.004, -0.072), (-0.020, 0.030, -0.058), (-0.092, 0.030, -0.076),
+    blk("nose", [(-0.074, -0.006, -0.090), (-0.040, -0.004, -0.088), (-0.038, 0.030, -0.070), (-0.076, 0.030, -0.072),
                  (-0.096, -0.028, 0.118), (0.038, -0.028, 0.130), (0.042, 0.050, 0.148), (-0.100, 0.050, 0.140)],
         kinds=dict(left="core", right="core"))
     # crown slab along the ridge

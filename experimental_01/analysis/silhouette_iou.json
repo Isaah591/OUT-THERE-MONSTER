@@ -1,0 +1,14 @@
+{
+ "front": {
+  "as_framed": 0.796,
+  "best_fit": 0.812
+ },
+ "tq": {
+  "as_framed": 0.746,
+  "best_fit": 0.748
+ },
+ "side": {
+  "as_framed": 0.78,
+  "best_fit": 0.788
+ }
+}

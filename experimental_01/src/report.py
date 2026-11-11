@@ -30,6 +30,7 @@ if __name__ == "__main__":
     up = [t for t in teeth if t["jaw"] == "upper"]
     lo = [t for t in teeth if t["jaw"] == "lower"]
     L = lambda ts: [round(float(t["L"]), 3) for t in ts]
+    hs = head.HEAD["scale"]
     lipc = head.Hw(0.262, 0.0, head.lip(0.262))
     chin = head.Hw(*head.RIM[np.argmin(head.RIM[:, 2])])
     stats = dict(
@@ -38,21 +39,26 @@ if __name__ == "__main__":
         width_m=round(float(np.ptp(allv[:, 0])), 3), length_m=round(float(np.ptp(allv[:, 1])), 3),
         head=dict(width_m=round(float(np.ptp(hv[:, 0])), 3), length_m=round(float(np.ptp(hv[:, 1])), 3),
                   height_m=round(float(np.ptp(hv[:, 2])), 3),
-                  mask_width_m=round(float(head.COLX[-1] - head.COLX[0]), 3),
-                  gape_m=round(float(-head.RIM[:, 2].min() + head.LIP.max()), 3),
-                  lip_dip_m=round(float(head.LIP.max() - head.LIP.min()), 3),
-                  chin_forward_of_hinge_m=round(float(head.RIM[0, 1] - head.RIM[:, 1].min()), 3),
-                  sockets_m=[[round(float(head.COLX[2] - head.COLX[1]), 3), round(float(np.mean(head.SOCT[1:3] - head.SOCB[1:3])), 3)],
-                             [round(float(head.COLX[5] - head.COLX[4]), 3), round(float(np.mean(head.SOCT[4:6] - head.SOCB[4:6])), 3)]],
-                  socket_depth_m=head.SOCKET_DEPTH, pupil_radius_m=head.PUPIL_R,
+                  mask_width_m=round(float(head.COLX[-1] - head.COLX[0]) * hs, 3),
+                  gape_m=round(float(-head.RIM[:, 2].min() + head.LIP.max()) * hs, 3),
+                  lip_dip_m=round(float(head.LIP.max() - head.LIP.min()) * hs, 3),
+                  chin_forward_of_hinge_m=round(float(head.RIM[0, 1] - head.RIM[:, 1].min()) * hs, 3),
+                  sockets_m=[[round(float(head.COLX[2] - head.COLX[1]) * hs, 3), round(float(np.mean(head.SOCT[1:3] - head.SOCB[1:3])) * hs, 3)],
+                             [round(float(head.COLX[5] - head.COLX[4]) * hs, 3), round(float(np.mean(head.SOCT[4:6] - head.SOCB[4:6])) * hs, 3)]],
+                  socket_depth_m=round(head.SOCKET_DEPTH * hs, 3), pupil_radius_m=head.PUPIL_R,
                   brow_drop_deg=[round(float(np.degrees(np.arctan2(head.SOCT[1] - head.SOCT[2], head.COLX[2] - head.COLX[1]))), 1),
                                  round(float(np.degrees(np.arctan2(head.SOCT[5] - head.SOCT[4], head.COLX[5] - head.COLX[4]))), 1)]),
         teeth=dict(upper=len(up), lower=len(lo), upper_front=len(head.UPPER_FRONT), upper_side=len(head.UPPER_SIDE),
                    upper_inner=len(head.UPPER_INNER), lower_rim=len(head.LOWER), lower_inner=len(head.LOWER_INNER),
                    upper_lengths_m=L(up), lower_lengths_m=L(lo),
                    longest_m=max(L(teeth)), shortest_m=min(L(teeth)),
-                   rear_upper_lengths_m=[round(float(t[2]), 3) for t in head.UPPER_SIDE],
+                   rear_upper_lengths_m=[round(float(t[2]) * hs, 3) for t in head.UPPER_SIDE],
                    clashes_as_placed=int(m.info["tooth_clashes"][0]), clashes_after_relaxing=int(m.info["tooth_clashes"][1])),
+        arm_long_m=round(float(np.linalg.norm(np.diff(np.array(body.POSE["arm_long"]), axis=0), axis=1).sum()), 2),
+        arm_short_m=round(float(np.linalg.norm(np.diff(np.array(body.POSE["arm_short"]), axis=0), axis=1).sum()), 2),
+        head_ahead_of_hips_m=round(float(body.POSE["hip"][1] - head.HEAD["origin"][1]), 2),
+        wounds=int(sum(len(p["wounds"].z) for p in m.parts)), rods=15,
+        front_upper_lengths_m=[round(float(t[1]) * hs, 3) for t in head.UPPER_FRONT],
         pose=body.POSE, head_placement=dict(origin=[float(x) for x in head.HEAD["origin"]], pitch_rad=float(head.HEAD["pitch"])),
         cameras=views.CAMS)
     json.dump(stats, open(os.path.join(AN, "model_stats.json"), "w"), indent=1)
