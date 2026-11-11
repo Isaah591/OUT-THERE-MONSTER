@@ -198,65 +198,64 @@ class NT:
 
 # ----------------------------------------------------------------------------- materials
 
-RUST_DEEP = (0.016, 0.006, 0.003)
-RUST_DARK = (0.043, 0.015, 0.007)
-RUST_MID = (0.105, 0.036, 0.013)
-RUST_WARM = (0.190, 0.066, 0.020)
-RUST_ORANGE = (0.400, 0.135, 0.028)
-RUST_TAN = (0.270, 0.118, 0.045)
+RUST_DEEP = (0.010, 0.0038, 0.0020)
+RUST_DARK = (0.030, 0.0100, 0.0045)
+RUST_MID = (0.082, 0.0270, 0.0095)
+RUST_WARM = (0.165, 0.0540, 0.0150)
+RUST_ORANGE = (0.360, 0.1150, 0.0230)
+RUST_TAN = (0.250, 0.1150, 0.0450)
 
 
 def mat_rust(name="R08_RustPlates"):
-    """Rust armour: per-slab tone, large blotches, a net of oxidised orange plate lines with
-    slightly cushioned cells between them, bright torn rims, dark side walls and pits."""
+    """Weathered rust armour: every slab has its own tone; the surface is mottled at several
+    scales (dark scabs, orange bloom, pale flecks), pitted and grainy; torn edges are oxidised
+    bright orange; side walls and the faint net of plate lines are dark."""
     m = NT(name)
     co = m.coords()
     tone = m.attr("tone")
     wall = m.attr("wall")
     layer = m.attr("layer")
     rim = m.attr("rim")
-    big = m.noise(co, 2.2, 3.0, 0.6)
-    mid = m.noise(co, 9.0, 4.0, 0.62)
-    fine = m.noise(co, 85.0, 3.0, 0.7)
-    t = m.math("ADD", m.math("MULTIPLY", tone, 0.46), m.math("MULTIPLY", big, 0.54))
-    t = m.math("ADD", t, m.math("MULTIPLY", m.math("SUBTRACT", mid, 0.5), 0.40))
-    base = m.ramp(t, [(0.20, RUST_DARK), (0.42, RUST_MID), (0.62, RUST_WARM), (0.86, RUST_TAN)])
-    # the net of plate lines: small irregular cells, bright oxidised seams, darker cushioned middles
-    wv = m.node("ShaderNodeMapping")
-    wv.inputs["Scale"].default_value = (1, 1, 1)
-    nv = m.noise(co, 6.0, 2.0, 0.5, out="Color")
-    wco = m.node("ShaderNodeMix", data_type="VECTOR")
-    ins = {s_.identifier: s_ for s_ in wco.inputs}
-    ins["Factor_Float"].default_value = 0.06
-    m.link(co, ins["A_Vector"])
-    m.link(nv, ins["B_Vector"])
-    wco_out = {s_.identifier: s_ for s_ in wco.outputs}["Result_Vector"]
-    edge = m.voronoi(wco_out, 21.0, feature="DISTANCE_TO_EDGE")
-    cellv = m.voronoi(wco_out, 21.0, out="Color")
-    seam = m.sstep(0.030, 0.004, edge)
-    seam = m.math("MULTIPLY", seam, m.sstep(0.30, 0.55, m.noise(co, 14.0, 2.0, 0.5)))
-    cell_t = m.node("ShaderNodeSeparateColor")
-    m.link(cellv, cell_t.inputs[0])
-    base = m.mix(m.math("MULTIPLY", cell_t.outputs[0], 0.34), base, RUST_DARK)
-    base = m.mix(m.math("MULTIPLY", m.sstep(0.0, 0.10, edge), 0.0), base, base)
-    base = m.mix(m.math("MULTIPLY", seam, 0.62), base, RUST_ORANGE)
-    # speckle: dark pits and pale flecks
-    sp = m.voronoi(co, 110.0)
-    base = m.mix(m.math("MULTIPLY", m.math("LESS_THAN", sp, 0.15), 0.6), base, RUST_DEEP)
-    base = m.mix(m.math("MULTIPLY", m.math("GREATER_THAN", fine, 0.70), 0.22), base, RUST_TAN)
-    # torn rims of each slab catch the light: orange
-    rimf = m.math("MULTIPLY", m.math("POWER", rim, 1.8), m.math("ADD", 0.45, m.math("MULTIPLY", mid, 0.6)), clamp=True)
-    base = m.mix(m.math("MULTIPLY", rimf, 0.60), base, RUST_ORANGE)
-    base = m.mix(m.math("MULTIPLY", layer, 0.06), base, RUST_TAN)
-    base = m.mix(m.math("MULTIPLY", wall, 0.82), base, RUST_DEEP)
-    # relief: cushioned cells, raised seams, grain
-    h = m.math("ADD", m.math("MULTIPLY", m.sstep(0.0, 0.07, edge), 0.55), m.math("MULTIPLY", seam, 0.35))
-    h = m.math("ADD", h, m.math("MULTIPLY", fine, 0.30))
-    h = m.math("ADD", h, m.math("MULTIPLY", mid, 0.40))
-    nrm = m.bump(h, 0.55, 0.010)
-    rough = m.math("ADD", 0.74, m.math("MULTIPLY", fine, 0.22))
+    big = m.noise(co, 1.7, 4.0, 0.62)
+    mid = m.noise(co, 7.5, 5.0, 0.66)
+    sml = m.noise(co, 31.0, 4.0, 0.68)
+    fine = m.noise(co, 150.0, 3.0, 0.72)
+    # where on the rust ramp this spot sits: slab tone + mottling at three scales
+    t = m.math("ADD", m.math("MULTIPLY", tone, 0.42), m.math("MULTIPLY", big, 0.26))
+    t = m.math("ADD", t, m.math("MULTIPLY", mid, 0.42))
+    t = m.math("ADD", t, m.math("MULTIPLY", m.math("SUBTRACT", sml, 0.5), 0.36))
+    t = m.math("ADD", t, m.math("MULTIPLY", m.math("SUBTRACT", fine, 0.5), 0.16))
+    base = m.ramp(t, [(0.30, RUST_DEEP), (0.43, RUST_DARK), (0.56, RUST_MID), (0.70, RUST_WARM), (0.86, RUST_ORANGE), (0.98, RUST_TAN)])
+    # dark scabs and orange bloom
+    scab = m.sstep(0.56, 0.70, m.noise(co, 4.6, 4.0, 0.7))
+    base = m.mix(m.math("MULTIPLY", scab, 0.42), base, RUST_DARK)
+    bloom = m.sstep(0.60, 0.76, m.noise(m.coords((1.0, 1.0, 0.45)), 11.0, 3.0, 0.6))
+    base = m.mix(m.math("MULTIPLY", bloom, 0.40), base, RUST_ORANGE)
+    # pits (dark, sunk) and pale flecks
+    pit = m.voronoi(co, 62.0)
+    pitm = m.sstep(0.17, 0.07, pit)
+    base = m.mix(m.math("MULTIPLY", pitm, 0.80), base, RUST_DEEP)
+    fleck = m.math("GREATER_THAN", m.noise(co, 240.0, 2.0, 0.6), 0.71)
+    base = m.mix(m.math("MULTIPLY", fleck, 0.30), base, RUST_TAN)
+    # a faint net of plate lines (the sheet's small tiles) - dark seams, slightly raised cells
+    edge = m.voronoi(co, 19.0, feature="DISTANCE_TO_EDGE")
+    seam = m.math("MULTIPLY", m.sstep(0.020, 0.003, edge), m.sstep(0.35, 0.60, m.noise(co, 9.0, 2.0, 0.5)))
+    base = m.mix(m.math("MULTIPLY", seam, 0.55), base, RUST_DEEP)
+    # torn edges of each slab: oxidised orange, broken up
+    rimf = m.math("MULTIPLY", m.math("POWER", rim, 1.6), m.math("ADD", 0.30, m.math("MULTIPLY", sml, 0.9)), clamp=True)
+    base = m.mix(m.math("MULTIPLY", rimf, 0.82), base, RUST_ORANGE)
+    base = m.mix(m.math("MULTIPLY", layer, 0.045), base, RUST_TAN)
+    base = m.mix(m.math("MULTIPLY", wall, 0.85), base, RUST_DEEP)
+    # relief
+    h = m.math("ADD", m.math("MULTIPLY", fine, 0.55), m.math("MULTIPLY", sml, 0.70))
+    h = m.math("ADD", h, m.math("MULTIPLY", mid, 0.50))
+    h = m.math("SUBTRACT", h, m.math("MULTIPLY", pitm, 0.90))
+    h = m.math("SUBTRACT", h, m.math("MULTIPLY", seam, 0.45))
+    h = m.math("SUBTRACT", h, m.math("MULTIPLY", scab, 0.25))
+    nrm = m.bump(h, 0.85, 0.012)
+    rough = m.math("ADD", 0.78, m.math("MULTIPLY", fine, 0.20))
     p = m.principled(**{"Base Color": base, "Roughness": rough, "Normal": nrm})
-    p.inputs["Specular IOR Level"].default_value = 0.30
+    p.inputs["Specular IOR Level"].default_value = 0.26
     return m.mat
 
 
@@ -269,8 +268,8 @@ def mat_under(name="R08_Under"):
     kind = m.attr("kind")
     n1 = m.noise(co, 26.0, 3.0, 0.6)
     fib = m.noise(m.coords((7.0, 7.0, 60.0)), 3.0, 3.0, 0.6)
-    grime = m.mix(n1, (0.012, 0.006, 0.004), (0.040, 0.017, 0.010))
-    tissue = m.mix(fib, (0.022, 0.002, 0.003), (0.110, 0.008, 0.010))
+    grime = m.mix(n1, (0.004, 0.002, 0.0015), (0.018, 0.008, 0.005))
+    tissue = m.mix(fib, (0.028, 0.002, 0.004), (0.130, 0.010, 0.012))
     w = m.sstep(0.25, 0.7, wound)
     is_t = m.math("COMPARE", kind, 1.0, 0.25)
     is_g = m.math("COMPARE", kind, 2.0, 0.25)
@@ -295,12 +294,12 @@ def mat_muscle(name="R08_Muscle"):
     co = m.coords()
     n1 = m.noise(co, 30.0, 3.0, 0.6)
     n2 = m.noise(co, 150.0, 2.0, 0.6)
-    col = m.ramp(n1, [(0.25, (0.030, 0.002, 0.004)), (0.55, (0.105, 0.007, 0.011)), (0.85, (0.190, 0.018, 0.020))])
+    col = m.ramp(n1, [(0.25, (0.032, 0.002, 0.004)), (0.55, (0.115, 0.008, 0.012)), (0.85, (0.210, 0.020, 0.022))])
     nrm = m.bump(m.math("ADD", n1, m.math("MULTIPLY", n2, 0.3)), 0.35, 0.008)
-    p = m.principled(**{"Base Color": col, "Roughness": 0.30, "Normal": nrm})
-    p.inputs["Specular IOR Level"].default_value = 0.6
-    p.inputs["Coat Weight"].default_value = 0.35
-    p.inputs["Coat Roughness"].default_value = 0.2
+    p = m.principled(**{"Base Color": col, "Roughness": 0.40, "Normal": nrm})
+    p.inputs["Specular IOR Level"].default_value = 0.5
+    p.inputs["Coat Weight"].default_value = 0.20
+    p.inputs["Coat Roughness"].default_value = 0.28
     return m.mat
 
 
@@ -310,24 +309,23 @@ def mat_gum(name="R08_Gum"):
     n1 = m.noise(co, 38.0, 3.0, 0.6)
     n2 = m.noise(co, 9.0, 2.0, 0.5)
     col = m.ramp(m.math("ADD", m.math("MULTIPLY", n1, 0.6), m.math("MULTIPLY", n2, 0.4)),
-                 [(0.25, (0.032, 0.002, 0.005)), (0.55, (0.115, 0.008, 0.014)), (0.85, (0.205, 0.020, 0.026))])
+                 [(0.25, (0.026, 0.0018, 0.0045)), (0.55, (0.092, 0.0070, 0.012)), (0.85, (0.165, 0.016, 0.021))])
     nrm = m.bump(n1, 0.4, 0.008)
-    p = m.principled(**{"Base Color": col, "Roughness": 0.24, "Normal": nrm})
-    p.inputs["Specular IOR Level"].default_value = 0.65
-    p.inputs["Coat Weight"].default_value = 0.4
-    p.inputs["Coat Roughness"].default_value = 0.18
+    p = m.principled(**{"Base Color": col, "Roughness": 0.33, "Normal": nrm})
+    p.inputs["Specular IOR Level"].default_value = 0.5
+    p.inputs["Coat Weight"].default_value = 0.28
+    p.inputs["Coat Roughness"].default_value = 0.22
     return m.mat
 
 
 def mat_mouth(name="R08_MouthLining"):
-    """Deep mouth interior: very dark, slightly wet red-black."""
+    """Deep mouth interior: black, with only a faint dark-red sheen."""
     m = NT(name)
-    co = m.coords((6.0, 6.0, 40.0))
-    n1 = m.noise(co, 4.0, 3.0, 0.6)
-    col = m.mix(n1, (0.0015, 0.0004, 0.0005), (0.012, 0.0012, 0.002))
-    nrm = m.bump(n1, 0.6, 0.012)
-    p = m.principled(**{"Base Color": col, "Roughness": 0.55, "Normal": nrm})
-    p.inputs["Specular IOR Level"].default_value = 0.4
+    co = m.coords()
+    n1 = m.noise(co, 9.0, 2.0, 0.5)
+    col = m.mix(n1, (0.0010, 0.0003, 0.0004), (0.0080, 0.0009, 0.0014))
+    p = m.principled(**{"Base Color": col, "Roughness": 0.62})
+    p.inputs["Specular IOR Level"].default_value = 0.30
     return m.mat
 
 
@@ -340,19 +338,19 @@ def mat_tooth(name="R08_Teeth"):
     streak = m.noise(m.coords((55.0, 55.0, 7.0)), 1.0, 3.0, 0.65)
     blot = m.noise(co, 60.0, 3.0, 0.6)
     fine = m.noise(co, 320.0, 2.0, 0.6)
-    ivory = m.mix(tone, (0.47, 0.31, 0.105), (0.66, 0.47, 0.19))
-    stain = (0.150, 0.070, 0.020)
+    ivory = m.mix(tone, (0.300, 0.180, 0.052), (0.470, 0.305, 0.104))
+    stain = (0.078, 0.032, 0.009)
     # stained root, slightly darker tip
     root = m.sstep(0.30, 0.0, t)
     tip = m.sstep(0.80, 1.0, t)
-    s = m.math("ADD", m.math("MULTIPLY", root, 0.75), m.math("MULTIPLY", tip, 0.22))
-    s = m.math("ADD", s, m.math("MULTIPLY", m.sstep(0.52, 0.72, streak), 0.42))
-    s = m.math("ADD", s, m.math("MULTIPLY", m.sstep(0.60, 0.75, blot), 0.30), clamp=True)
+    s = m.math("ADD", m.math("MULTIPLY", root, 0.85), m.math("MULTIPLY", tip, 0.30))
+    s = m.math("ADD", s, m.math("MULTIPLY", m.sstep(0.46, 0.70, streak), 0.58))
+    s = m.math("ADD", s, m.math("MULTIPLY", m.sstep(0.55, 0.74, blot), 0.42), clamp=True)
     col = m.mix(s, ivory, stain)
     col = m.mix(m.math("MULTIPLY", m.math("LESS_THAN", m.voronoi(co, 210.0), 0.12), 0.5), col, (0.10, 0.05, 0.02))
     nrm = m.bump(m.math("ADD", streak, m.math("MULTIPLY", fine, 0.4)), 0.22, 0.006)
-    p = m.principled(**{"Base Color": col, "Roughness": 0.46, "Normal": nrm})
-    p.inputs["Specular IOR Level"].default_value = 0.45
+    p = m.principled(**{"Base Color": col, "Roughness": 0.52, "Normal": nrm})
+    p.inputs["Specular IOR Level"].default_value = 0.38
     return m.mat
 
 
@@ -369,10 +367,10 @@ def mat_rod(name="R08_Rods"):
     return m.mat
 
 
-def mat_pupil(name="R08_Pupil", strength=28.0):
+def mat_pupil(name="R08_Pupil", strength=3.2):
     m = NT(name)
     n = m.node("ShaderNodeEmission")
-    n.inputs["Color"].default_value = (1.0, 0.085, 0.015, 1.0)
+    n.inputs["Color"].default_value = (1.0, 0.060, 0.008, 1.0)
     n.inputs["Strength"].default_value = strength
     m.link(n.outputs[0], m.out.inputs["Surface"])
     return m.mat
@@ -380,7 +378,7 @@ def mat_pupil(name="R08_Pupil", strength=28.0):
 
 def mat_floor(name="Studio_Floor"):
     m = NT(name)
-    p = m.principled(**{"Base Color": (0.050, 0.053, 0.056, 1.0), "Roughness": 0.66})
+    p = m.principled(**{"Base Color": (0.085, 0.090, 0.095, 1.0), "Roughness": 0.66})
     p.inputs["Specular IOR Level"].default_value = 0.25
     return m.mat
 
@@ -417,7 +415,7 @@ def studio(sc, k=1.0):
     sc.world = bpy.data.worlds.new("StudioWorld")
     sc.world.use_nodes = True
     bg = sc.world.node_tree.nodes["Background"]
-    bg.inputs[0].default_value = (0.020, 0.022, 0.024, 1.0)
+    bg.inputs[0].default_value = (0.035, 0.038, 0.042, 1.0)
     bg.inputs[1].default_value = 1.0
 
     def area(name, loc, target, size, energy, color=(1, 1, 1)):
@@ -435,12 +433,12 @@ def studio(sc, k=1.0):
         return o
 
     # positions are relative to the pivot; the camera sits on -Y of the rig
-    area("Key", (-4.6, -5.6, 6.2), (0, 0.0, 1.5), (4.5, 4.5), 780, (1.0, 0.965, 0.92))
-    area("Fill", (5.2, -6.0, 2.0), (0, 0.0, 1.4), (6, 5), 210, (0.86, 0.92, 1.0))
-    area("Front", (0.0, -8.0, 1.2), (0, 0.0, 1.4), (5, 4), 150, (1.0, 0.97, 0.94))
-    area("Rim", (3.4, 5.6, 5.4), (0, 0.0, 1.6), (3, 3), 330, (1.0, 0.90, 0.78))
-    area("Top", (0.0, -0.5, 8.5), (0, 0.0, 1.2), (7, 7), 170, (0.95, 0.97, 1.0))
-    area("Back", (0.0, 3.0, 2.6), (0, 12.0, 3.2), (9, 4), 95, (0.80, 0.88, 1.0))
+    area("Key", (-4.6, -5.6, 6.2), (0, 0.0, 1.5), (4.0, 4.0), 600, (1.0, 0.965, 0.92))
+    area("Fill", (5.2, -6.0, 2.0), (0, 0.0, 1.4), (6, 5), 240, (0.86, 0.92, 1.0))
+    area("Front", (0.0, -8.0, 1.2), (0, 0.0, 1.4), (5, 4), 190, (1.0, 0.97, 0.94))
+    area("Rim", (3.4, 5.6, 5.4), (0, 0.0, 1.6), (3, 3), 260, (1.0, 0.90, 0.78))
+    area("Top", (0.0, -0.5, 8.5), (0, 0.0, 1.2), (7, 7), 100, (0.95, 0.97, 1.0))
+    area("Back", (0.0, 3.0, 2.6), (0, 12.0, 3.2), (9, 4), 120, (0.80, 0.88, 1.0))
     return rig
 
 

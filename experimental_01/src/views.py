@@ -19,24 +19,43 @@ def cam(az_deg, elev_deg, target, dist, width, size, roll=0.0):
                 dist=dist, width=width)
 
 
-BODY_DIST = 11.5
-HEAD_T = np.array([-0.045, -1.47, 2.20])      # middle of the head (between the mask and the chin)
+import json, os
+_CJ = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "analysis", "cameras.json")
+# body cameras: long lens (the sheet's body panels show very little perspective); framing fitted
+# to each panel's silhouette by fit_pose.py --cams
+CAMS = dict(dist=22.0, fx=-0.21, fz=1.39, fw=3.02, taz=26.5, tx=-0.09, ty=-0.55, tz=1.49, tw=3.31, sy=-0.86, sz=1.50, sw=3.00)
+if os.path.exists(_CJ):
+    CAMS.update(json.load(open(_CJ)))
+BODY_DIST = CAMS["dist"]
+
+
+def _h(x, b, h):
+    import head
+    return head.Hw(x, b, h)
+
+
+def body_views(c=None):
+    c = c or CAMS
+    return {
+        "front": cam(0.0, 0.3, (c["fx"], -0.55, c["fz"]), c["dist"], c["fw"], (490, 496)),
+        "tq": cam(c["taz"], 0.3, (c["tx"], c["ty"], c["tz"]), c["dist"], c["tw"], (510, 496)),
+        "side": cam(90.0, 0.3, (0.0, c["sy"], c["sz"]), c["dist"], c["sw"], (468, 496)),
+    }
+
 
 VIEWS = {
     # full figure - the sheet's three body panels
-    "front": cam(0.0, 0.3, (-0.210, -0.55, 1.390), BODY_DIST, 3.020, (490, 496)),
-    "tq": cam(26.5, 0.3, (-0.090, -0.550, 1.490), BODY_DIST, 3.310, (510, 496)),
-    "side": cam(90.0, 0.3, (0.0, -0.860, 1.500), BODY_DIST, 3.000, (468, 496)),
+    **body_views(),
     # head and mouth - the sheet's close-up panels
-    "head": cam(27.0, -3.0, HEAD_T + (0.03, 0.0, 0.03), 4.2, 1.16, (438, 352)),
-    "mouth": cam(27.0, -9.0, HEAD_T + (0.03, 0.0, -0.12), 3.4, 0.64, (310, 313)),
-    "jawside": cam(58.0, -2.0, HEAD_T + (0.0, 0.10, -0.08), 3.6, 0.72, (231, 263)),
-    "sideclose": cam(68.0, 0.0, HEAD_T + (0.0, 0.18, 0.06), 4.2, 1.08, (286, 317)),
+    "head": cam(27.0, -3.0, _h(0.085, 0.036, -0.120), 4.6, 1.34, (438, 352)),
+    "mouth": cam(27.0, -9.0, _h(0.030, 0.200, -0.330), 3.6, 0.74, (310, 313)),
+    "jawside": cam(58.0, -2.0, _h(0.0, 0.230, -0.300), 3.8, 0.78, (231, 263)),
+    "sideclose": cam(68.0, 0.0, _h(0.0, 0.360, -0.130), 4.4, 1.00, (286, 317)),
     # exact profile of the mouth (asked for in the brief)
-    "mouthside": cam(90.0, 0.0, HEAD_T + (0.0, 0.10, -0.06), 4.2, 1.10, (330, 330)),
+    "mouthside": cam(90.0, 0.0, _h(0.0, 0.270, -0.250), 4.4, 1.02, (340, 340)),
     # working views of the head
-    "hfront": cam(0.0, 0.0, HEAD_T, 7.0, 1.10, (400, 440)),
-    "hside": cam(90.0, 0.0, HEAD_T + (0, 0.1, 0), 7.0, 1.30, (440, 440)),
+    "hfront": cam(0.0, 0.0, _h(0.0, 0.2, -0.13), 7.0, 1.20, (400, 440)),
+    "hside": cam(90.0, 0.0, _h(0.0, 0.36, -0.13), 7.0, 1.30, (440, 440)),
 }
 
 # which sheet panel each view answers

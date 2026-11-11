@@ -36,7 +36,7 @@ def to_blender(m, out):
     # a faint red glow inside each socket
     for i, p in enumerate(m.info.get("pupils", [])):
         L = bpy.data.lights.new(f"PupilGlow{i}", "POINT")
-        L.energy = 0.22
+        L.energy = 0.012
         L.color = (1.0, 0.07, 0.02)
         L.shadow_soft_size = 0.008
         o = bpy.data.objects.new(f"R08_pupil_glow{i}", L)

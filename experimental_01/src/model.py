@@ -53,7 +53,7 @@ class Model:
                 if z.get("n") is None or z.get("strands", True) is False:
                     continue
                 for (V, Q, T) in K.strands_for_wound(z, rng, z["n"], spacing=z.get("spacing", 0.05),
-                                                    depth=z.get("sdepth", 0.016)):
+                                                    depth=z.get("sdepth", 0.034)):
                     g[2].add(V, Q, T)
             if verbose:
                 print(f"   {p['name']:<18} plates {len(pl['Q']):>7} quads   under {len(un['Q']):>6}")

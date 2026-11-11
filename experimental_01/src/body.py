@@ -13,22 +13,23 @@ X = np.array([1.0, 0.0, 0.0])
 
 # ---- joints (m) ------------------------------------------------------------------------------
 POSE = dict(   # after fit_pose.py (silhouette fit to the sheet's front, three-quarter and side panels)
-    lean=36.0,                                   # torso forward lean, degrees (side view)
-    hip=[0.005, 0.025, 1.385],
-    torso_len=1.09,
-    torso_w=0.97, torso_d=0.91,                    # width / depth multipliers
-    arm_long=[[-0.555, -0.6, 2.33], [-0.56, -0.605, 2.25], [-0.75, -0.725, 1.855], [-0.98, -0.71, 1.475], [-1.035, -1.075, 0.795], [-1.035, -1.48, 0.105]],
-    arm_long_w=0.8, arm_long_d=1.0,
-    arm_short=[[0.445, -0.66, 2.335], [0.455, -0.69, 2.2], [0.635, -0.47, 1.69], [0.715, -0.375, 1.305], [0.745, -0.475, 0.93]],
-    arm_short_w=0.96, arm_short_d=1.0,
-    hipR=[-0.145, -0.02, 1.46], kneeR=[-0.25, -0.465, 0.875], ankR=[-0.24, -0.08, 0.25],
-    hipL=[0.18, 0.015, 1.41], kneeL=[0.34, 0.11, 0.915], ankL=[0.475, 0.355, 0.305],
+    lean=39.0,                                   # torso forward lean, degrees (side view)
+    hip=[0.005, 0.005, 1.425],
+    torso_len=1.11,
+    torso_w=0.99, torso_d=0.91,                    # width / depth multipliers
+    arm_long=[[-0.575, -0.61, 2.29], [-0.58, -0.64, 2.25], [-0.75, -0.745, 1.855], [-0.98, -0.760, 1.475], [-1.055, -1.065, 0.835], [-1.04, -1.495, 0.125]],
+    arm_long_w=0.77, arm_long_d=1.02,
+    arm_short=[[0.405, -0.64, 2.435], [0.495, -0.77, 2.14], [0.635, -0.49, 1.67], [0.695, -0.375, 1.325], [0.725, -0.455, 0.93]],
+    arm_short_w=0.90, arm_short_d=0.95,
+    hipR=[-0.145, -0.30, 1.44], kneeR=[-0.25, -0.485, 0.875], ankR=[-0.24, -0.08, 0.29],
+    hipL=[0.18, 0.03, 1.39], kneeL=[0.34, 0.11, 0.915], ankL=[0.455, 0.465, 0.265],
     leg_w=0.92, leg_d=0.84,
-    footR=0.6, footL=0.46, toeR=[-0.06, -1.0], toeL=[0.1, -1.0],
+    footR=0.6, footL=0.49, toeR=[-0.06, -1.0], toeL=[0.1, -1.0],
     neck_end=[0.04, -0.94, 2.475],
 )
 
-BODY = dict(cell=0.017, plate=(0.17, 0.135))
+BODY = dict(cell=0.017, plate=(0.110, 0.088), chip=0.36)
+TOEP = dict(BODY, layers=((0.003, 0.007, 1.00, 0.00), (0.009, 0.014, 0.5, 0.05)), pit=0.01)
 
 
 def build_body(m, pose=None):
@@ -47,8 +48,8 @@ def build_body(m, pose=None):
     # ------------------------------------------------------------------ torso
     # broad compact block; its right flank (-X) slopes inward toward the hips (front view)
     ts = [-0.10, 0.08, 0.42, 0.82, 1.06, 1.15]
-    hw = [(0.33, 0.25), (0.385, 0.315), (0.40, 0.375), (0.405, 0.405), (0.395, 0.395), (0.31, 0.31)]   # (+x, -x)
-    hd = [(0.20, 0.21), (0.255, 0.265), (0.275, 0.295), (0.255, 0.275), (0.225, 0.235), (0.17, 0.18)]  # (back, front)
+    hw = [(0.31, 0.25), (0.36, 0.315), (0.375, 0.375), (0.385, 0.405), (0.385, 0.395), (0.31, 0.31)]   # (+x, -x)
+    hd = [(0.18, 0.20), (0.225, 0.245), (0.275, 0.270), (0.355, 0.285), (0.390, 0.275), (0.300, 0.215)]  # (back, front): hunched upper back, deep chest
     P = [torso_point(s) for s in ts]
     halves = [(a[0] * Pz["torso_w"], a[1] * Pz["torso_w"], b[0] * Pz["torso_d"], b[1] * Pz["torso_d"]) for a, b in zip(hw, hd)]
     torso = m.part(K.loft("torso", P, halves, X, chamfer=0.20, rng=rng, jit=0.007), params=BODY)
@@ -61,8 +62,8 @@ def build_body(m, pose=None):
     wound_on(torso, 0.18, (0.5, -1, -0.6), 0.05, 0.06, axis=X)
 
     # pelvis block between the thighs
-    m.part(K.box("pelvis", (hip_mid := (np.array(Pz["hipR"], float) + np.array(Pz["hipL"], float)) / 2) + np.array([0.0, 0.02, -0.22]), X, (0, 1, 0), (0, 0, 1),
-                 (0.105, 0.115, 0.085), rng=rng, jit=0.006, taper=(1.25, 1.2)), params=BODY)
+    m.part(K.box("pelvis", (hip_mid := (np.array(Pz["hipR"], float) + np.array(Pz["hipL"], float)) / 2) + np.array([0.0, 0.02, -0.055]), X, (0, 1, 0), (0, 0, 1),
+                 (0.075, 0.085, 0.035), rng=rng, jit=0.006, taper=(1.25, 1.2)), params=BODY)
 
     # ------------------------------------------------------------------ long arm (creature's right)
     A = [np.array(p, float) for p in Pz["arm_long"]]
@@ -115,16 +116,16 @@ def build_body(m, pose=None):
         fh = [(fw * 0.86, 0.115), (fw, 0.105), (fw * 1.04, 0.062)]
         ft = m.part(K.loft(f"foot_{name}", Pf, fh, sd, chamfer=0.25, rng=rng, jit=0.005), params=BODY)
         # ankle block rising into the shin
-        m.part(K.box(f"ankle_{name}", heel + td * 0.07 + (0, 0, 0.225), sd, td, (0, 0, 1), (0.128, 0.150, 0.075),
-                     rng=rng, jit=0.006, taper=(0.92, 0.9)), params=BODY)
+        m.part(K.box(f"ankle_{name}", heel + td * 0.07 + (0, 0, 0.225), td, sd, (0, 0, 1), (0.150, 0.128, 0.075),
+                     rng=rng, jit=0.006, taper=(0.9, 0.92)), params=BODY)
         n_toe = 4
         tw = 2 * fw * 1.04 / n_toe
         for k in range(n_toe):
             off = (-fw * 1.04 + tw * (k + 0.5))
             ln = 0.150 + 0.022 * rng.random() - 0.012 * abs(k - 1.5)
             c = heel + td * (foot_len - 0.15 + ln / 2 - 0.01) + sd * off + (0, 0, 0.050)
-            m.part(K.box(f"toe_{name}{k}", c, sd, td, (0, 0, 1), (tw * 0.44, ln / 2, 0.050), rng=rng, jit=0.004,
-                         taper=(0.94, 0.88)), params=BODY)
+            m.part(K.box(f"toe_{name}{k}", c, td, sd, (0, 0, 1), (ln / 2, tw * 0.44, 0.050), rng=rng, jit=0.004,
+                         taper=(0.88, 0.94)), params=TOEP)
         return th, sh, ft
 
     # right leg strides forward, left leg trails (side and three-quarter views)
@@ -143,20 +144,20 @@ def build_body(m, pose=None):
     wound_on(shL, 0.40, (1, 0.2, 0), 0.10, 0.05)
     wound_on(shL, 0.84, (0.5, -1, 0.3), 0.06, 0.04)
     wound_on(shL, 0.80, (1, 0.5, 0), 0.055, 0.04)
-    wound_on(ftR, 0.45, (0, 0, 1), 0.07, 0.05)
-    wound_on(ftL, 0.40, (0, 0, 1), 0.06, 0.045)
 
     # ------------------------------------------------------------------ neck (hidden by the head)
-    N0 = torso_point(1.02, 0.0, -0.10)
-    N1 = np.array(Pz["neck_end"], float)
-    m.part(K.loft("neck", [N0, (N0 + N1) / 2 + (0, 0, 0.02), N1], [(0.25, 0.20), (0.235, 0.19), (0.22, 0.18)], X,
+    # short and high: the head hangs forward off the top of the shoulders, the throat stays open
+    import head as HD
+    N0 = torso_point(0.95, 0.0, -0.06)
+    N1 = HD.Hw(0.0, 0.680, 0.020)
+    m.part(K.loft("neck", [N0, (N0 + N1) / 2 + (0, 0, 0.045), N1], [(0.220, 0.245), (0.205, 0.235), (0.195, 0.215)], X,
                   chamfer=0.25, rng=rng, jit=0.006), params=BODY)
 
     # ------------------------------------------------------------------ rods (placed on the parts)
     R = lambda part, sx, side, L, r=0.027, tilt=(0, 0, 0): rod_on(m, part, sx, side, L, r, tilt)
-    R(torso, 0.95, (0.55, 1, 0.9), 0.42, 0.030, (0.1, -0.1, 0.75))          # behind the left shoulder
-    R(torso, 0.80, (0.25, 1, 0.7), 0.30, 0.028, (0, 0.1, 0.25))             # upper back
-    R(torso, 0.36, (0.10, 1, 0.7), 0.27, 0.027, (0, 0.2, -0.5))             # lower back
+    R(torso, 1.00, (0.60, 0.25, 1.0), 0.40, 0.030, (0.1, 0.25, 0.3))        # on the left shoulder
+    R(torso, 0.72, (0.25, 1, 0.7), 0.27, 0.028, (0, 0.15, 0.35))            # upper back
+    R(torso, 0.24, (0.10, 1, 0.7), 0.25, 0.027, (0, 0.3, -0.75))            # lower back, level
     R(torso, 0.62, (-1, -0.25, 0), 0.25, 0.027, (0, 0, 0.06))               # right flank, upper
     R(torso, 0.36, (-1, -0.35, 0), 0.27, 0.028, (0, -0.1, -0.1))            # right flank, lower
     R(larm, 0.44, (0.2, -1, 0.3), 0.28, 0.027, (0.1, 0, -0.2))              # elbow, pointing forward

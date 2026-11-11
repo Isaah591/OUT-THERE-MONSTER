@@ -44,7 +44,13 @@ def creature_mask(img, label_box=None):
         m[y0:y1, x0:x1] = False
     from scipy import ndimage as ndi
     m = ndi.binary_closing(m, iterations=2)
-    m = ndi.binary_fill_holes(m)
+    # fill pinholes (dark pits, black sockets, mouth) but keep real gaps such as between the legs
+    holes = ndi.binary_fill_holes(m) & ~m
+    hl, hn = ndi.label(holes)
+    if hn:
+        hs = ndi.sum(holes, hl, range(1, hn + 1))
+        small = [i + 1 for i, a in enumerate(hs) if a < 0.006 * m.size]
+        m = m | np.isin(hl, small)
     lab, n = ndi.label(m)
     if n > 1:                    # keep the big component (and anything nearly as big)
         sizes = ndi.sum(m, lab, range(1, n + 1))

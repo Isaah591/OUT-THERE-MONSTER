@@ -352,7 +352,7 @@ class Wounds:
         self.z = []
         self.seed = seed
 
-    def add(self, c, axis, L, W, normal=None, depth=None, strength=1.0, lobes=2):
+    def add(self, c, axis, L, W, normal=None, depth=None, strength=1.0, lobes=3):
         z = dict(c=np.asarray(c, float), a=unit(axis), L=float(L), W=float(W),
                  n=None if normal is None else unit(normal), depth=depth, s=strength)
         # a torn hole is never an ellipse: add off-centre lobes along and across it
@@ -386,7 +386,7 @@ class Wounds:
             q = self._q(p, z["c"], z["a"], z["L"], z["W"])
             for (c2, L2, W2) in z.get("lobes", ()):
                 q = np.minimum(q, self._q(p, c2, z["a"], L2, W2))
-            val = 1.0 - q + 0.70 * nz + 0.20 * nb
+            val = 1.0 - q + 0.95 * nz + 0.24 * nb
             if z["n"] is not None and nrm is not None:
                 val = np.where(nrm @ z["n"] > 0.15, val, -1.0)
             out = np.maximum(out, np.clip(0.5 + val * 2.2, 0, 1) * z["s"])
@@ -456,14 +456,14 @@ class MeshOut:
 DEFAULT_SHELL = dict(
     cell=0.016,            # size of the small cells the plates are cut from (m)
     plate=(0.15, 0.12),    # slab size along / across the grain (m)
-    layers=((0.004, 0.010, 1.00, 0.00), (0.011, 0.018, 0.70, 0.06), (0.019, 0.027, 0.30, 0.12)),
+    layers=((0.004, 0.010, 1.00, 0.00), (0.015, 0.024, 0.64, 0.06), (0.028, 0.040, 0.28, 0.12), (0.042, 0.056, 0.09, 0.16)),
     #        (h_min, h_max, coverage, extra wound margin)
     tilt=0.035,            # random tilt of a plate (m per m)
-    pit=0.016,             # fraction of cells knocked out as pits
+    pit=0.020,             # fraction of cells knocked out as pits
     rag=0.20,              # waviness of slab outlines (fraction of the slab size)
     chip=0.30,             # stepped chipping of slab outlines (fraction of the slab size)
     under=0.004,           # under-surface below the coarse face (m)
-    cavity=0.028,          # depth of the under-surface inside wounds (m)
+    cavity=0.050,          # depth of the under-surface inside wounds (m)
     drop=0.35,             # chance that a plate is missing outside wounds (per layer >0)
 )
 
@@ -563,8 +563,8 @@ def build_shell(co, wounds=None, params=None, seed=0):
             alive = rng.random(ns) < cover
             if li > 0:
                 alive &= rng.random(ns) > pr["drop"] * 0.0
-            tx = rng.normal(0, pr["tilt"], ns)
-            ty = rng.normal(0, pr["tilt"], ns)
+            tx = rng.normal(0, pr["tilt"] * (1 + 1.3 * li), ns)     # higher strata lift more at one edge
+            ty = rng.normal(0, pr["tilt"] * (1 + 1.3 * li), ns)
             # seeds inside wounds lose their plate entirely
             sw = wounds.value(np.asarray(poly[0]) + np.outer(S[:, 0], e1) + np.outer(S[:, 1], e2), np.tile(n, (ns, 1)))
             alive &= sw < (0.52 - margin * 6.0)
@@ -584,7 +584,7 @@ def build_shell(co, wounds=None, params=None, seed=0):
             vp = upair % nP
             sp = upair // nP
             hv = ph[sp] + tx[sp] * (puv[vp, 0] - S[sp, 0]) + ty[sp] * (puv[vp, 1] - S[sp, 1])
-            hv = np.clip(hv, h0 * 0.6, h1 * 1.35)
+            hv = np.clip(hv, h0 * 0.55, h1 * 1.5)
             top = P[vp] + D[vp] * hv[:, None]
             # boundary edges -> walls
             a = Qk
@@ -680,6 +680,20 @@ def tube(P, R, sides=7, rng=None, wob=0.0, xhint=(0.0, 0.0, 1.0), caps=True, fla
     return np.array(V), np.array(Q, np.int64).reshape(-1, 4), np.array(T, np.int64).reshape(-1, 3)
 
 
+def spline(pts, n):
+    """Catmull-Rom curve through pts, resampled to n points."""
+    P = np.asarray(pts, float)
+    P = np.concatenate([[2 * P[0] - P[1]], P, [2 * P[-1] - P[-2]]])
+    m = len(P) - 3
+    out = []
+    for t in np.linspace(0, m, n):
+        i = min(int(t), m - 1)
+        f = t - i
+        p0, p1, p2, p3 = P[i], P[i + 1], P[i + 2], P[i + 3]
+        out.append(0.5 * ((2 * p1) + (-p0 + p2) * f + (2 * p0 - 5 * p1 + 4 * p2 - p3) * f * f + (-p0 + 3 * p1 - 3 * p2 + p3) * f ** 3))
+    return np.array(out)
+
+
 def rod(base, direction, length, radius, rng, sides=6, sink=0.08):
     """A rusted bar driven into the body: irregular prism with a blunt chamfered end."""
     d = unit(direction)
@@ -721,16 +735,16 @@ def tooth(root, direction, length, radius, rng, bend_dir=None, bend=0.0, sides=6
     ph = rng.uniform(0, 2 * np.pi)
     ex, ey = ex * np.cos(ph) + ey * np.sin(ph), -ex * np.sin(ph) + ey * np.cos(ph)
     ts = np.array([-sink / length, 0.0, 0.12, 0.30, 0.50, 0.68, 0.84, 0.95])
-    prof = np.array([0.86, 0.97, 1.0, 0.985, 0.92, 0.78, 0.55, 0.28])
-    prof = prof * (1 + rng.normal(0, 0.045, len(prof)))
-    fac = 1 + rng.normal(0, 0.11, sides)
+    prof = np.array([0.90, 1.0, 0.985, 0.90, 0.745, 0.555, 0.345, 0.150])
+    prof = prof * (1 + rng.normal(0, 0.05, len(prof)))
+    fac = 1 + rng.normal(0, 0.13, sides)
     V, Q, T, tt = [], [], [], []
     for k, (t, pr_) in enumerate(zip(ts, prof)):
         c = np.asarray(root) + d * (t * length) + bd * (bend * length * max(t, 0) ** 2)
         tw = twist * t
         for j in range(sides):
             th = 2 * np.pi * j / sides + tw
-            r = radius * pr_ * fac[j] * (1 + rng.normal(0, 0.03))
+            r = radius * pr_ * fac[j] * (1 + rng.normal(0, 0.045))
             V.append(c + ex * np.cos(th) * r + ey * np.sin(th) * r * flat)
             tt.append(max(t, 0.0))
     for i in range(len(ts) - 1):
@@ -752,7 +766,7 @@ def tooth(root, direction, length, radius, rng, bend_dir=None, bend=0.0, sides=6
     return (np.array(V), np.array(Q, np.int64).reshape(-1, 4), np.array(T, np.int64).reshape(-1, 3), np.array(tt))
 
 
-def strands_for_wound(z, rng, surf_normal, spacing=0.05, depth=0.016):
+def strands_for_wound(z, rng, surf_normal, spacing=0.05, depth=0.034):
     """Muscle laid bare in a wound: long cords running along it, each swelling and thinning,
     weaving slightly over one another.  Returns list of (V, Q, T)."""
     a = z["a"]
@@ -780,7 +794,8 @@ def strands_for_wound(z, rng, surf_normal, spacing=0.05, depth=0.016):
             for t in ts:
                 uu = u + t * ln
                 vv = v0 + spacing * 0.22 * np.sin(ph + t * fq * 2.0)
-                dd = depth - r0 * 0.25 + 0.006 * np.sin(ph * 1.7 + t * 5.0)
+                edge = max(abs(uu) / L2, abs(vv) / (W * 1.15))
+                dd = depth - 0.012 * min(edge, 1.0) ** 2 + 0.005 * np.sin(ph * 1.7 + t * 5.0)
                 P.append(z["c"] + a * uu + s * vv - n * dd)
                 bulge = (1 - sw) + sw * abs(np.sin(ph + t * np.pi * fq)) ** 0.7
                 taper = min(1.0, t / 0.12, (1 - t) / 0.12) ** 0.6 * 0.85 + 0.15
