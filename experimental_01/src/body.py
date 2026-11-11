@@ -28,8 +28,8 @@ POSE = dict(   # after fit_pose.py (silhouette fit to the sheet's front, three-q
     neck_end=[0.04, -0.94, 2.475],
 )
 
-BODY = dict(cell=0.017, plate=(0.110, 0.088), chip=0.36)
-TOEP = dict(BODY, layers=((0.003, 0.007, 1.00, 0.00), (0.009, 0.014, 0.5, 0.05)), pit=0.01)
+BODY = dict(cell=0.017, plate=(0.110, 0.088), chip=0.36, pit=0.011)
+TOEP = dict(BODY, layers=((0.003, 0.006, 1.00, 0.00), (0.008, 0.012, 0.45, 0.05)), pit=0.006, plate=(0.07, 0.05))
 
 
 def build_body(m, pose=None):
@@ -53,7 +53,7 @@ def build_body(m, pose=None):
     P = [torso_point(s) for s in ts]
     halves = [(a[0] * Pz["torso_w"], a[1] * Pz["torso_w"], b[0] * Pz["torso_d"], b[1] * Pz["torso_d"]) for a, b in zip(hw, hd)]
     torso = m.part(K.loft("torso", P, halves, X, chamfer=0.20, rng=rng, jit=0.007), params=BODY)
-    wound_on(torso, 0.40, (-0.35, -1, -0.5), 0.10, 0.135, axis=X)            # belly, creature's right
+    wound_on(torso, 0.42, (-0.35, -1, -0.5), 0.125, 0.165, axis=X)           # belly, creature's right
     wound_on(torso, 0.52, (-1, -0.2, 0), 0.17, 0.075)                         # right flank
     wound_on(torso, 0.66, (1, 0.25, 0.1), 0.30, 0.095)                        # left flank, long tear
     wound_on(torso, 0.74, (0.75, -1, -0.6), 0.065, 0.055)                     # chest under left shoulder
@@ -75,7 +75,7 @@ def build_body(m, pose=None):
     wound_on(larm, 0.42, (-0.35, -1, 0), 0.17, 0.078)
     wound_on(larm, 0.63, (-0.25, -1, 0), 0.23, 0.085)
     wound_on(larm, 0.86, (0.1, -1, 0), 0.13, 0.062)
-    wound_on(larm, 0.60, (1, -0.15, 0), 0.31, 0.095, spacing=0.05)            # inner face, seen in the side view
+    wound_on(larm, 0.60, (1, -0.15, 0), 0.31, 0.095)                          # inner face, seen in the side view
     wound_on(larm, 0.90, (1, 0.2, 0), 0.075, 0.04)
     wound_on(larm, 0.34, (-1, 0.3, 0), 0.12, 0.06)
     # the blunt, hollow-looking end
@@ -122,10 +122,11 @@ def build_body(m, pose=None):
         tw = 2 * fw * 1.04 / n_toe
         for k in range(n_toe):
             off = (-fw * 1.04 + tw * (k + 0.5))
-            ln = 0.150 + 0.022 * rng.random() - 0.012 * abs(k - 1.5)
-            c = heel + td * (foot_len - 0.15 + ln / 2 - 0.01) + sd * off + (0, 0, 0.050)
-            m.part(K.box(f"toe_{name}{k}", c, td, sd, (0, 0, 1), (ln / 2, tw * 0.44, 0.050), rng=rng, jit=0.004,
-                         taper=(0.88, 0.94)), params=TOEP)
+            ln = 0.165 + 0.030 * rng.random() - 0.016 * abs(k - 1.5)
+            toe_h = 0.046 + 0.010 * rng.random()
+            c = heel + td * (foot_len - 0.15 + ln / 2 - 0.02) + sd * off + (0, 0, toe_h)
+            m.part(K.box(f"toe_{name}{k}", c, td, sd, (0, 0, 1), (ln / 2, tw * 0.33, toe_h), rng=rng, jit=0.004,
+                         taper=(0.80, 0.90)), params=TOEP)
         return th, sh, ft
 
     # right leg strides forward, left leg trails (side and three-quarter views)

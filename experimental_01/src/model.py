@@ -52,8 +52,8 @@ class Model:
             for z in p["wounds"].z:
                 if z.get("n") is None or z.get("strands", True) is False:
                     continue
-                for (V, Q, T) in K.strands_for_wound(z, rng, z["n"], spacing=z.get("spacing", 0.05),
-                                                    depth=z.get("sdepth", 0.034)):
+                for (V, Q, T) in K.strands_for_wound(z, rng, z["n"], spacing=z.get("spacing", 0.034),
+                                                    depth=z.get("sdepth", 0.030)):
                     g[2].add(V, Q, T)
             if verbose:
                 print(f"   {p['name']:<18} plates {len(pl['Q']):>7} quads   under {len(un['Q']):>6}")
@@ -102,7 +102,7 @@ def rod_on(m, part, s, side, length, radius=0.027, tilt=(0, 0, 0), group="body")
     m.add_rod(p - sd * 0.02, K.unit(sd + np.asarray(tilt, float)), length, radius, group=group)
 
 
-def wound_on(part, s, side, L, W, axis=None, strength=1.0, strands=True, spacing=0.05, shift=0.0):
+def wound_on(part, s, side, L, W, axis=None, strength=1.0, strands=True, spacing=0.034, shift=0.0):
     """Add a wound on a lofted beam: s in [0,1] along its path, on the side facing `side`
     (a world direction).  L / W = half length (along the beam, or `axis`) / half width."""
     centre, sd, t = surface_point(part, s, side)

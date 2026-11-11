@@ -52,7 +52,7 @@ VIEWS = {
     "jawside": cam(58.0, -2.0, _h(0.0, 0.230, -0.300), 3.8, 0.78, (231, 263)),
     "sideclose": cam(68.0, 0.0, _h(0.0, 0.360, -0.130), 4.4, 1.00, (286, 317)),
     # exact profile of the mouth (asked for in the brief)
-    "mouthside": cam(90.0, 0.0, _h(0.0, 0.270, -0.250), 4.4, 1.02, (340, 340)),
+    "mouthside": cam(90.0, 0.0, _h(0.0, 0.290, -0.190), 4.4, 1.12, (340, 340)),
     # working views of the head
     "hfront": cam(0.0, 0.0, _h(0.0, 0.2, -0.13), 7.0, 1.20, (400, 440)),
     "hside": cam(90.0, 0.0, _h(0.0, 0.36, -0.13), 7.0, 1.30, (440, 440)),
@@ -61,3 +61,6 @@ VIEWS = {
 # which sheet panel each view answers
 PANEL_OF = {"front": "front", "tq": "tq", "side": "side", "head": "head", "mouth": "mouth",
             "jawside": "jaw_new", "sideclose": "sideclose"}
+
+# a working view of the feet
+VIEWS["feet"] = cam(20.0, 12.0, (0.0, -0.20, 0.22), 6.0, 1.9, (560, 300))

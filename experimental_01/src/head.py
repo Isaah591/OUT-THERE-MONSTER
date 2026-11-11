@@ -20,7 +20,7 @@ HEAD = dict(origin=np.array([-0.010, -1.760, 2.410]), pitch=0.0549, yaw=np.radia
 
 HEADP = dict(cell=0.0105, plate=(0.100, 0.085),
              layers=((0.003, 0.008, 1.00, 0.00), (0.011, 0.017, 0.66, 0.05), (0.019, 0.027, 0.30, 0.10), (0.029, 0.040, 0.11, 0.14)),
-             pit=0.022, cavity=0.040, chip=0.36)
+             pit=0.012, cavity=0.040, chip=0.36)
 JAWP = dict(HEADP, plate=(0.085, 0.07))
 
 
@@ -159,7 +159,7 @@ def build_cranium(rng):
             if jx in (8, 9):
                 kind = "void" if b0 < MOUTH_BACK else "core"
             co.f([a[jx], a[(jx + 1) % 10], c[(jx + 1) % 10], c[jx]], kind=kind, grain=gb, tag=f"cr{jx}")
-    co.f(rings[0][::-1], kind="core", tag="front")
+    co.f(rings[0][::-1], kind="plate", grain=Hd(1, 0, 0), tag="front")
     co.f(rings[-1], kind="plate", grain=Hd(1, 0, 0), tag="back")
     return co
 
@@ -207,28 +207,30 @@ def build_lower_jaw(rng):
 # Upper front arc: (x, length, radius, lean forward deg, splay deg toward -x).  From the front,
 # three-quarter and head close-up panels: long at the right corner, the longest fang at the lip
 # point, one thick fang left of centre, uneven in between.
-UPPER_FRONT = [(-0.240, 0.235, 0.030, 4, 9), (-0.196, 0.292, 0.033, 3, 6), (-0.150, 0.196, 0.025, 10, 3),
-               (-0.108, 0.160, 0.026, 3, 2), (-0.048, 0.385, 0.040, 2, -1), (-0.004, 0.182, 0.024, 10, 0),
-               (0.040, 0.250, 0.032, 4, -2), (0.092, 0.160, 0.025, 8, -3), (0.140, 0.272, 0.036, 3, -4),
-               (0.190, 0.158, 0.024, 9, -6), (0.236, 0.196, 0.027, 4, -9)]
+UPPER_FRONT = [(-0.240, 0.235, 0.030, 3, 5), (-0.196, 0.292, 0.033, 2, 3), (-0.150, 0.196, 0.025, 7, 2),
+               (-0.108, 0.160, 0.026, 2, 1), (-0.048, 0.385, 0.040, 1, -1), (-0.004, 0.182, 0.024, 7, 0),
+               (0.040, 0.305, 0.033, 3, -1), (0.092, 0.215, 0.027, 6, -2), (0.140, 0.285, 0.036, 2, -2),
+               (0.190, 0.158, 0.024, 6, -3), (0.236, 0.196, 0.027, 3, -5)]
 # Upper sides: (side, b, length, radius, splay out deg).  The exact side view shows the rear teeth
 # as long as the front ones, and the brief asks for it.
-UPPER_SIDE = [(-1, 0.105, 0.300, 0.033, 9), (-1, 0.195, 0.205, 0.027, 14), (-1, 0.285, 0.315, 0.034, 6), (-1, 0.375, 0.225, 0.028, 12),
-              (1, 0.100, 0.245, 0.030, 12), (1, 0.190, 0.340, 0.037, 6), (1, 0.280, 0.235, 0.029, 14), (1, 0.370, 0.270, 0.031, 8)]
+UPPER_SIDE = [(-1, 0.105, 0.300, 0.033, 5), (-1, 0.195, 0.205, 0.027, 8), (-1, 0.285, 0.315, 0.034, 4), (-1, 0.375, 0.225, 0.028, 7),
+              (1, 0.100, 0.245, 0.030, 7), (1, 0.190, 0.340, 0.037, 4), (1, 0.280, 0.235, 0.029, 8), (1, 0.370, 0.270, 0.031, 5)]
 # Upper inner row, behind and between the main teeth: (x, b offset, length, radius)
 UPPER_INNER = [(-0.218, 0.060, 0.170, 0.021), (-0.128, 0.052, 0.215, 0.023), (-0.026, 0.056, 0.230, 0.024),
                (0.066, 0.052, 0.225, 0.023), (0.166, 0.058, 0.200, 0.022), (0.215, 0.090, 0.160, 0.020),
-               (0.108, 0.082, 0.265, 0.026), (0.018, 0.100, 0.255, 0.024), (-0.085, 0.092, 0.240, 0.024), (0.180, 0.108, 0.225, 0.022)]
+               (0.108, 0.082, 0.265, 0.026), (0.018, 0.100, 0.255, 0.024), (-0.085, 0.092, 0.240, 0.024), (0.180, 0.108, 0.225, 0.022),
+               (-0.150, 0.110, 0.230, 0.023), (0.062, 0.125, 0.290, 0.025)]
 # Lower teeth: (rim parameter 0..1 from the right hinge round the chin to the left hinge, length,
 # radius, elevation above the forward direction deg, lean toward +x deg)
 LOWER = [(0.085, 0.200, 0.025, 72, 8), (0.150, 0.262, 0.029, 68, 10), (0.215, 0.300, 0.032, 63, 7), (0.275, 0.262, 0.028, 66, 12),
          (0.335, 0.325, 0.034, 62, 8), (0.390, 0.280, 0.029, 62, 12), (0.440, 0.340, 0.035, 60, 5), (0.487, 0.270, 0.028, 64, 2),
-         (0.530, 0.352, 0.036, 58, -2), (0.575, 0.276, 0.029, 62, -7), (0.620, 0.335, 0.034, 60, -6), (0.668, 0.290, 0.030, 63, -11),
+         (0.530, 0.372, 0.036, 60, -2), (0.575, 0.305, 0.030, 64, -7), (0.620, 0.350, 0.034, 62, -6), (0.668, 0.300, 0.030, 63, -11),
          (0.718, 0.340, 0.035, 60, -8), (0.772, 0.302, 0.031, 64, -11), (0.828, 0.325, 0.033, 62, -7), (0.882, 0.270, 0.028, 67, -10),
          (0.932, 0.210, 0.025, 72, -8)]
 # Lower inner row: (rim parameter, length, radius, elevation)
 LOWER_INNER = [(0.245, 0.215, 0.021, 74), (0.365, 0.250, 0.023, 70), (0.465, 0.285, 0.025, 72), (0.555, 0.275, 0.025, 70),
-               (0.645, 0.255, 0.023, 72), (0.745, 0.235, 0.022, 74), (0.855, 0.200, 0.020, 76)]
+               (0.645, 0.255, 0.023, 72), (0.745, 0.235, 0.022, 74), (0.855, 0.200, 0.020, 76),
+               (0.420, 0.300, 0.025, 68), (0.510, 0.315, 0.026, 66), (0.600, 0.295, 0.025, 68)]
 
 
 def rim_point(u):
@@ -241,54 +243,131 @@ def rim_point(u):
     return P[i] * (1 - f) + P[i + 1] * f, K.unit(T[i] * (1 - f) + T[i + 1] * f), K.unit(EY[i] * (1 - f) + EY[i + 1] * f)
 
 
+TOOTH_T = np.array([0.0, 0.10, 0.24, 0.40, 0.56, 0.71, 0.84, 0.94, 1.0])
+TOOTH_R = np.array([1.0, 0.99, 0.93, 0.82, 0.67, 0.50, 0.32, 0.15, 0.0])
+
+
+def tooth_line(sp, n=14):
+    """Centre line and radius of a tooth (as kernel.tooth builds it)."""
+    t = np.linspace(0, 1, n)
+    P = sp["root"][None] + np.outer(t * sp["L"], sp["dir"]) + np.outer(sp["bend"] * sp["L"] * t ** 2, sp["bd"])
+    return P, sp["r"] * 1.06 * np.interp(t, TOOTH_T, TOOTH_R)
+
+
+def tooth_clashes(specs, margin=0.0015, skip=2):
+    """Teeth passing through one another above the gum: (i, j, depth, point on i, point on j)."""
+    lines = [tooth_line(sp) for sp in specs]
+    out = []
+    for i in range(len(specs)):
+        Pi, Ri = lines[i]
+        for j in range(i + 1, len(specs)):
+            if np.linalg.norm(specs[i]["root"] - specs[j]["root"]) > specs[i]["L"] + specs[j]["L"]:
+                continue
+            Pj, Rj = lines[j]
+            D = (np.linalg.norm(Pi[:, None] - Pj[None], axis=2) - Ri[:, None] - Rj[None])[skip:, skip:]
+            if D.min() < -margin:
+                ia, ib = np.unravel_index(D.argmin(), D.shape)
+                out.append((i, j, float(-D.min()), Pi[ia + skip], Pj[ib + skip]))
+    return out
+
+
+def relax_teeth(specs, iters=240, max_lean=np.radians(7.5), max_shift=0.026):
+    """Ease crowded teeth apart until none passes through another: mostly by sliding the roots
+    along the gum (up to max_shift), partly by leaning (up to max_lean from the designed line)."""
+    for sp in specs:
+        sp.setdefault("dir0", sp["dir"].copy())
+        sp.setdefault("root0", sp["root"].copy())
+    for _ in range(iters):
+        cl = tooth_clashes(specs)
+        if not cl:
+            break
+        for (i, j, depth, pi, pj) in cl:
+            n = pi - pj
+            n = K.unit(n) if np.linalg.norm(n) > 1e-6 else K.unit(np.cross(specs[i]["dir"], specs[j]["dir"]) + 1e-6)
+            for (k, sgn) in ((i, 1.0), (j, -1.0)):
+                sp = specs[k]
+                side = n - (n @ sp["dir"]) * sp["dir"]
+                # slide the root
+                r_new = sp["root"] + sgn * side * (0.30 * depth + 0.0004)
+                off = r_new - sp["root0"]
+                if np.linalg.norm(off) > max_shift:
+                    r_new = sp["root0"] + off * (max_shift / np.linalg.norm(off))
+                sp["root"] = r_new
+                # lean the tooth
+                d_new = K.unit(sp["dir"] + sgn * side * (0.25 * depth + 0.0004) / max(sp["L"] * 0.6, 0.05))
+                ang = np.arccos(np.clip(d_new @ sp["dir0"], -1, 1))
+                if ang > max_lean:
+                    ax = np.cross(sp["dir0"], d_new)
+                    d_new = K.rot_axis(ax, max_lean) @ sp["dir0"] if np.linalg.norm(ax) > 1e-9 else sp["dir0"]
+                sp["dir"] = K.unit(d_new)
+                sp["bd"] = K.unit(sp["bd"] - (sp["bd"] @ sp["dir"]) * sp["dir"])
+    left = tooth_clashes(specs)
+    # anything still touching is two neighbours fused at the base: shorten the smaller one a little
+    for (i, j, depth, pi, pj) in left:
+        k = i if specs[i]["r"] < specs[j]["r"] else j
+        specs[k]["r"] *= max(0.80, 1.0 - depth / max(specs[k]["r"], 1e-3))
+    return tooth_clashes(specs)
+
+
 def build_teeth(m):
     rng = np.random.default_rng(m.seed + 404)
     tb = m.bucket("head_teeth", "tooth")
     gum = m.bucket("head_gums", "gum", smooth=True)
     dn, fw, up, ex = Hd(0, 0, -1), Hd(0, -1, 0), Hd(0, 0, 1), Hd(1, 0, 0)
-    teeth = []
+    specs = []
 
     def add(root, d, L, r, bend_dir, bend, jaw, sink=0.032):
         # no two teeth stand alike: every one is knocked a few degrees off its line
-        k = rng.normal(0, 0.075, 3) * (2.2 if rng.random() < 0.22 else 1.0)
+        k = rng.normal(0, 0.052, 3) * (1.9 if rng.random() < 0.16 else 1.0)
         d = K.unit(d + k - (k @ d) * d)
-        V, Q, T, tt = K.tooth(root, d, L, r, rng, bend_dir=bend_dir, bend=bend, sides=6, sink=sink,
-                              flat=rng.uniform(0.80, 1.0), twist=rng.uniform(-0.5, 0.5))
-        tb.add(V, Q, T, vattr=dict(t=tt, tone=rng.random()))
-        # each root sits in its own swollen collar of gum
-        P4 = np.array([root - d * 0.014, root - d * 0.002, root + d * 0.012, root + d * (0.026 + 0.3 * r)])
-        V, Q, T = K.tube(P4, [r + 0.002, r + 0.0065, r + 0.004, r + 0.0003], sides=8, rng=rng, wob=0.05, xhint=np.cross(d, ex))
-        gum.add(V, Q, T)
-        teeth.append(dict(root=root, dir=d, L=L, r=r, tip=root + d * L + K.unit(bend_dir) * bend * L, jaw=jaw))
+        bd = np.asarray(bend_dir, float)
+        specs.append(dict(root=np.asarray(root, float), dir=d, L=L, r=r, bd=K.unit(bd - (bd @ d) * d), bend=bend, jaw=jaw, sink=sink))
 
-    for (x, L, r, lean, splay) in UPPER_FRONT:
+    # upper front arc: neighbours stand at alternate depths in the thick lip, so crowded teeth overlap
+    # in the picture without growing through one another
+    for i, (x, L, r, lean, splay) in enumerate(UPPER_FRONT):
         h = lip(x)
-        root = Hw(x, mask_b(x, h) + 0.036 + 0.004 * rng.normal(), h - 0.004)
+        root = Hw(x, mask_b(x, h) + (0.030 if i % 2 == 0 else 0.056) + 0.003 * rng.normal(), h - 0.004)
         a = np.radians(lean + rng.normal(0, 2.0))
         d = K.unit(dn + fw * np.tan(a) + ex * np.tan(np.radians(-splay + rng.normal(0, 1.5))))
         add(root, d, L, r, -fw, rng.uniform(0.02, 0.06), "upper", sink=0.010)
-    for (sd, b, L, r, splay) in UPPER_SIDE:
-        root = Hw(sd * (jaw_half_width(b) - 0.024), b, 0.010)
+    for i, (sd, b, L, r, splay) in enumerate(UPPER_SIDE):
+        root = Hw(sd * (jaw_half_width(b) - (0.020 if i % 2 == 0 else 0.042)), b, 0.010)
         d = K.unit(dn + ex * sd * np.tan(np.radians(splay + rng.normal(0, 2.0))) + fw * np.tan(np.radians(rng.normal(3, 3))))
         add(root, d, L, r, -ex * sd, rng.uniform(0.03, 0.07), "upper")
     for (x, db, L, r) in UPPER_INNER:
         h = lip(x)
-        root = Hw(x, mask_b(x, h) + 0.034 + db, h - 0.004)
-        d = K.unit(dn + fw * np.tan(np.radians(rng.normal(1, 3))) + ex * np.tan(np.radians(rng.normal(0, 4))))
+        root = Hw(x, mask_b(x, h) + 0.046 + db, h - 0.004)
+        d = K.unit(dn + fw * np.tan(np.radians(rng.normal(-3, 3))) + ex * np.tan(np.radians(rng.normal(0, 4))))
         add(root, d, L, r, -fw, rng.uniform(0.02, 0.06), "upper", sink=0.010)
-    for (u, L, r, elev) in LOWER_INNER:
+    for i, (u, L, r, elev) in enumerate(LOWER_INNER):
         p, t, out = rim_point(u)
-        root = p - out * 0.012 - fw * 0.040
+        root = p - out * 0.014 - fw * (0.050 if i % 2 else 0.085)
         e = np.radians(elev + rng.normal(0, 3.0))
         d = K.unit(np.cos(e) * fw + np.sin(e) * up + ex * np.tan(np.radians(rng.normal(0, 5))) * (1 if u < 0.5 else -1) * 0.6)
         add(root, d, L, r, up, rng.uniform(0.03, 0.07), "lower")
-    for (u, L, r, elev, lean) in LOWER:
+    for i, (u, L, r, elev, lean) in enumerate(LOWER):
         p, t, out = rim_point(u)
-        root = p + out * band_width(u) * 0.36 + fw * 0.004
+        root = p + out * band_width(u) * (0.22 if i % 2 == 0 else 0.60) + fw * 0.004
         e = np.radians(elev + rng.normal(0, 2.5))
         d = K.unit(np.cos(e) * fw + np.sin(e) * up + ex * np.tan(np.radians(lean + rng.normal(0, 2.0))))
         add(root, d, L, r, up, rng.uniform(0.03, 0.08), "lower")
-    m.info["teeth"] = teeth
+
+    before = len(tooth_clashes(specs))
+    left = relax_teeth(specs)
+    m.info["tooth_clashes"] = (before, len(left), max([c[2] for c in left], default=0.0))
+
+    for sp in specs:
+        root, d, L, r = sp["root"], sp["dir"], sp["L"], sp["r"]
+        V, Q, T, at = K.tooth(root, d, L, r, rng, bend_dir=sp["bd"], bend=sp["bend"], sides=int(rng.choice([5, 6, 6, 7])),
+                              sink=sp["sink"], flat=rng.uniform(0.82, 1.0), twist=rng.uniform(-0.6, 0.6))
+        tb.add(V, Q, T, vattr=dict(t=at["t"], ca=at["ca"], sa=at["sa"], tone=rng.random()))
+        # the gum rises a little way up each root
+        P4 = np.array([root - d * 0.014, root - d * 0.002, root + d * 0.010, root + d * (0.022 + 0.25 * r)])
+        V, Q, T = K.tube(P4, [r + 0.001, r + 0.0045, r + 0.003, r + 0.0003], sides=8, rng=rng, wob=0.04, xhint=np.cross(d, ex))
+        gum.add(V, Q, T)
+        sp["tip"] = root + d * L + sp["bd"] * sp["bend"] * L
+    m.info["teeth"] = specs
     m.info["n_teeth"] = (len(UPPER_FRONT) + len(UPPER_SIDE) + len(UPPER_INNER), len(LOWER) + len(LOWER_INNER))
 
 
@@ -328,6 +407,10 @@ def build_soft(m):
         pts.append(((jaw_half_width(b) - 0.020), b, 0.004))
     Rg = 0.030 + 0.004 * np.sin(np.arange(len(pts)) * 2.1)
     cord(gum, pts, Rg, rng, sides=8, wob=0.05, hint=Hd(0, 0, 1), n=40)
+    # thick pads of gum behind the lip for the inner rows of upper teeth to stand in
+    for db, rad, dh in ((0.085, 0.040, 0.022), (0.140, 0.046, 0.034)):
+        pts = [(x, mask_b(x, lip(x)) + 0.034 + db, lip(x) + dh) for x in np.linspace(-0.235, 0.235, 13)]
+        cord(gum, pts, rad + 0.004 * np.sin(np.arange(13) * 1.9), rng, sides=8, wob=0.06, hint=Hd(0, 0, 1), n=30)
     # the gum band on the front of the lower jaw: ropes of wet tissue laid side by side
     P, Tn, EX, EY = rim_frames()
     n = len(P)
@@ -343,12 +426,12 @@ def build_soft(m):
     gum.add(V, Q, T)
     # ... with thinner ropes of tissue running along it
     for i in range(1, 3 * n - 1):
-        if rng.random() < 0.55:
+        if rng.random() < 0.40:
             g = band_width(i / (3 * n - 1))
             j = min(i // 3, n - 1)
-            c = Pb[i] + EY[j] * g * rng.uniform(-0.38, 0.42) + EX[j] * 0.006
-            V, Q, T = K.spindle(c, Tn[j] + EY[j] * rng.normal(0, 0.4), g * rng.uniform(0.45, 0.9), g * rng.uniform(0.16, 0.30),
-                                g * rng.uniform(0.10, 0.18), EX[j], segs=7, rings=4, rng=rng)
+            c = Pb[i] + EY[j] * g * rng.uniform(-0.38, 0.42) + EX[j] * 0.004
+            V, Q, T = K.spindle(c, Tn[j] + EY[j] * rng.normal(0, 0.3), g * rng.uniform(0.7, 1.4), g * rng.uniform(0.13, 0.22),
+                                g * rng.uniform(0.06, 0.10), EX[j], segs=7, rings=5, rng=rng)
             gum.add(V, Q, T)
     for k, frac in enumerate((0.90,)):
         pts, rad = [], []
@@ -401,9 +484,12 @@ def build_soft(m):
             ((0.060, 0.350, -0.600), (0.055, 0.395, -0.32), (0.040, 0.445, -0.06), (0.03, 0.48, 0.05), 0.064),
             ((0.005, 0.330, -0.610), (0.005, 0.370, -0.36), (0.005, 0.420, -0.10), (0.0, 0.46, 0.05), 0.070),
             ((-0.130, 0.410, -0.480), (-0.125, 0.440, -0.28), (-0.11, 0.465, -0.06), (-0.09, 0.49, 0.05), 0.052),
-            ((0.150, 0.405, -0.490), (0.145, 0.440, -0.28), (0.13, 0.465, -0.06), (0.10, 0.49, 0.05), 0.052)]
+            ((0.150, 0.405, -0.490), (0.145, 0.440, -0.28), (0.13, 0.465, -0.06), (0.10, 0.49, 0.05), 0.052),
+            ((-0.060, 0.300, -0.560), (-0.070, 0.265, -0.34), (-0.060, 0.235, -0.12), (-0.04, 0.22, 0.05), 0.056),
+            ((0.065, 0.305, -0.570), (0.075, 0.275, -0.33), (0.070, 0.245, -0.12), (0.05, 0.23, 0.05), 0.058),
+            ((0.000, 0.250, -0.540), (0.005, 0.215, -0.33), (0.000, 0.190, -0.13), (0.0, 0.18, 0.05), 0.050)]
     for (a, b_, c, d, r) in cols:
-        cord(lin, [a, b_, c, d], [r * 0.8, r, r * 0.95, r * 0.7], rng, sides=8, wob=0.05, hint=Hd(1, 0, 0))
+        cord(lin, [a, b_, c, d], [r * 0.8, r, r * 0.95, r * 0.7], rng, sides=8, wob=0.10, hint=Hd(1, 0, 0), wander=0.012, n=14)
 
 
 def build_eyes(m):
@@ -436,6 +522,9 @@ def build_head(m):
     blk("brow_L", [(0.042, -0.022, 0.120), (0.286, -0.010, 0.172), (0.292, 0.110, 0.232), (0.036, 0.110, 0.198),
                    (0.046, -0.018, 0.168), (0.284, -0.006, 0.216), (0.290, 0.125, 0.288), (0.042, 0.125, 0.284)],
         kinds=dict(bottom="core"))
+    blk("brow_C", [(-0.104, -0.020, 0.150), (0.050, -0.020, 0.160), (0.046, 0.112, 0.200), (-0.100, 0.112, 0.196),
+                   (-0.106, -0.014, 0.176), (0.052, -0.014, 0.186), (0.048, 0.128, 0.292), (-0.102, 0.128, 0.290)],
+        kinds=dict(bottom="core", left="core", right="core"))
     # nasal plate between the eyes, running down into the lip point
     blk("nose", [(-0.090, -0.006, -0.092), (-0.024, -0.004, -0.072), (-0.020, 0.030, -0.058), (-0.092, 0.030, -0.076),
                  (-0.096, -0.028, 0.118), (0.038, -0.028, 0.130), (0.042, 0.050, 0.148), (-0.100, 0.050, 0.140)],

@@ -723,8 +723,8 @@ def rod(base, direction, length, radius, rng, sides=6, sink=0.08):
 
 def tooth(root, direction, length, radius, rng, bend_dir=None, bend=0.0, sides=6, sink=0.03, flat=0.8,
           twist=0.3):
-    """One fang: an irregular, faceted, slightly curved cone.  Returns (V, Q, T, t) with t = 0 at
-    the gum and 1 at the tip (for staining)."""
+    """One fang: an irregular, chiselled, slightly curved spike.  Returns (V, Q, T, attrs) with
+    attrs t (0 at the gum, 1 at the tip) and ca / sa (cos / sin of the angle round the tooth)."""
     d = unit(direction)
     hint = np.array([0.0, 0.0, 1.0]) if abs(d[2]) < 0.9 else np.array([0.0, 1.0, 0.0])
     ex = unit(hint - (hint @ d) * d)
@@ -734,39 +734,41 @@ def tooth(root, direction, length, radius, rng, bend_dir=None, bend=0.0, sides=6
     bd = unit(np.asarray(bend_dir, float) - (np.asarray(bend_dir, float) @ d) * d)
     ph = rng.uniform(0, 2 * np.pi)
     ex, ey = ex * np.cos(ph) + ey * np.sin(ph), -ex * np.sin(ph) + ey * np.cos(ph)
-    ts = np.array([-sink / length, 0.0, 0.12, 0.30, 0.50, 0.68, 0.84, 0.95])
-    prof = np.array([0.90, 1.0, 0.985, 0.90, 0.745, 0.555, 0.345, 0.150])
+    ts = np.array([-sink / length, 0.0, 0.10, 0.24, 0.40, 0.56, 0.71, 0.84, 0.94])
+    prof = np.array([0.90, 1.0, 0.99, 0.93, 0.82, 0.67, 0.50, 0.32, 0.15])
     prof = prof * (1 + rng.normal(0, 0.05, len(prof)))
-    fac = 1 + rng.normal(0, 0.13, sides)
-    V, Q, T, tt = [], [], [], []
+    fac = 1 + rng.normal(0, 0.15, sides)          # unequal faces: a carved, not turned, section
+    ang0 = 2 * np.pi * (np.arange(sides) + rng.normal(0, 0.10, sides)) / sides
+    V, Q, T, tt, ca, sa = [], [], [], [], [], []
     for k, (t, pr_) in enumerate(zip(ts, prof)):
         c = np.asarray(root) + d * (t * length) + bd * (bend * length * max(t, 0) ** 2)
+        if 0 < k < len(ts) - 1:
+            c = c + (ex * rng.normal() + ey * rng.normal()) * radius * 0.045   # slight kinks
         tw = twist * t
         for j in range(sides):
-            th = 2 * np.pi * j / sides + tw
-            r = radius * pr_ * fac[j] * (1 + rng.normal(0, 0.045))
+            th = ang0[j] + tw
+            r = radius * pr_ * fac[j] * (1 + rng.normal(0, 0.05))
             V.append(c + ex * np.cos(th) * r + ey * np.sin(th) * r * flat)
-            tt.append(max(t, 0.0))
+            tt.append(max(t, 0.0)); ca.append(np.cos(ang0[j])); sa.append(np.sin(ang0[j]))
     for i in range(len(ts) - 1):
         for j in range(sides):
-            a = i * sides
-            Q.append([a + j, a + (j + 1) % sides, a + sides + (j + 1) % sides, a + sides + j])
+            a_ = i * sides
+            Q.append([a_ + j, a_ + (j + 1) % sides, a_ + sides + (j + 1) % sides, a_ + sides + j])
     tip = np.asarray(root) + d * length + bd * (bend * length)
-    V.append(tip)
-    tt.append(1.0)
+    V.append(tip); tt.append(1.0); ca.append(0.0); sa.append(0.0)
     c = len(V) - 1
-    a = (len(ts) - 1) * sides
+    a_ = (len(ts) - 1) * sides
     for j in range(sides):
-        T.append([a + j, a + (j + 1) % sides, c])
-    V.append(np.asarray(root) - d * sink)
-    tt.append(0.0)
+        T.append([a_ + j, a_ + (j + 1) % sides, c])
+    V.append(np.asarray(root) - d * sink); tt.append(0.0); ca.append(0.0); sa.append(0.0)
     c0 = len(V) - 1
     for j in range(sides):
         T.append([c0, (j + 1) % sides, j])
-    return (np.array(V), np.array(Q, np.int64).reshape(-1, 4), np.array(T, np.int64).reshape(-1, 3), np.array(tt))
+    return (np.array(V), np.array(Q, np.int64).reshape(-1, 4), np.array(T, np.int64).reshape(-1, 3),
+            dict(t=np.array(tt), ca=np.array(ca), sa=np.array(sa)))
 
 
-def strands_for_wound(z, rng, surf_normal, spacing=0.05, depth=0.034):
+def strands_for_wound(z, rng, surf_normal, spacing=0.034, depth=0.030):
     """Muscle laid bare in a wound: long cords running along it, each swelling and thinning,
     weaving slightly over one another.  Returns list of (V, Q, T)."""
     a = z["a"]
@@ -788,12 +790,12 @@ def strands_for_wound(z, rng, surf_normal, spacing=0.05, depth=0.034):
             k = max(6, int(ln / 0.018))
             ts = np.linspace(0, 1, k)
             ph, fq = rng.uniform(0, 6.28), rng.uniform(1.2, 2.6)
-            r0 = spacing * rng.uniform(0.50, 0.66)
+            r0 = spacing * rng.uniform(0.38, 0.70)
             sw = rng.uniform(0.25, 0.5)
             P, R = [], []
             for t in ts:
                 uu = u + t * ln
-                vv = v0 + spacing * 0.22 * np.sin(ph + t * fq * 2.0)
+                vv = v0 + spacing * 0.42 * np.sin(ph + t * fq * 2.0)
                 edge = max(abs(uu) / L2, abs(vv) / (W * 1.15))
                 dd = depth - 0.012 * min(edge, 1.0) ** 2 + 0.005 * np.sin(ph * 1.7 + t * 5.0)
                 P.append(z["c"] + a * uu + s * vv - n * dd)

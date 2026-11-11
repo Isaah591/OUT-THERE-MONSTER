@@ -61,6 +61,9 @@ if __name__ == "__main__":
     for k, v in sorted(stats.items(), key=lambda kv: -kv[1]):
         print(f"   {k:<16} {v:>8} triangles")
     print(f"   total            {tot:>8} triangles;  teeth upper/lower: {m.info.get('n_teeth')}")
+    c = m.info.get("tooth_clashes")
+    if c:
+        print(f"   teeth passing through one another: {c[0]} pairs as placed -> {c[1]} after relaxing (deepest {c[2] * 1000:.1f} mm)")
     os.makedirs(os.path.dirname(path), exist_ok=True)
     bpy.ops.wm.save_as_mainfile(filepath=path, compress=True)
     print("saved", path, f"({os.path.getsize(path) / 1e6:.1f} MB) in {time.time() - t:.1f} s")
