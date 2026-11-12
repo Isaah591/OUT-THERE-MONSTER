@@ -4,5 +4,35 @@
   "tissue": 0.116,
   "dark": 0.369,
   "largest_dark": 0.275
+ },
+ "model_head": {
+  "teeth": 0.398,
+  "tissue": 0.037,
+  "dark": 0.315,
+  "largest_dark": 0.294
+ },
+ "model_mouth": {
+  "teeth": 0.381,
+  "tissue": 0.039,
+  "dark": 0.336,
+  "largest_dark": 0.306
+ },
+ "model_front": {
+  "teeth": 0.354,
+  "tissue": 0.043,
+  "dark": 0.271,
+  "largest_dark": 0.213
+ },
+ "model_tq": {
+  "teeth": 0.388,
+  "tissue": 0.037,
+  "dark": 0.307,
+  "largest_dark": 0.27
+ },
+ "model_mouthside": {
+  "teeth": 0.396,
+  "tissue": 0.114,
+  "dark": 0.193,
+  "largest_dark": 0.121
  }
 }

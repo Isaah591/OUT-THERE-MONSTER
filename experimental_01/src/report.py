@@ -99,7 +99,7 @@ if __name__ == "__main__":
         right.append("LARGEST UNBROKEN DARK PATCH: %.0f%% OF THE OPENING (SHEET: %.0f%%)" % (
             fill["model_head"]["largest_dark"] * 100, fill["sheet_head_closeup"]["largest_dark"] * 100))
     right.append(f"TEETH PASSING THROUGH ONE ANOTHER: {t['clashes_after_relaxing']} (WAS {t['clashes_as_placed']} PAIRS BEFORE EASING APART)")
-    right.append("SOCKETS %d x %d CM AND %d x %d CM, %d CM DEEP; BROWS DROP %.0f AND %.0f DEG TOWARD THE NOSE" % (
+    right.append("SOCKETS %.0f x %.0f CM AND %.0f x %.0f CM, %.0f CM DEEP; BROWS DROP %.0f AND %.0f DEG TOWARD THE NOSE" % (
         hd["sockets_m"][0][0] * 100, hd["sockets_m"][0][1] * 100, hd["sockets_m"][1][0] * 100, hd["sockets_m"][1][1] * 100,
         hd["socket_depth_m"] * 100, hd["brow_drop_deg"][0], hd["brow_drop_deg"][1]))
     right.append("HEAD (CROWN TO CHIN) = %.0f%% OF THE HEIGHT; THE SHEET SHOWS 32%% (FRONT), 39%% (THREE-QUARTER), 42%% (SIDE)" % (
