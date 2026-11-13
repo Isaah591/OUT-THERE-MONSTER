@@ -40,6 +40,14 @@ def Hw(x, b, h, cfg=None):
     return cfg["origin"] + x * ex + b * eb + h * eh
 
 
+def Hl(p, cfg=None):
+    """World point -> head coordinates (x, b, h)."""
+    cfg = cfg or HEAD
+    ex, eb, eh = frame(cfg)
+    d = (np.asarray(p, float) - cfg["origin"]) / cfg["scale"] ** 2
+    return np.array([d @ ex, d @ eb, d @ eh])
+
+
 def Hd(x, b, h, cfg=None):
     ex, eb, eh = frame(cfg)
     return K.unit(x * ex + b * eb + h * eh)
@@ -63,106 +71,236 @@ def hexa(name, P8, kind="plate", rng=None, jit=0.0, kinds=None):
     return co
 
 
-# ---- the mask (front view crop: 620 px across the face = 0.52 m) ------------------------------
-# columns: mask edge | right socket outer | inner | lip point | left socket inner | outer | mask edge
+# ---- the face (front view crop: 620 px across the face = 0.52 m) -------------------------------
+# reference columns: face edge | right socket outer | inner | lip point | left socket inner | outer | face edge
 COLX = np.array([-0.262, -0.235, -0.124, -0.056, 0.070, 0.205, 0.262])
 LIP = np.array([0.006, -0.006, -0.024, -0.096, -0.012, 0.004, 0.020])     # the lip stays high under the sockets and dips between them
 SOCB = np.array([0.034, 0.021, 0.013, 0.004, 0.026, 0.034, 0.044])        # socket floors
 SOCT = np.array([0.158, 0.148, 0.108, 0.096, 0.124, 0.160, 0.168])        # socket tops: inner corners low
-BROW = np.array([0.188, 0.190, 0.172, 0.162, 0.178, 0.194, 0.188])        # top of the mask
-MASK_B = np.array([0.000, -0.004, -0.014, -0.024, -0.014, -0.004, 0.000]) # centre pushed forward (nose)
-MASK_BACK = 0.128
-SOCKET_DEPTH = 0.092
+SOCKET_DEPTH = 0.095
 # pupils: tiny, deep, toward the inner-lower corner of each socket (not mirrored)
 PUPILS = [(-0.168, 0.068), (0.124, 0.084)]
 PUPIL_R = 0.0068
+PUPIL_DEPTH = 0.058
 
 
 def lip(x):
     return float(np.interp(x, COLX, LIP))
 
 
-def mask_b(x, h):
-    return float(np.interp(x, COLX, MASK_B)) + 0.018 * (1.0 - np.clip(h / 0.18, -0.6, 1.0))
+# ---- skull (Model 02): a stack of horizontal contours, curved in every view -------------------
+# Model 01's skull was a flat mask with box slabs on it.  Here every level of the head is a rounded
+# outline (a superellipse seen from above), so the face wraps back toward the temples, the brow
+# juts over the sockets, the forehead rounds up and back into the dome and the outline is curved
+# from the front, the side and above.  The sockets, lip line and pupils keep Model 01's readings.
+XS = np.array([-0.270, -0.253, -0.235, -0.180, -0.124, -0.090, -0.056, -0.010, 0.030, 0.070, 0.137, 0.205, 0.232, 0.253, 0.270])
+SOCK_COLS = ((2, 4), (9, 11))                                    # ring columns bounding the right / left socket
+FB = np.array([-0.50, -0.29, -0.07, 0.15, 0.37, 0.57, 0.75])     # side stations: fraction of the half depth
+BX = np.array([0.70, 0.47, 0.235, 0.0, -0.235, -0.47, -0.70])    # back points: fraction of the half width
+NEXP = 3.0                                                       # roundness of the outline seen from above
+#          height  half-width  front   back      (front / back = depth of the outline on the centre line)
+LEVELS = [(0.000, 0.296, 0.006, 0.765),      # jaw edge / lip
+          (0.046, 0.303, 0.002, 0.775),      # socket floors
+          (0.092, 0.306, 0.002, 0.780),      # socket middles
+          (0.138, 0.305, 0.004, 0.780),      # socket tops
+          (0.190, 0.299, 0.018, 0.775),      # brow
+          (0.242, 0.287, 0.068, 0.768),      # the forehead slopes back at about 35 degrees ...
+          (0.292, 0.268, 0.132, 0.752),
+          (0.338, 0.240, 0.202, 0.728),
+          (0.376, 0.198, 0.276, 0.692),
+          (0.402, 0.138, 0.352, 0.634)]      # ... into a broad, rounded crown
+SKULL_TOP = (0.006, 0.485, 0.420)
+PALATE = (0.0, 0.360, 0.075)
+# lumps and dents (x, b, h, radius, amount pushed out): no two quarters of this skull match
+LUMPS = [(-0.120, 0.100, 0.270, 0.110, 0.024), (0.140, 0.140, 0.290, 0.100, -0.022), (0.100, 0.520, 0.370, 0.140, 0.020),
+         (-0.270, 0.520, 0.220, 0.120, -0.020), (0.290, 0.360, 0.200, 0.120, -0.024), (-0.060, 0.330, 0.380, 0.110, 0.014),
+         (0.020, 0.700, 0.250, 0.150, 0.018), (-0.290, 0.200, 0.110, 0.090, 0.012)]
+SKULL_C = np.array([0.0, 0.40, 0.12])        # lumps push away from here
+REVEAL = 0.044                                # thickness of the armour seen in the socket openings
+N_RING = len(XS) + 2 * len(FB) + len(BX)
 
 
-def build_mask(rng):
-    co = K.Coarse("mask")
-    rows = [LIP, SOCB, SOCT, BROW]
-    F = [[co.v(Hw(COLX[c], mask_b(COLX[c], rows[r][c]), rows[r][c])) for c in range(7)] for r in range(4)]
-    B = [[co.v(Hw(COLX[c], MASK_BACK, rows[r][c])) for c in range(7)] for r in range(4)]
-    sockets = {(1, 1), (1, 4)}
-    gx = Hd(1, 0, 0)
-    for r in range(3):
-        for c in range(6):
-            if (r, c) in sockets:
-                continue
-            co.f([F[r][c], F[r][c + 1], F[r + 1][c + 1], F[r + 1][c]], grain=gx, tag="mask_front")
-    for c in range(6):
-        co.f([F[3][c], F[3][c + 1], B[3][c + 1], B[3][c]], grain=gx, tag="mask_top")
-        co.f([F[0][c + 1], F[0][c], B[0][c], B[0][c + 1]], kind="gum", tag="lip")
-    for r in range(3):
-        co.f([F[r][0], F[r + 1][0], B[r + 1][0], B[r][0]], grain=Hd(0, 0, 1), tag="mask_side")
-        co.f([F[r + 1][6], F[r][6], B[r][6], B[r + 1][6]], grain=Hd(0, 0, 1), tag="mask_side")
-    for (r, c) in sockets:
-        cx = (COLX[c] + COLX[c + 1]) / 2
-        ch = (SOCB[c] + SOCB[c + 1] + SOCT[c] + SOCT[c + 1]) / 4
-        bk = {}
-        for rr in (r, r + 1):
-            for cc in (c, c + 1):
-                x = cx + (COLX[cc] - cx) * 0.92
-                h = ch + (rows[rr][cc] - ch) * 0.92
-                bk[(rr, cc)] = co.v(Hw(x, mask_b(COLX[cc], rows[rr][cc]) + SOCKET_DEPTH, h))
-        co.f([F[r][c], F[r][c + 1], bk[(r, c + 1)], bk[(r, c)]], kind="socket")
-        co.f([F[r + 1][c + 1], F[r + 1][c], bk[(r + 1, c)], bk[(r + 1, c + 1)]], kind="socket")
-        co.f([F[r + 1][c], F[r][c], bk[(r, c)], bk[(r + 1, c)]], kind="socket")
-        co.f([F[r][c + 1], F[r + 1][c + 1], bk[(r + 1, c + 1)], bk[(r, c + 1)]], kind="socket")
-        co.f([bk[(r, c)], bk[(r, c + 1)], bk[(r + 1, c + 1)], bk[(r + 1, c)]], kind="socket")
-    return co
+def _level(h):
+    hs = [L[0] for L in LEVELS]
+    return tuple(float(np.interp(h, hs, [L[i] for L in LEVELS])) for i in (1, 2, 3))
 
 
-# ---- cranium (exact side view and side close-up: steep forehead into a dome) ------------------
-#        b      wb     wc     hc     wt     ht     wi     hi     hr     hbc
-CRAN = [(0.118, 0.272, 0.290, 0.095, 0.264, 0.218, 0.140, 0.268, 0.282, 0.072),
-        (0.180, 0.280, 0.298, 0.102, 0.268, 0.250, 0.150, 0.328, 0.356, 0.078),
-        (0.290, 0.288, 0.308, 0.110, 0.268, 0.262, 0.155, 0.356, 0.392, 0.082),
-        (0.440, 0.288, 0.308, 0.115, 0.258, 0.262, 0.145, 0.362, 0.400, 0.062),
-        (0.600, 0.268, 0.290, 0.112, 0.238, 0.240, 0.130, 0.332, 0.366, -0.010),
-        (0.710, 0.225, 0.246, 0.102, 0.196, 0.200, 0.105, 0.272, 0.300, 0.004),
-        (0.765, 0.160, 0.176, 0.096, 0.140, 0.160, 0.070, 0.200, 0.220, 0.030)]
-MOUTH_BACK = 0.50          # the palate ends here; behind it the head is solid
+def _front_b(x, a, bf, bk):
+    bc, c = (bf + bk) / 2, (bk - bf) / 2
+    t = min(abs(x) / a, 0.999)
+    return bc - c * (1 - t ** NEXP) ** (1 / NEXP)
+
+
+def face_b(x, h):
+    """Depth of the skull's front surface at (x, h), before the brow and nose relief."""
+    return _front_b(x, *_level(max(h, 0.0)))
+
+
+mask_b = face_b          # the name the teeth, gums and checks use
 
 
 def jaw_half_width(b):
-    return float(np.interp(b, [c[0] for c in CRAN], [c[1] for c in CRAN]))
+    """Half width of the upper jaw edge at depth b."""
+    a, bf, bk = _level(0.0)
+    bc, c = (bf + bk) / 2, (bk - bf) / 2
+    t = min(abs(b - bc) / c, 0.999)
+    return a * (1 - t ** NEXP) ** (1 / NEXP)
 
 
-def build_cranium(rng):
-    co = K.Coarse("cranium")
-    rings = []
-    for (b, wb, wc, hc, wt, ht, wi, hi, hr, hbc) in CRAN:
-        j = lambda s=0.007: rng.normal(0, s)
-        dl = 0.016 if 0.2 < b < 0.5 else 0.0            # dented left temple
-        pts = [(-wb + j(), b, 0.0 + j(0.004)), (-wc + j(), b, hc + j()), (-wt + j(), b, ht + j()),
-               (-wi + j(), b, hi + j()), (0.012 + j(), b, hr + j(0.005)), (wi + j(), b, hi + j() - dl * 0.4),
-               (wt + j() - dl, b, ht + j() - dl * 0.6), (wc + j() - dl * 0.5, b, hc + j()), (wb + j(), b, 0.0 + j(0.004)),
-               (0.0, b, hbc)]
-        if b > MOUTH_BACK:                               # underside behind the mouth drops a little
-            pts[0] = (pts[0][0], b, -0.03)
-            pts[8] = (pts[8][0], b, -0.03)
-        rings.append(co.vs([Hw(*p) for p in pts]))
-    gb = Hd(0, 1, 0)
-    for i in range(len(rings) - 1):
-        b0 = CRAN[i][0]
-        for jx in range(10):
-            a, c = rings[i], rings[i + 1]
-            kind = "plate"
-            if jx in (8, 9):
-                kind = "void" if b0 < MOUTH_BACK else "core"
-            co.f([a[jx], a[(jx + 1) % 10], c[(jx + 1) % 10], c[jx]], kind=kind, grain=gb, tag=f"cr{jx}")
-    co.f(rings[0][::-1], kind="socket", tag="front")
-    co.f(rings[-1], kind="plate", grain=Hd(1, 0, 0), tag="back")
+def _brow_w(x):
+    return float(np.exp(-((x + 0.180) / 0.105) ** 4) + np.exp(-((x - 0.137) / 0.115) ** 4))
+
+
+def build_skull(rng):
+    """Returns (coarse skull, {(row, column): face index}) - the map is used to lay armour slabs."""
+    co = K.Coarse("skull")
+    NF, NS, NB = len(XS), len(FB), len(BX)
+    lipx, flo, top = (np.interp(XS, COLX, A) for A in (LIP, SOCB, SOCT))
+
+    def rows(j):
+        return [lipx[j], flo[j], (flo[j] + top[j]) / 2, top[j], top[j] + 0.050 + 0.010 * _brow_w(XS[j])]
+
+    side_w = (0.22, 0.07, 0.0, 0.0, 0.0, 0.0, 0.0)
+    C = []
+    for k, (hs, a, bf, bk) in enumerate(LEVELS):
+        bc, c = (bf + bk) / 2, (bk - bf) / 2
+        sx = min(1.0, a / LEVELS[0][1])                 # the dome narrows: the columns close up
+        ring = []
+        for j in range(NF):                             # across the face, right to left
+            x = XS[j] * sx
+            wf = float(np.clip((0.300 - abs(XS[j])) / 0.060, 0.35, 1.0))
+            h = hs + wf * (rows(j)[k] - hs) if k <= 4 else hs
+            bb = _front_b(x, a, bf, bk)
+            if k <= 5:
+                bw = _brow_w(XS[j])
+                fwd = bw * (0.0, 0.0, 0.002, 0.014, 0.030, 0.012)[k]                        # brow ridge
+                xn = -0.056 + 0.026 * min(max(h, 0.0) / 0.19, 1.0)
+                fwd += float(np.exp(-((XS[j] - xn) / 0.042) ** 2)) * (0.020, 0.024, 0.024, 0.020, 0.012, 0.004)[k]   # nose ridge
+                if abs(XS[j]) > 0.17:
+                    fwd += (0.012, 0.012, 0.004, 0.0, 0.0, 0.0)[k]                          # cheekbones
+                if k == 0:
+                    fwd += 0.008                                                            # the lip overhangs the teeth
+                bb -= fwd
+            ring.append([x, bb, h])
+        for i, fb in enumerate(FB):                     # left side, front to back
+            h = hs + side_w[i] * (rows(NF - 1)[k] - hs) if k <= 4 else hs
+            ring.append([a * (1 - abs(fb) ** NEXP) ** (1 / NEXP), bc + fb * c, h])
+        for fx in BX:                                   # across the back, left to right
+            ring.append([fx * a, bc + c * (1 - abs(fx) ** NEXP) ** (1 / NEXP), hs])
+        for i in range(NS - 1, -1, -1):                 # right side, back to front
+            fb = FB[i]
+            h = hs + side_w[i] * (rows(0)[k] - hs) if k <= 4 else hs
+            ring.append([-a * (1 - abs(fb) ** NEXP) ** (1 / NEXP), bc + fb * c, h])
+        C.append(np.array(ring))
+    C = np.array(C)                                     # (levels, ring points, 3) in head coordinates
+    # battering: nothing on this head is true - swell and pinch the outline, dent the left temple
+    flat = C.reshape(-1, 3)
+    nz = (K.fbm(flat * np.array([1.0, 1.0, 1.4]), 4.2, 3, 71) - 0.5)
+    for k in range(len(LEVELS)):
+        bc = (LEVELS[k][2] + LEVELS[k][3]) / 2
+        for i in range(N_RING):
+            x, bb, h = C[k, i]
+            face = i < NF and k <= 4
+            amp = 0.030 if face else 0.075
+            sck = face and (SOCK_COLS[0][0] <= i <= SOCK_COLS[0][1] or SOCK_COLS[1][0] <= i <= SOCK_COLS[1][1]) and 1 <= k <= 3
+            if sck:
+                amp = 0.010                              # the sockets stay square
+            g = 1.0 + amp * 2 * nz[k * N_RING + i]
+            x, bb = x * g, bc + (bb - bc) * g
+            h += (0.0 if sck else 0.008) * float(rng.normal())
+            q = np.array([x, bb, h])
+            if not sck:
+                for (lx, lb, lh, lr, amt) in LUMPS:
+                    d2 = ((q - (lx, lb, lh)) ** 2).sum() / lr ** 2
+                    if d2 < 6.0:
+                        q = q + K.unit(q - SKULL_C) * amt * np.exp(-d2) * (0.5 if face else 1.0)
+            C[k, i] = q
+    ids = [[co.v(Hw(*C[k, i])) for i in range(N_RING)] for k in range(len(LEVELS))]
+    holes = {(k, i) for k in (1, 2) for (c0, c2) in SOCK_COLS for i in range(c0, c2)}
+    grid = {}
+    for k in range(len(LEVELS) - 1):
+        for i in range(N_RING):
+            if (k, i) in holes:
+                continue
+            j = (i + 1) % N_RING
+            grid[(k, i)] = len(co.F)
+            co.f([ids[k][i], ids[k][j], ids[k + 1][j], ids[k + 1][i]], patch="skull", tag="skull")
+    tp = co.v(Hw(*SKULL_TOP))
+    K_ = len(LEVELS) - 1
+    for i in range(N_RING):
+        co.f([ids[K_][i], ids[K_][(i + 1) % N_RING], tp], patch="skull", tag="crown")
+    pal = co.v(Hw(*PALATE))
+    for i in range(N_RING):
+        co.f([ids[0][(i + 1) % N_RING], ids[0][i], pal], kind="void", tag="palate")
+    # sockets: square windows through thick armour - a reveal of thin plating (a part of its own,
+    # so the face plates stop square at the opening), then a black pocket
+    rims = K.Coarse("socket_rims")
+    for si, (c0, c2) in enumerate(SOCK_COLS):
+        loop = [(1, c0), (1, c0 + 1), (1, c2), (2, c2), (3, c2), (3, c0 + 1), (3, c0), (2, c0)]
+        O = np.array([C[k, i] for (k, i) in loop])
+        cen = O.mean(0)
+        n = len(loop)
+        Ro, Ri, I, B = [], [], [], []
+        for pt in O:
+            Ro.append(rims.v(Hw(*pt)))
+            q = pt + (cen - pt) * 0.05
+            q[1] = pt[1] + REVEAL
+            Ri.append(rims.v(Hw(*q)))
+            I.append(co.v(Hw(*q)))
+            q = pt + (cen - pt) * 0.10
+            B.append(co.v(Hw(q[0], cen[1] + SOCKET_DEPTH, q[2])))
+        for t in range(n):
+            u = (t + 1) % n
+            rims.f([Ro[t], Ro[u], Ri[u], Ri[t]], patch=f"rim{si}", tag="socket_rim")
+            co.f([I[t], I[u], B[u], B[t]], kind="socket", tag="socket_wall")
+        co.f(B, kind="socket", tag="socket_back")
+    co.rims = rims
+    co.grid = grid
+    co.ring_ids = ids
     return co
+
+
+def raise_slab(name, src, faces, t, rng):
+    """A thick plate of armour lying on a group of the skull's faces and following their curve."""
+    V = src.arrays()
+    vn = {}
+    for fi in faces:
+        n = K.newell(V[src.F[fi]])
+        for v in src.F[fi]:
+            vn[v] = vn.get(v, 0.0) + n
+    co = K.Coarse(name)
+    tt = t * (1 + rng.normal(0, 0.07))
+    top = {v: co.v(V[v] + K.unit(n) * tt * (1 + rng.normal(0, 0.10))) for v, n in vn.items()}
+    base = {v: co.v(V[v] - K.unit(n) * 0.004) for v, n in vn.items()}
+    edges = set()
+    for fi in faces:
+        f = src.F[fi]
+        co.f([top[v] for v in f], patch=name, tag="slab_top")
+        for k in range(len(f)):
+            edges.add((f[k], f[(k + 1) % len(f)]))
+    for (a_, b_) in sorted(edges):
+        if (b_, a_) not in edges:
+            co.f([top[a_], base[a_], base[b_], top[b_]], patch=name, tag="slab_edge")
+    return co
+
+
+# armour slabs on the skull: (name, thickness m, [(row, first column, last column), ...]).  Rows count
+# up from the lip (3-4 = the brow band); columns run round the ring: 0-13 across the face from the
+# creature's right, 14-21 down its left side, 22-28 across the back, 29-35 up its right side.
+SLABS = [("brow_R", 0.036, [(3, 0, 5), (4, 0, 5), (5, 1, 3)]),
+         ("brow_L", 0.031, [(3, 8, 13), (4, 9, 13), (5, 10, 12)]),
+         ("nasal", 0.022, [(0, 5, 7), (1, 5, 7), (2, 5, 7), (3, 6, 7)]),
+         ("forehead_a", 0.027, [(5, 4, 8), (6, 4, 7), (7, 5, 7)]),
+         ("forehead_b", 0.024, [(6, 9, 12), (7, 9, 12), (8, 9, 11)]),
+         ("zygo_R", 0.025, [(0, 31, 35), (1, 31, 35), (2, 32, 35)]),
+         ("zygo_L", 0.022, [(0, 14, 15), (1, 14, 15)]),
+         ("temple_R", 0.024, [(3, 30, 33), (4, 30, 34), (5, 31, 33)]),
+         ("occiput_a", 0.025, [(2, 22, 27), (3, 22, 27), (4, 23, 26)]),
+         ("crown_a", 0.023, [(6, 17, 20), (7, 17, 20), (8, 18, 19)]),
+         ("crown_b", 0.026, [(6, 24, 30), (7, 25, 29)])]
+# slabs carry broader, flatter plating than the skull under them; the socket reveals a thin skin
+SLABP = dict(HEADP, plate=(0.125, 0.105), layers=((0.003, 0.007, 1.00, 0.00), (0.009, 0.014, 0.60, 0.05), (0.016, 0.023, 0.22, 0.10)))
+RIMP = dict(HEADP, plate=(0.07, 0.06), layers=((0.002, 0.005, 1.00, 0.00), (0.006, 0.010, 0.35, 0.05)), pit=0.02)
 
 
 # ---- lower jaw rim (front view outline + exact side profile): inner edge of the gum band ------
@@ -214,8 +352,8 @@ UPPER_FRONT = [(-0.240, 0.235, 0.030, 3, 5), (-0.196, 0.292, 0.033, 2, 3), (-0.1
                (0.190, 0.158, 0.024, 6, -3), (0.236, 0.196, 0.027, 3, -5)]
 # Upper sides: (side, b, length, radius, splay out deg).  The exact side view shows the rear teeth
 # as long as the front ones, and the brief asks for it.
-UPPER_SIDE = [(-1, 0.105, 0.335, 0.033, 5), (-1, 0.195, 0.265, 0.028, 8), (-1, 0.285, 0.345, 0.034, 4), (-1, 0.375, 0.275, 0.029, 7),
-              (1, 0.100, 0.275, 0.030, 7), (1, 0.190, 0.340, 0.037, 4), (1, 0.280, 0.275, 0.030, 8), (1, 0.370, 0.285, 0.031, 5)]
+UPPER_SIDE = [(-1, 0.170, 0.335, 0.033, 5), (-1, 0.245, 0.265, 0.028, 8), (-1, 0.325, 0.345, 0.034, 4), (-1, 0.405, 0.275, 0.029, 7),
+              (1, 0.165, 0.275, 0.030, 7), (1, 0.240, 0.340, 0.037, 4), (1, 0.320, 0.275, 0.030, 8), (1, 0.400, 0.285, 0.031, 5)]
 # Upper inner row, behind and between the main teeth: (x, b offset, length, radius)
 UPPER_INNER = [(-0.218, 0.060, 0.190, 0.021), (-0.128, 0.052, 0.275, 0.024), (-0.026, 0.056, 0.300, 0.025),
                (0.066, 0.052, 0.240, 0.023), (0.166, 0.058, 0.210, 0.022), (0.215, 0.090, 0.165, 0.020),
@@ -403,12 +541,12 @@ def build_soft(m):
     lin = m.bucket("head_mouth", "mouth", smooth=True)
     # upper gum line: round the lip and back along both sides (the collars sit on it)
     pts = []
-    for b in (0.44, 0.36, 0.27, 0.18, 0.10):
+    for b in (0.44, 0.36, 0.27, 0.19):
         pts.append((-(jaw_half_width(b) - 0.020), b, 0.004))
     for x in np.linspace(-0.250, 0.250, 15):
         h = lip(x)
         pts.append((x, mask_b(x, h) + 0.034, h + 0.006))
-    for b in (0.10, 0.18, 0.27, 0.36, 0.44):
+    for b in (0.19, 0.27, 0.36, 0.44):
         pts.append(((jaw_half_width(b) - 0.020), b, 0.004))
     Rg = 0.030 + 0.004 * np.sin(np.arange(len(pts)) * 2.1)
     cord(gum, pts, Rg, rng, sides=8, wob=0.05, hint=Hd(0, 0, 1), n=40)
@@ -460,7 +598,9 @@ def build_soft(m):
                       (-1, [((-0.292, 0.440, 0.090), (-0.300, 0.455, 0.020), (-0.290, 0.468, -0.055), (-0.276, 0.470, -0.150), (-0.262, 0.465, -0.240), 0.022),
                             ((-0.288, 0.495, 0.070), (-0.300, 0.500, 0.000), (-0.292, 0.495, -0.080), (-0.280, 0.485, -0.170), (-0.268, 0.474, -0.250), 0.019)])):
         for (*pp, r) in cords:
-            cord(gum, pp, [r * 0.75, r, r * 1.05, r * 0.9, r * 0.6], rng, sides=8, wob=0.08, wander=0.014, n=16)
+            # on the skull the sinews lie in the torn surface; below it they hang free to the jaw
+            pp = [tuple(Hl(on_skull(x_, b_, h_, lift=0.2 * r))) if h_ > 0.035 else (x_, b_, h_) for (x_, b_, h_) in pp]
+            cord(gum, pp, [r * 0.62, r * 0.85, r * 0.95, r * 0.85, r * 0.6], rng, sides=8, wob=0.08, wander=0.012, n=16)
             # a thinner strand twisting round each sinew
             q = [(x + sd * 0.012, b_ + 0.018 * (-1) ** i, h_) for i, (x, b_, h_) in enumerate(pp)]
             cord(gum, q, r * 0.42, rng, sides=6, wob=0.08, wander=0.012, n=16)
@@ -501,7 +641,7 @@ def build_eyes(m):
     pb = m.bucket("head_pupils", "pupil", smooth=True)
     pos = []
     for (x, h) in PUPILS:
-        c = Hw(x, mask_b(x, h) + 0.034, h)
+        c = Hw(x, mask_b(x, h) + PUPIL_DEPTH, h)
         V, Q, T = K.spindle(c, Hd(0, 1, 0), PUPIL_R * 2, PUPIL_R, PUPIL_R, Hd(0, 0, 1), segs=10, rings=6)
         pb.add(V, Q, T)
         pos.append(c)
@@ -510,53 +650,89 @@ def build_eyes(m):
 
 # ---- assembly --------------------------------------------------------------------------------
 
+class Surf:
+    """Closest point on a coarse mesh's plated faces (sampled): seats wounds, rods and sinews on it."""
+
+    def __init__(self, co, n=7):
+        from scipy.spatial import cKDTree
+        V = co.arrays()
+        P, N = [], []
+        for fi, f in enumerate(co.F):
+            if co.kind[fi] not in ("plate", "core"):
+                continue
+            poly = V[f]
+            nrm = K.newell(poly)
+            if len(f) == 4:
+                for u in np.linspace(0, 1, n):
+                    for v in np.linspace(0, 1, n):
+                        P.append((1 - u) * (1 - v) * poly[0] + u * (1 - v) * poly[1] + u * v * poly[2] + (1 - u) * v * poly[3])
+                        N.append(nrm)
+            else:
+                for u in np.linspace(0, 1, n):
+                    for v in np.linspace(0, 1 - u, max(2, int(round(n * (1 - u))))):
+                        P.append(poly[0] * (1 - u - v) + poly[1] * u + poly[2] * v)
+                        N.append(nrm)
+        self.P, self.N = np.array(P), np.array(N)
+        self.tree = cKDTree(self.P)
+
+    def __call__(self, p, lift=0.0):
+        _, i = self.tree.query(np.asarray(p, float))
+        return self.P[i] + self.N[i] * lift, self.N[i]
+
+
+SKULL_SURF = [None]
+
+
+def on_skull(x, b, h, lift=0.0):
+    """World point on the skull's surface nearest the head-coordinate point (x, b, h)."""
+    return SKULL_SURF[0](Hw(x, b, h), lift)[0]
+
+
 def build_head(m):
     rng = np.random.default_rng(m.seed + 303)
     G = "head"
-    cran = m.part(build_cranium(rng), params=HEADP, group=G)
-    mask = m.part(build_mask(rng), params=HEADP, group=G)
+    sk = build_skull(rng)
+    S = Surf(sk)
+    SKULL_SURF[0] = S
+    # armour slabs: thick broken plates lying on the skull and following its curve
+    slabs = []
+    for (name, t, spans) in SLABS:
+        faces = [sk.grid[(k, i % N_RING)] for (k, c0, c1) in spans for i in range(c0, c1 + 1) if (k, i % N_RING) in sk.grid]
+        slabs.append(raise_slab(name, sk, faces, t, rng))
+        for fi in faces:
+            sk.kind[fi] = "core"                 # hidden under the slab: no plating of its own
+    skull = m.part(sk, params=HEADP, group=G)
+    m.part(sk.rims, params=RIMP, group=G)
+    for co in slabs:
+        m.part(co, params=SLABP, group=G)
     jaw = m.part(build_lower_jaw(rng), params=JAWP, group=G)
 
     def blk(name, P8, **kw):
         return m.part(hexa(name, [Hw(*p) for p in P8], rng=rng, jit=0.004, **kw), params=HEADP, group=G)
 
-    # heavy brows over each socket, dropping toward the nose and hooding the inner corners
-    blk("brow_R", [(-0.286, -0.010, 0.162), (-0.098, -0.022, 0.104), (-0.092, 0.110, 0.190), (-0.290, 0.110, 0.226),
-                   (-0.284, -0.006, 0.208), (-0.102, -0.018, 0.156), (-0.096, 0.125, 0.280), (-0.286, 0.125, 0.286)],
-        kinds=dict(bottom="core"))
-    blk("brow_L", [(0.042, -0.022, 0.120), (0.286, -0.010, 0.172), (0.292, 0.110, 0.232), (0.036, 0.110, 0.198),
-                   (0.046, -0.018, 0.168), (0.284, -0.006, 0.216), (0.290, 0.125, 0.288), (0.042, 0.125, 0.284)],
-        kinds=dict(bottom="core"))
-    blk("brow_C", [(-0.104, -0.020, 0.150), (0.050, -0.020, 0.160), (0.046, 0.112, 0.200), (-0.100, 0.112, 0.196),
-                   (-0.106, -0.014, 0.176), (0.052, -0.014, 0.186), (0.048, 0.128, 0.292), (-0.102, 0.128, 0.290)],
-        kinds=dict(bottom="core", left="core", right="core"))
-    # nasal plate between the eyes, running down into the lip point
-    blk("nose", [(-0.074, -0.006, -0.090), (-0.040, -0.004, -0.088), (-0.038, 0.030, -0.070), (-0.076, 0.030, -0.072),
-                 (-0.096, -0.028, 0.118), (0.038, -0.028, 0.130), (0.042, 0.050, 0.148), (-0.100, 0.050, 0.140)],
-        kinds=dict(left="core", right="core"))
-    # crown slab along the ridge
-    blk("crest_a", [(-0.120, 0.210, 0.335), (0.030, 0.200, 0.350), (0.040, 0.360, 0.385), (-0.110, 0.380, 0.365),
-                    (-0.112, 0.214, 0.362), (0.026, 0.206, 0.378), (0.034, 0.352, 0.412), (-0.102, 0.372, 0.392)])
-    blk("crest_b", [(0.020, 0.400, 0.384), (0.150, 0.390, 0.352), (0.140, 0.580, 0.336), (0.010, 0.590, 0.366),
-                    (0.024, 0.404, 0.412), (0.144, 0.396, 0.380), (0.134, 0.572, 0.362), (0.014, 0.582, 0.392)])
-    # cheek / hinge blocks the jaw hangs from
-    blk("cheek_R", [(-0.326, 0.410, -0.150), (-0.246, 0.410, -0.150), (-0.246, 0.650, -0.110), (-0.320, 0.650, -0.110),
-                    (-0.330, 0.395, 0.105), (-0.252, 0.395, 0.105), (-0.252, 0.670, 0.120), (-0.316, 0.670, 0.120)])
-    chl = blk("cheek_L", [(0.246, 0.470, -0.150), (0.326, 0.470, -0.150), (0.320, 0.650, -0.110), (0.246, 0.650, -0.110),
-                          (0.252, 0.500, 0.105), (0.330, 0.500, 0.105), (0.316, 0.670, 0.120), (0.252, 0.670, 0.120)])
+    # hinge blocks the jaw hangs from, under the back corners of the skull
+    blk("hinge_R", [(-0.326, 0.410, -0.150), (-0.246, 0.410, -0.150), (-0.246, 0.650, -0.110), (-0.320, 0.650, -0.110),
+                    (-0.322, 0.395, 0.060), (-0.240, 0.395, 0.060), (-0.240, 0.670, 0.070), (-0.310, 0.670, 0.070)])
+    chl = blk("hinge_L", [(0.246, 0.470, -0.150), (0.326, 0.470, -0.150), (0.320, 0.650, -0.110), (0.246, 0.650, -0.110),
+                          (0.240, 0.500, 0.060), (0.322, 0.500, 0.060), (0.310, 0.670, 0.070), (0.240, 0.670, 0.070)])
     # back-of-head block bridging to the neck
     blk("occiput", [(-0.215, 0.640, -0.120), (0.215, 0.640, -0.120), (0.190, 0.800, -0.070), (-0.190, 0.800, -0.070),
-                    (-0.230, 0.640, 0.190), (0.230, 0.640, 0.190), (0.200, 0.810, 0.160), (-0.200, 0.810, 0.160)])
+                    (-0.225, 0.640, 0.150), (0.225, 0.640, 0.150), (0.195, 0.800, 0.130), (-0.195, 0.800, 0.130)])
 
     # the torn left side of the head (side view / side close-up): temple and cheek laid open
-    w = cran["wounds"]
-    w.add(Hw(0.300, 0.410, 0.120), Hd(0.0, 0.25, 1.0), 0.150, 0.090, normal=Hd(1, 0, 0.2))
-    w.z[-1]["strands"] = False
-    w.add(Hw(0.292, 0.330, 0.200), Hd(0, 1, 0.2), 0.090, 0.050, normal=Hd(1, 0, 0.3))
-    w.z[-1]["strands"] = False
-    w.add(Hw(-0.300, 0.300, 0.150), Hd(0, 1, 0.2), 0.070, 0.045, normal=Hd(-1, 0, 0.2))
-    w.add(Hw(0.130, 0.330, 0.340), Hd(0, 1, 0), 0.060, 0.040, normal=Hd(0.3, 0, 1))
-    w.add(Hw(-0.150, 0.560, 0.320), Hd(1, 0.4, 0), 0.055, 0.040, normal=Hd(-0.3, 0, 1))
+    w = skull["wounds"]
+
+    def tear(x, b, h, axis, L, W, strands=True):
+        c, n = S(Hw(x, b, h))
+        ax = Hd(*axis)
+        w.add(c, K.unit(ax - (ax @ n) * n), L, W, normal=n)
+        w.z[-1]["strands"] = strands
+
+    tear(0.300, 0.420, 0.110, (0.0, 0.20, 1.0), 0.125, 0.052, strands=False)
+    tear(0.292, 0.350, 0.205, (0, 1, 0.3), 0.070, 0.040, strands=False)
+    tear(-0.300, 0.300, 0.150, (0, 1, 0.2), 0.070, 0.045)
+    tear(0.130, 0.330, 0.360, (0, 1, 0), 0.060, 0.040)
+    tear(-0.150, 0.560, 0.330, (1, 0.4, 0), 0.055, 0.040)
     chl["wounds"].add(Hw(0.328, 0.500, -0.020), Hd(0, 0.2, -1), 0.110, 0.050, normal=Hd(1, 0, 0))
     chl["wounds"].z[-1]["strands"] = False
     jw = jaw["wounds"]
@@ -570,7 +746,9 @@ def build_head(m):
     build_eyes(m)
 
     # rods driven into the skull
-    m.add_rod(Hw(-0.255, 0.300, 0.240), Hd(-0.55, 0.0, 1.0), 0.130, 0.026, group=G)
-    m.add_rod(Hw(0.085, 0.640, 0.330), Hd(0.10, 0.45, 1.0), 0.170, 0.028, group=G)
-    m.add_rod(Hw(0.215, 0.440, 0.270), Hd(0.60, 0.10, 1.0), 0.140, 0.026, group=G)
+    for (x, b, h, d, L, r) in ((-0.255, 0.300, 0.250, (-0.55, 0.0, 1.0), 0.130, 0.026),
+                               (0.085, 0.640, 0.330, (0.10, 0.45, 1.0), 0.170, 0.028),
+                               (0.215, 0.440, 0.290, (0.60, 0.10, 1.0), 0.140, 0.026)):
+        c, n = S(Hw(x, b, h))
+        m.add_rod(c - n * 0.015, Hd(*d), L, r, group=G)
     m.info["head_back"] = Hw(0.0, 0.720, 0.060)
