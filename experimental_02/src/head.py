@@ -502,9 +502,11 @@ def build_teeth(m):
 
     for sp in specs:
         root, d, L, r = sp["root"], sp["dir"], sp["L"], sp["r"]
-        V, Q, T, at = K.tooth(root, d, L, r, rng, bend_dir=sp["bd"], bend=sp["bend"], sides=int(rng.choice([5, 6, 6, 7])),
+        sides = int(rng.choice([5, 6, 6, 7]))
+        V, Q, T, at = K.tooth(root, d, L, r, rng, bend_dir=sp["bd"], bend=sp["bend"], sides=sides,
                               sink=sp["sink"], flat=rng.uniform(0.82, 1.0), twist=rng.uniform(-0.6, 0.6))
         tb.add(V, Q, T, vattr=dict(t=at["t"], ca=at["ca"], sa=at["sa"], tone=rng.random()))
+        sp["V"], sp["sides"] = V, sides          # the tooth as built (game_mesh.py thins it out)
         # the gum rises a little way up each root
         P4 = np.array([root - d * 0.014, root - d * 0.002, root + d * 0.010, root + d * (0.022 + 0.25 * r)])
         V, Q, T = K.tube(P4, [r + 0.001, r + 0.0045, r + 0.003, r + 0.0003], sides=8, rng=rng, wob=0.04, xhint=np.cross(d, ex))
@@ -515,6 +517,9 @@ def build_teeth(m):
 
 
 # ---- soft parts ------------------------------------------------------------------------------
+
+CORDS = []      # every cord of soft tissue as built: centre line and radii (read by game_mesh.py)
+
 
 def cord(bucket, pts, radii, rng, sides=7, wob=0.07, hint=None, wander=0.0, n=None):
     P = np.array([Hw(*p) for p in pts])
@@ -531,8 +536,10 @@ def cord(bucket, pts, radii, rng, sides=7, wob=0.07, hint=None, wander=0.0, n=No
             for a in range(3):
                 P[:, a] += wander * env * np.sin(ph[a] + t1 * fq[a] * np.pi)
             R = R * (0.78 + 0.34 * np.abs(np.sin(ph[0] + t1 * fq[1] * np.pi)) ** 0.8)
-    V, Q, T = K.tube(P, R, sides=sides, rng=rng, wob=wob, xhint=Hd(0, -1, 0) if hint is None else hint)
+    xh = Hd(0, -1, 0) if hint is None else hint
+    V, Q, T = K.tube(P, R, sides=sides, rng=rng, wob=wob, xhint=xh)
     bucket.add(V, Q, T)
+    CORDS.append(dict(bucket=bucket, P=P.copy(), R=np.array(R, float), sides=sides, flat=1.0, hint=np.asarray(xh, float)))
 
 
 def build_soft(m):
@@ -567,6 +574,7 @@ def build_soft(m):
     Rb = np.interp(np.linspace(0, 1, 3 * n), np.linspace(0, 1, n), rad)
     V, Q, T = K.tube(Pb, Rb, sides=10, rng=rng, wob=0.04, xhint=Hd(0, -1, 0), flat=0.45)
     gum.add(V, Q, T)
+    CORDS.append(dict(bucket=gum, P=Pb.copy(), R=np.array(Rb, float), sides=10, flat=0.45, hint=Hd(0, -1, 0), band=True))
     # ... with thinner ropes of tissue running along it
     for i in range(1, 3 * n - 1):
         if rng.random() < 0.40:
@@ -624,6 +632,7 @@ def build_soft(m):
     Qm = np.array([[i * nv + k, i * nv + k + 1, (i + 1) * nv + k + 1, (i + 1) * nv + k] for i in range(n - 1) for k in range(nv - 1)])
     lin.add(Vm, Qm)
     lin.add(Vm, Qm[:, ::-1])
+    m.info["throat_sheet"] = (Vm.reshape(n, nv, 3).copy())
     # dark masses in the throat (stop the view passing straight through the open sides)
     cols = [((-0.050, 0.345, -0.600), (-0.045, 0.385, -0.33), (-0.030, 0.440, -0.06), (-0.02, 0.47, 0.05), 0.060),
             ((0.060, 0.350, -0.600), (0.055, 0.395, -0.32), (0.040, 0.445, -0.06), (0.03, 0.48, 0.05), 0.064),
@@ -691,6 +700,7 @@ def on_skull(x, b, h, lift=0.0):
 def build_head(m):
     rng = np.random.default_rng(m.seed + 303)
     G = "head"
+    CORDS.clear()
     sk = build_skull(rng)
     S = Surf(sk)
     SKULL_SURF[0] = S

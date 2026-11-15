@@ -9,6 +9,7 @@ Shell        -> every plated coarse face is cut into small cells, the cells are 
                 plates (noisy Voronoi), each plate is raised to its own height with its own tilt
                 and closed with side walls; several layers overlap.
 """
+import zlib
 import numpy as np
 
 # ----------------------------------------------------------------------------- small helpers
@@ -717,7 +718,8 @@ def build_shell(co, wounds=None, params=None, seed=0):
             patches.setdefault(pid, []).append(fi)
     patched = {fi for fs in patches.values() for fi in fs}
     for pid in sorted(patches, key=str):
-        _shell_patch(co, V, FN, dv, de, patches[pid], wounds, pr, seed + 1000 + (hash(str(pid)) % 9973), plates, under)
+        # (zlib.crc32, not hash(): Python salts string hashes per process and the build must repeat exactly)
+        _shell_patch(co, V, FN, dv, de, patches[pid], wounds, pr, seed + 1000 + (zlib.crc32(str(pid).encode()) % 9973), plates, under)
 
     for fi, f in enumerate(co.F):
         if fi in patched:
