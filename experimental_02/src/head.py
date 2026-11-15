@@ -281,6 +281,7 @@ def raise_slab(name, src, faces, t, rng):
     for (a_, b_) in sorted(edges):
         if (b_, a_) not in edges:
             co.f([top[a_], base[a_], base[b_], top[b_]], patch=name, tag="slab_edge")
+    co.src = (list(faces), list(vn))          # the skull faces and corners it lies on (game_mesh.py)
     return co
 
 
