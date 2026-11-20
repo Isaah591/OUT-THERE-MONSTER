@@ -581,8 +581,12 @@ def write_report(V):
     gs = s["global_settings"]
     lines += ["## The character file", "",
               f"`export/{BASE_NAME}` - {s['bytes'] / 1e6:.2f} MB, FBX {s['fbx_version']}, binary.  Axis system: up = "
-              f"{'XYZ'[gs['UpAxis']]}, front = {'XYZ'[gs['FrontAxis']]}; unit scale factor {gs['UnitScaleFactor']} "
-              f"(one file unit = one stud = 0.28 m; the creature is {V['height_studs']} units tall).", "",
+              f"{'XYZ'[gs['UpAxis']]} (sign {gs['UpAxisSign']}), front = {'XYZ'[gs['FrontAxis']]} (sign {gs['FrontAxisSign']}); "
+              f"the creature faces {'-Z' if V['structure']['base'].get('facing', {}).get('head_from_body', [0, 0, 0])[2] < 0 else '+Z'} "
+              f"in the file's own frame.  Coordinates are in studs: the creature is {V['height_studs']} units tall "
+              f"(2.885 m).  The header's UnitScaleFactor is {gs['UnitScaleFactor']:g}, which is what Blender writes with Roblox's "
+              f"settings (Unit System None, FBX Unit Scale); Studio's 3D Importer is told the unit with Scale Unit = Stud, and "
+              f"Blender's importers read the file as metres (hence their scale x1 below).", "",
               "| Mesh | Triangles | Vertices | Open edges | UV sets | UV range | Max bones / vertex | Bones used |",
               "|---|---|---|---|---|---|---|---|"]
     for n, d in s["meshes"].items():

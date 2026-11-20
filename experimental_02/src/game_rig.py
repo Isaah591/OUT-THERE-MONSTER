@@ -389,6 +389,10 @@ def main(src=STAGE2, out=OUT):
         log(f"   {nm}: {r['vertices']} vertices, at most {r['max_influences']} bones per vertex (mean {r['mean_influences']}), Root weight {r['root_weight']}")
     log(f"   {len(bones)} bones; height {report['height_studs']} studs = {report['height_m']} m")
     os.makedirs(os.path.dirname(out), exist_ok=True)
+    # texture paths relative to the saved file, so the .blend opens anywhere next to textures/
+    for im in bpy.data.images:
+        if im.filepath and im.packed_file is None:
+            im.filepath = bpy.path.relpath(bpy.path.abspath(im.filepath))     # relative to this file; the save remaps it
     bpy.ops.wm.save_as_mainfile(filepath=out, compress=True, relative_remap=True)
     log(f"saved {out}  ({time.time() - t0:.1f} s)")
 
