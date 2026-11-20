@@ -12,6 +12,12 @@ is editable and the model rebuilds in ~35 s.
 approved sheet's creature, built from a blank scene. It uses none of the models, meshes,
 measurements or scripts described below; see `experimental_01/README.md`.
 
+**Experimental Model 02** (`experimental_02/`) continues Model 01: the creature's right hip is
+rebuilt under the right half of the pelvis, the skull is rebuilt as a curved, organic form, and
+the creature becomes a rigged, animatable Roblox enemy — a 20,950-triangle game model with UV maps
+and baked textures, a 27-bone skeleton with an independent jaw, nine test clips and FBX files
+checked against Roblox's import requirements; see `experimental_02/README.md`.
+
 ## Status
 
 | Stage | State | Where |
@@ -32,8 +38,9 @@ measurements or scripts described below; see `experimental_01/README.md`.
 | v14 ("Experimental 10") mouth curvature and the brow's expression on v13: the gape's rear corners closed by torn tissue whose free edge follows the sheet's side panel (a curve from the upper jaw down into the lower jaw, not v8-v13's flat, straight-edged wall), the lower tooth row swept in an arc and curling forward at the chin, the upper jaw's edge uneven through the upper teeth's roots, an unbroken gum up both arms; heavy brow ledges over the sockets, the sockets tilted the sheet's way (inner corners lower) and deeper; teeth re-seated on the new edges, none crossing; the body and the rest of the head unchanged | kept unchanged | `model/out_there_monster_v14.blend`, `model/renders_v14/`, `docs/V14_NOTES.md` |
 | **v15 ("Experimental 11") posterior teeth lengthened and angrier brows on v14: the teeth further inside the mouth - behind the upper front row, at its near corner and along both sides, and from the near side of the chin up the lower jaw's arm - grown from their own roots toward the prominent front teeth's length, each to its own length and tapering toward the hinges (9 upper, 9 lower; none crossing another or entering bone or tissue), so the three-quarter camera sees a quarter less of the mouth's dark interior; the brows' inner halves dropped more steeply toward the nose, with a lip over each socket's inner top corner; the jaws, the opening, the tissue, the sockets, the pupils, the head's outline and the body v14's** | **for review** | `model/out_there_monster_v15.blend`, `model/renders_v15/`, `docs/V15_NOTES.md` |
 | **Experimental Model 01 — independent reconstruction, from scratch: the approved sheet's creature rebuilt in a blank scene with new code throughout (plate-shell kernel, body posed and proportioned from the sheet's three views, block skull with recessed square sockets and sloping brows, a hooked U-shaped lower jaw on a 3D rim curve, 58 teeth modelled one by one in two rows per jaw with none passing through another, gums and torn cheek, materials, one studio rig for all views); checked against the sheet by silhouette overlap and by how much of the mouth opening the teeth cover** | **for review** | `experimental_01/` — `README.md`, `model/astra_r08_exp01.blend`, `renders/ASTRA_R08_EXP01_sheet.png`, `renders/ASTRA_R08_EXP01_vs_approved.png` |
-| Baked textures + optimised FBX for Roblox | not run (held until the design is approved) | `scripts/bake_export.py`, `docs/ROBLOX_IMPORT.md` |
-| Rigging / animation | not started | |
+| **Experimental Model 02 — Model 01 with the right leg's hip structure and the skull rebuilt (curved contour skull, jutting brow, armour slabs on the curve), plus the Roblox build: retopologised game meshes (Body 9,852 + Head 11,082 + Eyes 16 triangles) with UV maps, textures baked from the 1.13 M-triangle source (1024 px set + 2048 masters), a 27-bone rig (independent jaw, five bones per arm), nine test clips, FBX export read back by two importers with 79 of 79 checks passed; not yet opened in Roblox Studio** | **for review** | `experimental_02/` — `README.md`, `export/ASTRA_R08.fbx`, `export/animations/`, `model/astra_r08_exp02_game.blend`, `model/astra_r08_exp02_highdetail.blend`, `docs/ROBLOX_IMPORT.md`, `docs/RIG_HIERARCHY.md`, `renders/game/` |
+| Baked textures + optimised FBX for Roblox (main-line model) | not run (held until the design is approved); done for Experimental Model 02 | `scripts/bake_export.py`, `docs/ROBLOX_IMPORT.md`; `experimental_02/` |
+| Rigging / animation (main-line model) | not started; done for Experimental Model 02 | `experimental_02/docs/RIG_HIERARCHY.md` |
 
 What changed in this pass and why: `docs/R08_GAP_ANALYSIS.md`.
 
@@ -57,6 +64,7 @@ Depth positions as in R08's side panel, relative to the flat torso back at y = +
 | Path | Contents |
 |---|---|
 | `references/` | Original Roblox screenshots, R08 reference sheet and R08 detail panels |
+| `experimental_02/` | **Experimental Model 02** — Model 01's sources with the hips and skull rebuilt, plus the Roblox build stages `src/game_mesh.py` (game meshes + UVs), `game_bake.py` (textures), `game_rig.py` (skeleton + weights), `game_anim.py` (test clips), `game_export.py` (FBX + verification), `game_preview.py` (deformation test, rig picture, UV layouts); `model/`, `export/`, `textures/`, `renders/`, `docs/`, `analysis/`, `README.md` |
 | `experimental_01/` | **Experimental Model 01** — self-contained from-scratch reconstruction: `src/` (its own kernel, body, head, scene, cameras, checks), `model/`, `renders/`, `analysis/`, `README.md`. Shares nothing with `scripts/` or `model/` |
 | `scripts/build_v15.py` | **v15 variation** ("Experimental 11") — opens v14 and, with `head_v15.py`, rebuilds the cranium's brows (every cranium vertex away from the brows and sockets stays v14's, checked) and both rows of teeth: v14's plans, then the posterior teeth lengthened step by step while each stays clear of every other tooth and of bone and tissue (`lengthen_posterior`); checks the body and the kept head parts (jaw, gums, mouth tissue, pupils) are vertex-identical to v14; saves `model/out_there_monster_v15.blend` |
 | `scripts/v15_anatomy_check.py`, `v15_mouth_check.py`, `v15_compare.py` | The v15 plan against the sheet (as v14's, plus each lengthened tooth and the brows; overlays of the sheet's annotations and of the lengthened teeth); body seen through the mouth, how much of the mouth's interior each camera sees between the jaws (ray casts) and how dark it renders, and the eye sockets, against the sheet's; the v15 comparison sheets (sheet, v14, v15) |

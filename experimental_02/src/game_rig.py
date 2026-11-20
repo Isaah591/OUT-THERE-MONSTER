@@ -360,9 +360,10 @@ def main(src=STAGE2, out=OUT):
     for o in [ao] + [bpy.data.objects[nm] for nm in MESHES]:
         assert all(abs(a - b) < 1e-9 for a, b in zip(o.matrix_world.col[0][:3], (1, 0, 0))), o.name
     sc = bpy.context.scene
-    sc.unit_settings.system = "METRIC"
-    sc.unit_settings.scale_length = 0.01          # one Blender unit is written to FBX as one unit (= one stud in Roblox)
-    sc.unit_settings.length_unit = "CENTIMETERS"
+    # Roblox's Blender guide: Unit System "None" (and FBX Unit Scale on export, Scale Unit "Stud" on
+    # import), so one Blender unit is written as one file unit and read by Studio as one stud
+    sc.unit_settings.system = "NONE"
+    sc.unit_settings.scale_length = 1.0
     sc.render.fps = 30
     ao["stud_m"] = STUD
     ao["note"] = "ASTRA R08 game rig. Units: studs (1 stud = 0.28 m). Rest pose = the approved sheet's stance."

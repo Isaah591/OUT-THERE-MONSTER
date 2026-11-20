@@ -80,8 +80,8 @@ POSES = [("Rest", None, 0, "rest pose (the sheet's stance)"), ("Idle", "Idle", 3
          ("Lunge", "Lunge", 16, "lunge - bite"), ("HeadTrack", "HeadTrack", 14, "head tracking - left"),
          ("HeadTrack", "HeadTrack", 43, "head tracking - right"), ("HitReact", "HitReact", 4, "hit reaction"),
          ("Death", "Death", 30, "death - knees give"), ("Death", "Death", 60, "death - down")]
-CLOSE = [("JawSnap", 6, "jaw open (Jaw bone only)", "pose_head"), ("JawSnap", 10, "jaw shut", "pose_head"),
-         ("Attack", 15, "shoulder at full swing", "pose_shoulder"), ("Run", 6, "hips at full stride", "pose_hips")]
+CLOSE = [("JawSnap", 6, "jaw open (Jaw bone only)", "pose_jaw"), ("JawSnap", 10, "jaw shut - the skull does not move", "pose_jaw"),
+         ("Attack", 15, "shoulder at full swing", "pose_shoulder2"), ("Run", 6, "hips at full stride", "pose_hips")]
 
 
 def poses(res=430, samples=24):
@@ -391,6 +391,80 @@ def uv(px=2048):
         log("wrote UV layout", key)
 
 
+# ------------------------------------------------------------------------------- deformation numbers
+
+def stats(step=1, min_edge_studs=0.107):
+    """Per clip: the most any edge (>= 3 cm at rest) stretches or shrinks, where, how low anything goes,
+    and how far skull and lower-jaw vertices move relative to their own bone (they should not)."""
+    bpy.ops.wm.open_mainfile(filepath=GAME)
+    sc = bpy.context.scene
+    ao = bpy.data.objects[GA.ARMATURE]
+    obs = [bpy.data.objects[n] for n in ("ASTRA_R08_Body", "ASTRA_R08_Head")]
+
+    def verts(ob):
+        dg = bpy.context.evaluated_depsgraph_get()
+        me = ob.evaluated_get(dg).to_mesh()
+        v = np.zeros(len(me.vertices) * 3)
+        me.vertices.foreach_get("co", v)
+        ob.evaluated_get(dg).to_mesh_clear()
+        return v.reshape(-1, 3)
+
+    GA.set_clip(ao, None)
+    sc.frame_set(0)
+    rest = {o.name: verts(o) for o in obs}
+    E, dom, rigid = {}, {}, {}
+    for o in obs:
+        e = np.zeros(len(o.data.edges) * 2, np.int32)
+        o.data.edges.foreach_get("vertices", e)
+        E[o.name] = e.reshape(-1, 2)
+        names = [g.name for g in o.vertex_groups]
+        dom[o.name] = np.array([names[max(v.groups, key=lambda g: g.weight).group] for v in o.data.vertices])
+        for bn in ("Head", "Jaw"):
+            if bn in names:
+                gi = names.index(bn)
+                rigid[(o.name, bn)] = np.array([any(g.group == gi and g.weight > 0.999 for g in v.groups) for v in o.data.vertices])
+    restM = {b.name: np.array(b.matrix_local) for b in ao.data.bones}
+    out = {}
+    for (name, secs, loop, fn) in GA.CLIPS:
+        GA.set_clip(ao, name)
+        act = bpy.data.actions[name]
+        worst, shrink, where, zmin, rig_err = 1.0, 1.0, None, 1e9, 0.0
+        for f in range(int(act.frame_range[0]), int(act.frame_range[1]) + 1, step):
+            sc.frame_set(f)
+            for o in obs:
+                v = verts(o)
+                e = E[o.name]
+                L0 = np.linalg.norm(rest[o.name][e[:, 0]] - rest[o.name][e[:, 1]], axis=1)
+                L1 = np.linalg.norm(v[e[:, 0]] - v[e[:, 1]], axis=1)
+                ok = L0 >= min_edge_studs
+                r = L1[ok] / L0[ok]
+                if r.max() > worst:
+                    worst = float(r.max())
+                    i = np.nonzero(ok)[0][int(r.argmax())]
+                    where = dict(frame=f, mesh=o.name, bone=str(dom[o.name][e[i, 0]]))
+                shrink = min(shrink, float(r.min()))
+                zmin = min(zmin, float(v[:, 2].min()))
+                for bn in ("Head", "Jaw"):
+                    m = rigid.get((o.name, bn))
+                    if m is None or not m.any():
+                        continue
+                    P = np.array(ao.pose.bones[bn].matrix)
+                    T = P @ np.linalg.inv(restM[bn])                     # rest -> posed, for anything carried by the bone alone
+                    pr = rest[o.name][m] @ T[:3, :3].T + T[:3, 3]
+                    rig_err = max(rig_err, float(np.linalg.norm(pr - v[m], axis=1).max()))
+        out[name] = dict(max_edge_stretch=round(worst, 2), max_edge_shrink=round(shrink, 2), worst_at=where,
+                         lowest_point_m=round(zmin * STUD, 3), rigid_skull_and_jaw_error_mm=round(rig_err * STUD * 1000, 3))
+        log(f"   {name:<10} stretch x{worst:.2f} shrink x{shrink:.2f} at {where}; lowest {zmin * STUD:+.3f} m; "
+            f"skull / jaw rigid to {rig_err * STUD * 1000:.3f} mm")
+    GA.set_clip(ao, None)
+    json.dump(dict(edge_min_studs=min_edge_studs, clips=out), open(os.path.join(ROOT, "analysis", "game_deformation.json"), "w"), indent=1)
+
+
+# working views for the close-ups of the deformation test
+import head as _HD                                               # noqa: E402
+views.VIEWS["pose_jaw"] = views.cam(80.0, 2.0, _HD.Hw(0.0, 0.32, -0.22), 6.0, 1.75, (480, 420))
+views.VIEWS["pose_shoulder2"] = views.cam(-35.0, 8.0, (-0.35, -0.75, 1.95), 16.0, 2.9, (480, 420))
+
 # working views for the rig picture
 views.VIEWS["rig_front"] = views.cam(0.0, 2.0, (-0.10, -0.75, 1.42), 22.0, 3.6, (620, 700))
 views.VIEWS["rig_side"] = views.cam(90.0, 2.0, (0.0, -0.80, 1.42), 22.0, 3.6, (620, 700))
@@ -405,4 +479,4 @@ if __name__ == "__main__":
         kw["samples"] = int(S)
     if R:
         kw["res"] = int(R)
-    dict(poses=poses, clip=clip, compare=compare, rig=rig, uv=lambda **k: uv())[what](**kw)
+    dict(poses=poses, clip=clip, compare=compare, rig=rig, uv=lambda **k: uv(), stats=lambda **k: stats())[what](**kw)

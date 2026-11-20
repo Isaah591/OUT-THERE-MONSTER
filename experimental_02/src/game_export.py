@@ -71,11 +71,15 @@ def _obj(root, ob_obj, scene_data):
 _FU.ObjectWrapper.fbx_object_tx = _tx
 _EFB.fbx_data_object_elements = _obj
 
+# Settings from Roblox's Blender export guide (Creator Hub, art/blender.md): Path Mode "Copy", Embed
+# Textures on, Apply Scalings "FBX Unit Scale", Forward "Z Forward", Up "Y Up", Add Leaf Bones off,
+# Bake Animation only for animation files.  (Blender's own default, -Z Forward, would leave the
+# creature facing away from Roblox's front.)
 COMMON = dict(check_existing=False, use_selection=True, global_scale=1.0, apply_unit_scale=True,
               apply_scale_options="FBX_SCALE_UNITS", use_space_transform=True, bake_space_transform=False,
               use_mesh_modifiers=False, mesh_smooth_type="FACE", use_tspace=True, use_triangles=True,
               use_custom_props=False, add_leaf_bones=False, primary_bone_axis="Y", secondary_bone_axis="X",
-              use_armature_deform_only=False, armature_nodetype="NULL", axis_forward="-Z", axis_up="Y",
+              use_armature_deform_only=False, armature_nodetype="NULL", axis_forward="Z", axis_up="Y",
               use_metadata=True, colors_type="NONE")
 
 # Roblox's published limits for imported skinned meshes (Creator Hub modelling and export
@@ -295,6 +299,39 @@ def fbx_structure(path):
         info["weight_sum_range"] = [round(float(wsum.min()), 5), round(float(wsum.max()), 5)]
         meshes[info["model"] or str(gid)] = info
     out["meshes"] = meshes
+    # which way the creature faces in the file's own coordinates: where the head mesh lies relative to
+    # the body mesh, horizontally, after each mesh's own Lcl transform (Euler XYZ, degrees)
+    from scipy.spatial.transform import Rotation as _R
+
+    def model_tx(mid):
+        e = objs[mid]
+        t, r, sc_ = np.zeros(3), np.zeros(3), np.ones(3)
+        for c in e.elems:
+            if c.id == b"Properties70":
+                for p in c.elems:
+                    nm = _name(p.props[0])
+                    if nm == "Lcl Translation":
+                        t = np.array(p.props[4:7], float)
+                    elif nm == "Lcl Rotation":
+                        r = np.array(p.props[4:7], float)
+                    elif nm == "Lcl Scaling":
+                        sc_ = np.array(p.props[4:7], float)
+        return t, _R.from_euler("xyz", r, degrees=True).as_matrix(), sc_
+    cents = {}
+    for gid, g in geoms.items():
+        mids = [p for p in parent_of.get(gid, []) if p in models]
+        if not mids:
+            continue
+        V = np.asarray({c.id: c for c in g.elems}[b"Vertices"].props[0], float).reshape(-1, 3)
+        t, Rm, sc_ = model_tx(mids[0])
+        W = (V * sc_) @ Rm.T + t
+        cents[models[mids[0]][1]] = W.mean(0)
+    if "ASTRA_R08_Head" in cents and "ASTRA_R08_Body" in cents:
+        dv = cents["ASTRA_R08_Head"] - cents["ASTRA_R08_Body"]
+        up = np.array([0.0, 1.0, 0.0]) if gs.get("UpAxis") == 1 else np.array([0.0, 0.0, 1.0])
+        hz = dv - (dv @ up) * up
+        out["facing"] = dict(head_from_body=(hz / max(np.linalg.norm(hz), 1e-9)).round(3).tolist(),
+                             head_above_body=round(float(dv @ up), 3))
     # embedded images
     from PIL import Image
     ims = []
@@ -507,7 +544,10 @@ def conformance(struct_base, struct_clips, imports):
         mats = py.get("meshes", {}).get(n, {}).get("materials", [])
         chk(f"{n}: one material", len(mats) == 1, mats)
     gsd = struct_base["global_settings"]
-    chk("axis system: Y up, -Z forward (Blender default for Roblox)", gsd["UpAxis"] == 1 and gsd["FrontAxis"] == 2, gsd)
+    chk("axis system: Y up (Roblox's Blender guide: Z Forward, Y Up)", gsd["UpAxis"] == 1 and gsd["UpAxisSign"] == 1, gsd)
+    fz = struct_base.get("facing")
+    chk("facing: in the file's own frame the creature faces -Z (Roblox's front) with Y up",
+        fz is not None and fz["head_from_body"][2] < -0.9, fz)
     for name, s in struct_clips.items():
         chk(f"animation {name}: exactly one animation in the file, named {name}", s["animation_stacks"] == [name], s["animation_stacks"])
         gsc = s["global_settings"]

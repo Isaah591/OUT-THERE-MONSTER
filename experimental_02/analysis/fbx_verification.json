@@ -17,17 +17,17 @@
  "structure": {
   "base": {
    "file": "export/ASTRA_R08.fbx",
-   "bytes": 10206652,
+   "bytes": 10206716,
    "fbx_version": 7400,
    "global_settings": {
     "UpAxis": 1,
     "UpAxisSign": 1,
     "FrontAxis": 2,
-    "FrontAxisSign": 1,
+    "FrontAxisSign": -1,
     "CoordAxis": 0,
-    "CoordAxisSign": 1,
-    "UnitScaleFactor": 0.9999999776482582,
-    "OriginalUnitScaleFactor": 0.9999999776482582,
+    "CoordAxisSign": -1,
+    "UnitScaleFactor": 100.0,
+    "OriginalUnitScaleFactor": 100.0,
     "TimeMode": 6,
     "CustomFrameRate": 30.0
    },
@@ -181,6 +181,14 @@
      ]
     }
    },
+   "facing": {
+    "head_from_body": [
+     -0.106,
+     0.0,
+     -0.994
+    ],
+    "head_above_body": 4.013
+   },
    "embedded_images": [
     {
      "name": "ASTRA_R08_Body_Color.png",
@@ -276,17 +284,17 @@
   "clips": {
    "Idle": {
     "file": "export/animations/ASTRA_R08_Idle.fbx",
-    "bytes": 346380,
+    "bytes": 346396,
     "fbx_version": 7400,
     "global_settings": {
      "UpAxis": 1,
      "UpAxisSign": 1,
      "FrontAxis": 2,
-     "FrontAxisSign": 1,
+     "FrontAxisSign": -1,
      "CoordAxis": 0,
-     "CoordAxisSign": 1,
-     "UnitScaleFactor": 0.9999999776482582,
-     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "CoordAxisSign": -1,
+     "UnitScaleFactor": 100.0,
+     "OriginalUnitScaleFactor": 100.0,
      "TimeMode": 6,
      "CustomFrameRate": 30.0
     },
@@ -345,11 +353,11 @@
      "UpAxis": 1,
      "UpAxisSign": 1,
      "FrontAxis": 2,
-     "FrontAxisSign": 1,
+     "FrontAxisSign": -1,
      "CoordAxis": 0,
-     "CoordAxisSign": 1,
-     "UnitScaleFactor": 0.9999999776482582,
-     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "CoordAxisSign": -1,
+     "UnitScaleFactor": 100.0,
+     "OriginalUnitScaleFactor": 100.0,
      "TimeMode": 6,
      "CustomFrameRate": 30.0
     },
@@ -408,11 +416,11 @@
      "UpAxis": 1,
      "UpAxisSign": 1,
      "FrontAxis": 2,
-     "FrontAxisSign": 1,
+     "FrontAxisSign": -1,
      "CoordAxis": 0,
-     "CoordAxisSign": 1,
-     "UnitScaleFactor": 0.9999999776482582,
-     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "CoordAxisSign": -1,
+     "UnitScaleFactor": 100.0,
+     "OriginalUnitScaleFactor": 100.0,
      "TimeMode": 6,
      "CustomFrameRate": 30.0
     },
@@ -465,17 +473,17 @@
    },
    "Attack": {
     "file": "export/animations/ASTRA_R08_Attack.fbx",
-    "bytes": 248092,
+    "bytes": 248108,
     "fbx_version": 7400,
     "global_settings": {
      "UpAxis": 1,
      "UpAxisSign": 1,
      "FrontAxis": 2,
-     "FrontAxisSign": 1,
+     "FrontAxisSign": -1,
      "CoordAxis": 0,
-     "CoordAxisSign": 1,
-     "UnitScaleFactor": 0.9999999776482582,
-     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "CoordAxisSign": -1,
+     "UnitScaleFactor": 100.0,
+     "OriginalUnitScaleFactor": 100.0,
      "TimeMode": 6,
      "CustomFrameRate": 30.0
     },
@@ -528,17 +536,17 @@
    },
    "Lunge": {
     "file": "export/animations/ASTRA_R08_Lunge.fbx",
-    "bytes": 240684,
+    "bytes": 240700,
     "fbx_version": 7400,
     "global_settings": {
      "UpAxis": 1,
      "UpAxisSign": 1,
      "FrontAxis": 2,
-     "FrontAxisSign": 1,
+     "FrontAxisSign": -1,
      "CoordAxis": 0,
-     "CoordAxisSign": 1,
-     "UnitScaleFactor": 0.9999999776482582,
-     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "CoordAxisSign": -1,
+     "UnitScaleFactor": 100.0,
+     "OriginalUnitScaleFactor": 100.0,
      "TimeMode": 6,
      "CustomFrameRate": 30.0
     },
@@ -597,11 +605,11 @@
      "UpAxis": 1,
      "UpAxisSign": 1,
      "FrontAxis": 2,
-     "FrontAxisSign": 1,
+     "FrontAxisSign": -1,
      "CoordAxis": 0,
-     "CoordAxisSign": 1,
-     "UnitScaleFactor": 0.9999999776482582,
-     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "CoordAxisSign": -1,
+     "UnitScaleFactor": 100.0,
+     "OriginalUnitScaleFactor": 100.0,
      "TimeMode": 6,
      "CustomFrameRate": 30.0
     },
@@ -660,11 +668,11 @@
      "UpAxis": 1,
      "UpAxisSign": 1,
      "FrontAxis": 2,
-     "FrontAxisSign": 1,
+     "FrontAxisSign": -1,
      "CoordAxis": 0,
-     "CoordAxisSign": 1,
-     "UnitScaleFactor": 0.9999999776482582,
-     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "CoordAxisSign": -1,
+     "UnitScaleFactor": 100.0,
+     "OriginalUnitScaleFactor": 100.0,
      "TimeMode": 6,
      "CustomFrameRate": 30.0
     },
@@ -723,11 +731,11 @@
      "UpAxis": 1,
      "UpAxisSign": 1,
      "FrontAxis": 2,
-     "FrontAxisSign": 1,
+     "FrontAxisSign": -1,
      "CoordAxis": 0,
-     "CoordAxisSign": 1,
-     "UnitScaleFactor": 0.9999999776482582,
-     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "CoordAxisSign": -1,
+     "UnitScaleFactor": 100.0,
+     "OriginalUnitScaleFactor": 100.0,
      "TimeMode": 6,
      "CustomFrameRate": 30.0
     },
@@ -786,11 +794,11 @@
      "UpAxis": 1,
      "UpAxisSign": 1,
      "FrontAxis": 2,
-     "FrontAxisSign": 1,
+     "FrontAxisSign": -1,
      "CoordAxis": 0,
-     "CoordAxisSign": 1,
-     "UnitScaleFactor": 0.9999999776482582,
-     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "CoordAxisSign": -1,
+     "UnitScaleFactor": 100.0,
+     "OriginalUnitScaleFactor": 100.0,
      "TimeMode": 6,
      "CustomFrameRate": 30.0
     },
@@ -855,8 +863,8 @@
    "bones": 27,
    "bone_names_match": true,
    "hierarchy_match": true,
-   "scale_to_source": 0.01,
-   "bone_head_error_studs": 2.384185791015625e-06,
+   "scale_to_source": 1.0,
+   "bone_head_error_studs": 2.5033950805664062e-06,
    "root_bone_at_origin": true,
    "meshes": {
     "ASTRA_R08_Body": {
@@ -869,7 +877,7 @@
       "ASTRA_R08_Body"
      ],
      "vertex_order_preserved": true,
-     "rest_position_error_studs": 2.844339835661458e-06,
+     "rest_position_error_studs": 3.249867929433492e-06,
      "uv_range": [
       [
        0.0031,
@@ -946,7 +954,7 @@
       "ASTRA_R08_Head"
      ],
      "vertex_order_preserved": true,
-     "rest_position_error_studs": 3.6310047448750993e-06,
+     "rest_position_error_studs": 4.1405956263673716e-06,
      "uv_range": [
       [
        0.0012,
@@ -1023,7 +1031,7 @@
       "ASTRA_R08_Eyes"
      ],
      "vertex_order_preserved": true,
-     "rest_position_error_studs": 7.496574987442273e-07,
+     "rest_position_error_studs": 1.2787796190849576e-06,
      "uv_range": [
       [
        0.02,
@@ -1046,7 +1054,7 @@
      ]
     }
    },
-   "import_seconds": 0.26,
+   "import_seconds": 0.38,
    "clips": {
     "Idle": {
      "file": "export/animations/ASTRA_R08_Idle.fbx",
@@ -1105,11 +1113,11 @@
      ],
      "deformation_error_studs": {
       "0": 0.0,
-      "12": 1e-05,
-      "24": 1e-05,
+      "12": 0.0,
+      "24": 0.0,
       "36": 0.0
      },
-     "max_error_studs": 1e-05,
+     "max_error_studs": 0.0,
      "max_error_mm": 0.0
     },
     "Lunge": {
@@ -1205,7 +1213,7 @@
    "bones": 27,
    "bone_names_match": true,
    "hierarchy_match": true,
-   "scale_to_source": 0.01,
+   "scale_to_source": 1.0,
    "bone_head_error_studs": 1.430511474609375e-06,
    "root_bone_at_origin": true,
    "meshes": {
@@ -1219,7 +1227,7 @@
       "ASTRA_R08_Body"
      ],
      "vertex_order_preserved": true,
-     "rest_position_error_studs": 2.2452766070824026e-06,
+     "rest_position_error_studs": 2.5652508908180494e-06,
      "uv_range": [
       [
        0.0031,
@@ -1296,7 +1304,7 @@
       "ASTRA_R08_Head"
      ],
      "vertex_order_preserved": true,
-     "rest_position_error_studs": 1.7169887680523743e-06,
+     "rest_position_error_studs": 2.3478395272391595e-06,
      "uv_range": [
       [
        0.0012,
@@ -1373,7 +1381,7 @@
       "ASTRA_R08_Eyes"
      ],
      "vertex_order_preserved": true,
-     "rest_position_error_studs": 1.045911069752492e-06,
+     "rest_position_error_studs": 1.8198675411085219e-06,
      "uv_range": [
       [
        0.02,
@@ -1396,7 +1404,7 @@
      ]
     }
    },
-   "import_seconds": 0.19,
+   "import_seconds": 0.31,
    "clips": {
     "Idle": {
      "file": "export/animations/ASTRA_R08_Idle.fbx",
@@ -1868,19 +1876,31 @@
    ]
   },
   {
-   "check": "axis system: Y up, -Z forward (Blender default for Roblox)",
+   "check": "axis system: Y up (Roblox's Blender guide: Z Forward, Y Up)",
    "passed": true,
    "detail": {
     "UpAxis": 1,
     "UpAxisSign": 1,
     "FrontAxis": 2,
-    "FrontAxisSign": 1,
+    "FrontAxisSign": -1,
     "CoordAxis": 0,
-    "CoordAxisSign": 1,
-    "UnitScaleFactor": 0.9999999776482582,
-    "OriginalUnitScaleFactor": 0.9999999776482582,
+    "CoordAxisSign": -1,
+    "UnitScaleFactor": 100.0,
+    "OriginalUnitScaleFactor": 100.0,
     "TimeMode": 6,
     "CustomFrameRate": 30.0
+   }
+  },
+  {
+   "check": "facing: in the file's own frame the creature faces -Z (Roblox's front) with Y up",
+   "passed": true,
+   "detail": {
+    "head_from_body": [
+     -0.106,
+     0.0,
+     -0.994
+    ],
+    "head_above_body": 4.013
    }
   },
   {
@@ -2023,7 +2043,7 @@
    "passed": true,
    "detail": {
     "bones": 27,
-    "head_error_studs": 2.384185791015625e-06
+    "head_error_studs": 2.5033950805664062e-06
    }
   },
   {
@@ -2032,7 +2052,7 @@
    "detail": {
     "vertices": 4930,
     "triangles": 9852,
-    "pos_err": 2.844339835661458e-06,
+    "pos_err": 3.249867929433492e-06,
     "weight_err": 0.0
    }
   },
@@ -2042,7 +2062,7 @@
    "detail": {
     "vertices": 5733,
     "triangles": 11082,
-    "pos_err": 3.6310047448750993e-06,
+    "pos_err": 4.1405956263673716e-06,
     "weight_err": 0.0
    }
   },
@@ -2052,7 +2072,7 @@
    "detail": {
     "vertices": 12,
     "triangles": 16,
-    "pos_err": 7.496574987442273e-07,
+    "pos_err": 1.2787796190849576e-06,
     "weight_err": 0.0
    }
   },
@@ -2115,7 +2135,7 @@
    "detail": {
     "vertices": 4930,
     "triangles": 9852,
-    "pos_err": 2.2452766070824026e-06,
+    "pos_err": 2.5652508908180494e-06,
     "weight_err": 0.0
    }
   },
@@ -2125,7 +2145,7 @@
    "detail": {
     "vertices": 5733,
     "triangles": 11082,
-    "pos_err": 1.7169887680523743e-06,
+    "pos_err": 2.3478395272391595e-06,
     "weight_err": 0.0
    }
   },
@@ -2135,7 +2155,7 @@
    "detail": {
     "vertices": 12,
     "triangles": 16,
-    "pos_err": 1.045911069752492e-06,
+    "pos_err": 1.8198675411085219e-06,
     "weight_err": 0.0
    }
   },
