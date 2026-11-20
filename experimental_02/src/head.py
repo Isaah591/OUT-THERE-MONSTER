@@ -761,5 +761,5 @@ def build_head(m):
                                (0.085, 0.640, 0.330, (0.10, 0.45, 1.0), 0.170, 0.028),
                                (0.215, 0.440, 0.290, (0.60, 0.10, 1.0), 0.140, 0.026)):
         c, n = S(Hw(x, b, h))
-        m.add_rod(c - n * 0.015, Hd(*d), L, r, group=G)
+        m.add_rod(c - n * 0.015, Hd(*d), L, r, group=G, host="skull")
     m.info["head_back"] = Hw(0.0, 0.720, 0.060)

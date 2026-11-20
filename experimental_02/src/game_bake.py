@@ -27,6 +27,7 @@ STAGE1 = os.path.join(ROOT, "model", "work", "game_stage1.blend")
 STAGE2 = os.path.join(ROOT, "model", "work", "game_stage2.blend")
 TEX = os.path.join(ROOT, "textures")
 SRC = os.path.join(TEX, "source")
+RAW = os.path.join(ROOT, "model", "work", "bake")      # the raw baked passes (intermediate, not kept in git)
 RES = int(os.environ.get("BAKE_RES", "2048"))
 GAME_RES = 1024
 AO_MIX = 0.55            # share of the baked ambient shadow multiplied into the colour map
@@ -180,7 +181,7 @@ def bake_target(key, passes):
             nt.links.new((em if ps == "metal" else em2).outputs[0], outn.inputs[0])
             select(ob)
             bpy.ops.object.bake(type="EMIT", use_selected_to_active=False, margin=M)
-        path = os.path.join(SRC, f"ASTRA_R08_{key}_{ps}{tag}_{RES}.png")
+        path = os.path.join(RAW, f"ASTRA_R08_{key}_{ps}{tag}_{RES}.png")
         save(im, path)
         out[ps + tag] = path
         log(f"   {key} {ps}{tag}: {time.time() - t:.1f} s")
@@ -193,13 +194,13 @@ def bake_target(key, passes):
 def compose(key):
     """Masters -> the Roblox set: colour = albedo x part of the ambient shadow; 1024 px; 8-bit."""
     T = TARGETS[key]
-    region = np.asarray(Image.open(os.path.join(SRC, f"ASTRA_R08_{key}_region_{RES}.png")).convert("L"), np.float32)
+    region = np.asarray(Image.open(os.path.join(RAW, f"ASTRA_R08_{key}_region_{RES}.png")).convert("L"), np.float32)
     region = np.round(region / 16.0).astype(np.int32)
     mask2 = np.isin(region, T.get("regions2", ()))
 
     def load(ps, mode):
-        im = Image.open(os.path.join(SRC, f"ASTRA_R08_{key}_{ps}_{RES}.png")).convert(mode)
-        p2 = os.path.join(SRC, f"ASTRA_R08_{key}_{ps}_teeth_{RES}.png")
+        im = Image.open(os.path.join(RAW, f"ASTRA_R08_{key}_{ps}_{RES}.png")).convert(mode)
+        p2 = os.path.join(RAW, f"ASTRA_R08_{key}_{ps}_teeth_{RES}.png")
         if mask2.any() and os.path.exists(p2):
             a, b = np.asarray(im).copy(), np.asarray(Image.open(p2).convert(mode))
             a[mask2] = b[mask2]
@@ -284,6 +285,7 @@ def eyes_material():
 def main(stage1=STAGE1, out=STAGE2):
     t0 = time.time()
     os.makedirs(SRC, exist_ok=True)
+    os.makedirs(RAW, exist_ok=True)
     bpy.ops.wm.open_mainfile(filepath=stage1)
     only = os.environ.get("BAKE_ONLY")
     passes = os.environ.get("BAKE_PASSES", ",".join(PASSES)).split(",")
@@ -298,9 +300,10 @@ def main(stage1=STAGE1, out=STAGE2):
     log(f"high-detail source appended: {sum(len(o.data.polygons) for o in dst.objects)} faces  ({time.time() - t0:.1f} s)")
     for k in keys:
         bake_target(k, passes)
-    if only or set(passes) != set(PASSES):
-        log("partial bake: masters written, no materials made")
+    if set(passes) != set(PASSES):
+        log("partial bake: raw passes written, no materials made")
         return
+    # (BAKE_ONLY: the other mesh's raw passes from an earlier full bake are used as they are)
     for o in list(coll.objects):
         dm = o.data
         bpy.data.objects.remove(o)

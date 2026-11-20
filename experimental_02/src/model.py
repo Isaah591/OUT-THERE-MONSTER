@@ -31,12 +31,12 @@ class Model:
             self.loose[name] = (K.MeshOut(), material, smooth)
         return self.loose[name][0]
 
-    def add_rod(self, base, direction, length, radius=0.028, group="body"):
+    def add_rod(self, base, direction, length, radius=0.028, group="body", host=None):
         V, Q, T = K.rod(base, direction, length, radius, self.rng)
         self.bucket(f"{group}_rods", "rod").add(V, Q, T)
         # kept for the game mesh (game_mesh.py): the rod as built, six points to a ring
         self.info.setdefault("rods", []).append(dict(group=group, base=np.asarray(base, float), dir=K.unit(direction),
-                                                     L=float(length), r=float(radius), V=V))
+                                                     L=float(length), r=float(radius), V=V, host=host))
 
     # -- output -------------------------------------------------------------------------------
     def generate(self, only=None, verbose=True):
@@ -102,7 +102,7 @@ def surface_point(part, s, side):
 def rod_on(m, part, s, side, length, radius=0.027, tilt=(0, 0, 0), group="body"):
     """A bar driven into a beam at s along it, sticking out of the side facing `side`."""
     p, sd, t = surface_point(part, s, side)
-    m.add_rod(p - sd * 0.02, K.unit(sd + np.asarray(tilt, float)), length, radius, group=group)
+    m.add_rod(p - sd * 0.02, K.unit(sd + np.asarray(tilt, float)), length, radius, group=group, host=part["name"])
 
 
 def wound_on(part, s, side, L, W, axis=None, strength=1.0, strands=True, spacing=0.034, shift=0.0):

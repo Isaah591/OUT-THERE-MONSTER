@@ -611,25 +611,53 @@ def build_shells(m, jaw_tree, skull_tree):
             region = "sinew" if rmean >= 0.011 else "web"
         ww = np.concatenate([w, jaw_share([Pk[-1], Pk[0]])])
         sh.ringed(rings, region, max(0.008, 0.40 * rmean), jaw=ww)
-    # the throat: the black sheet that closes the lower jaw from behind (both faces)
+    # the throat: the black sheet that closes the lower jaw from behind, as a thin closed slab
+    # (front face toward the mouth, back face 1.4 cm behind it, walls round the edge)
     G_ = m.info["throat_sheet"]
     n, nv = G_.shape[:2]
     sel = list(range(0, n, 2)) + ([n - 1] if (n - 1) % 2 else [])
-    G_ = G_[sel]
-    n = len(G_)
-    V = G_.reshape(-1, 3)
+    A = G_[sel]
+    n = len(A)
+    Nr = np.cross(np.gradient(A, axis=1), np.gradient(A, axis=0))
+    Nr /= np.maximum(np.linalg.norm(Nr, axis=2, keepdims=True), 1e-9)
+    mouth = head.Hw(0.0, 0.20, -0.30)
+    sgn = 1.0 if float(np.mean(((mouth - A) * Nr).sum(-1))) > 0 else -1.0     # does a quad (a, b, c, d) face the mouth?
+    T_ = 0.014
+    B_ = A - Nr * sgn * T_
+    off = n * nv
+    V = np.concatenate([A.reshape(-1, 3), B_.reshape(-1, 3)])
     w = jaw_share(V)
-    lu = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(G_[:, nv // 2], axis=0), axis=1))])
-    lv = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(G_[n // 2], axis=0), axis=1))])
-    for flip in (False, True):
-        F, UV = [], []
-        for i in range(n - 1):
-            for k in range(nv - 1):
-                q = [i * nv + k, i * nv + k + 1, (i + 1) * nv + k + 1, (i + 1) * nv + k]
-                uv = [(lu[i], lv[k]), (lu[i], lv[k + 1]), (lu[i + 1], lv[k + 1]), (lu[i + 1], lv[k])]
-                F.append(q[::-1] if flip else q)
-                UV.append(uv[::-1] if flip else uv)
-        sh.add(V, F, UV, "throat", 0.008, jaw=w)
+    lu = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(A[:, nv // 2], axis=0), axis=1))])
+    lv = np.concatenate([[0.0], np.cumsum(np.linalg.norm(np.diff(A[n // 2], axis=0), axis=1))])
+    F, UV, front_edges = [], [], set()
+    for i in range(n - 1):
+        for k in range(nv - 1):
+            q = [i * nv + k, i * nv + k + 1, (i + 1) * nv + k + 1, (i + 1) * nv + k]
+            uv = [(lu[i], lv[k]), (lu[i], lv[k + 1]), (lu[i + 1], lv[k + 1]), (lu[i + 1], lv[k])]
+            if sgn < 0:
+                q, uv = q[::-1], uv[::-1]
+            F.append(q)
+            UV.append(uv)
+            for j in range(4):
+                front_edges.add((q[j], q[(j + 1) % 4]))
+            # the back face: same quad, turned the other way, its own island beside the front one
+            F.append([v + off for v in q[::-1]])
+            UV.append([(u + lu[-1] + 0.05, v_) for (u, v_) in uv[::-1]])
+    # walls, walked round the edge of the grid so their strip unrolls in one piece
+    loop = [(0, k) for k in range(nv)] + [(i, nv - 1) for i in range(1, n)] + [(n - 1, k) for k in range(nv - 2, -1, -1)] + \
+           [(i, 0) for i in range(n - 2, 0, -1)]
+    loop = [i * nv + k for (i, k) in loop]
+    cu = 0.0
+    for j in range(len(loop)):
+        a_, b_ = loop[j], loop[(j + 1) % len(loop)]
+        if (b_, a_) in front_edges:
+            a_, b_ = b_, a_
+        assert (a_, b_) in front_edges, "throat edge not on the front face"
+        L = float(np.linalg.norm(V[a_] - V[b_]))
+        F.append([b_, a_, a_ + off, b_ + off])
+        UV.append([(cu + L, -0.06), (cu, -0.06), (cu, -0.06 - T_), (cu + L, -0.06 - T_)])
+        cu += L
+    sh.add(V, F, UV, "throat", 0.008, jaw=w)
     return sh
 
 
@@ -760,7 +788,7 @@ def joints(m):
              pupils=np.asarray(m.info["pupils"]).tolist())
     J["teeth"] = [dict(jaw=sp["jaw"], root=sp["root"].tolist(), tip=sp["tip"].tolist(), r=float(sp["r"]), L=float(sp["L"]),
                        dir=sp["dir"].tolist(), bd=sp["bd"].tolist(), bend=float(sp["bend"])) for sp in m.info["teeth"]]
-    J["rods"] = [dict(group=r["group"], base=r["base"].tolist(), dir=r["dir"].tolist(), L=r["L"]) for r in m.info["rods"]]
+    J["rods"] = [dict(group=r["group"], base=r["base"].tolist(), dir=r["dir"].tolist(), L=r["L"], host=r["host"]) for r in m.info["rods"]]
     return J
 
 
