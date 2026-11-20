@@ -1,0 +1,19 @@
+{
+ "master_px": 2048,
+ "game_px": 1024,
+ "ao_mix": 0.55,
+ "maps": {
+  "Body": {
+   "Color": "textures/ASTRA_R08_Body_Color.png",
+   "Normal": "textures/ASTRA_R08_Body_Normal.png",
+   "Roughness": "textures/ASTRA_R08_Body_Roughness.png",
+   "Metalness": "textures/ASTRA_R08_Body_Metalness.png"
+  },
+  "Head": {
+   "Color": "textures/ASTRA_R08_Head_Color.png",
+   "Normal": "textures/ASTRA_R08_Head_Normal.png",
+   "Roughness": "textures/ASTRA_R08_Head_Roughness.png",
+   "Metalness": "textures/ASTRA_R08_Head_Metalness.png"
+  }
+ }
+}

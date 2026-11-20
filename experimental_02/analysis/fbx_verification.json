@@ -1,0 +1,2188 @@
+{
+ "files": {
+  "base": "export/ASTRA_R08.fbx",
+  "clips": {
+   "Idle": "export/animations/ASTRA_R08_Idle.fbx",
+   "Walk": "export/animations/ASTRA_R08_Walk.fbx",
+   "Run": "export/animations/ASTRA_R08_Run.fbx",
+   "Attack": "export/animations/ASTRA_R08_Attack.fbx",
+   "Lunge": "export/animations/ASTRA_R08_Lunge.fbx",
+   "HeadTrack": "export/animations/ASTRA_R08_HeadTrack.fbx",
+   "JawSnap": "export/animations/ASTRA_R08_JawSnap.fbx",
+   "HitReact": "export/animations/ASTRA_R08_HitReact.fbx",
+   "Death": "export/animations/ASTRA_R08_Death.fbx"
+  }
+ },
+ "height_studs": 10.304,
+ "structure": {
+  "base": {
+   "file": "export/ASTRA_R08.fbx",
+   "bytes": 10206652,
+   "fbx_version": 7400,
+   "global_settings": {
+    "UpAxis": 1,
+    "UpAxisSign": 1,
+    "FrontAxis": 2,
+    "FrontAxisSign": 1,
+    "CoordAxis": 0,
+    "CoordAxisSign": 1,
+    "UnitScaleFactor": 0.9999999776482582,
+    "OriginalUnitScaleFactor": 0.9999999776482582,
+    "TimeMode": 6,
+    "CustomFrameRate": 30.0
+   },
+   "models": {
+    "LimbNode": [
+     "Chest",
+     "Head",
+     "Jaw",
+     "LeftFoot",
+     "LeftHand",
+     "LeftHip",
+     "LeftLowerArm",
+     "LeftLowerLeg",
+     "LeftShoulder",
+     "LeftToes",
+     "LeftUpperArm",
+     "LeftUpperLeg",
+     "LeftWrist",
+     "Neck",
+     "Pelvis",
+     "RightFoot",
+     "RightHand",
+     "RightHip",
+     "RightLowerArm",
+     "RightLowerLeg",
+     "RightShoulder",
+     "RightToes",
+     "RightUpperArm",
+     "RightUpperLeg",
+     "RightWrist",
+     "Root",
+     "Spine"
+    ],
+    "Mesh": [
+     "ASTRA_R08_Body",
+     "ASTRA_R08_Eyes",
+     "ASTRA_R08_Head"
+    ],
+    "Null": [
+     "ASTRA_R08"
+    ]
+   },
+   "meshes": {
+    "ASTRA_R08_Body": {
+     "model": "ASTRA_R08_Body",
+     "vertices": 4930,
+     "polygons": 9852,
+     "triangles": 9852,
+     "max_polygon_sides": 3,
+     "open_edges": 0,
+     "repeated_directed_edges": 0,
+     "uv_sets": 1,
+     "uv_min": [
+      0.0031,
+      0.0032
+     ],
+     "uv_max": [
+      0.9969,
+      0.9948
+     ],
+     "skin_clusters": 25,
+     "bones_with_weights": [
+      "Chest",
+      "Head",
+      "LeftFoot",
+      "LeftHand",
+      "LeftHip",
+      "LeftLowerArm",
+      "LeftLowerLeg",
+      "LeftShoulder",
+      "LeftToes",
+      "LeftUpperArm",
+      "LeftUpperLeg",
+      "LeftWrist",
+      "Neck",
+      "Pelvis",
+      "RightFoot",
+      "RightHand",
+      "RightHip",
+      "RightLowerArm",
+      "RightLowerLeg",
+      "RightShoulder",
+      "RightToes",
+      "RightUpperArm",
+      "RightUpperLeg",
+      "RightWrist",
+      "Spine"
+     ],
+     "max_influences": 4,
+     "unweighted_vertices": 0,
+     "weight_sum_range": [
+      1.0,
+      1.0
+     ]
+    },
+    "ASTRA_R08_Eyes": {
+     "model": "ASTRA_R08_Eyes",
+     "vertices": 12,
+     "polygons": 16,
+     "triangles": 16,
+     "max_polygon_sides": 3,
+     "open_edges": 0,
+     "repeated_directed_edges": 0,
+     "uv_sets": 1,
+     "uv_min": [
+      0.02,
+      0.02
+     ],
+     "uv_max": [
+      0.98,
+      0.98
+     ],
+     "skin_clusters": 1,
+     "bones_with_weights": [
+      "Head"
+     ],
+     "max_influences": 1,
+     "unweighted_vertices": 0,
+     "weight_sum_range": [
+      1.0,
+      1.0
+     ]
+    },
+    "ASTRA_R08_Head": {
+     "model": "ASTRA_R08_Head",
+     "vertices": 5733,
+     "polygons": 11082,
+     "triangles": 11082,
+     "max_polygon_sides": 3,
+     "open_edges": 0,
+     "repeated_directed_edges": 0,
+     "uv_sets": 1,
+     "uv_min": [
+      0.0012,
+      0.0011
+     ],
+     "uv_max": [
+      0.9959,
+      0.9989
+     ],
+     "skin_clusters": 2,
+     "bones_with_weights": [
+      "Head",
+      "Jaw"
+     ],
+     "max_influences": 2,
+     "unweighted_vertices": 0,
+     "weight_sum_range": [
+      1.0,
+      1.0
+     ]
+    }
+   },
+   "embedded_images": [
+    {
+     "name": "ASTRA_R08_Body_Color.png",
+     "file": "ASTRA_R08_Body_Color.png",
+     "embedded_bytes": 1466658,
+     "format": "PNG",
+     "size": [
+      1024,
+      1024
+     ],
+     "mode": "RGB"
+    },
+    {
+     "name": "ASTRA_R08_Body_Metalness.png",
+     "file": "ASTRA_R08_Body_Metalness.png",
+     "embedded_bytes": 17396,
+     "format": "PNG",
+     "size": [
+      1024,
+      1024
+     ],
+     "mode": "L"
+    },
+    {
+     "name": "ASTRA_R08_Body_Normal.png",
+     "file": "ASTRA_R08_Body_Normal.png",
+     "embedded_bytes": 2303640,
+     "format": "PNG",
+     "size": [
+      1024,
+      1024
+     ],
+     "mode": "RGB"
+    },
+    {
+     "name": "ASTRA_R08_Body_Roughness.png",
+     "file": "ASTRA_R08_Body_Roughness.png",
+     "embedded_bytes": 482206,
+     "format": "PNG",
+     "size": [
+      1024,
+      1024
+     ],
+     "mode": "L"
+    },
+    {
+     "name": "ASTRA_R08_Head_Color.png",
+     "file": "ASTRA_R08_Head_Color.png",
+     "embedded_bytes": 1345672,
+     "format": "PNG",
+     "size": [
+      1024,
+      1024
+     ],
+     "mode": "RGB"
+    },
+    {
+     "name": "ASTRA_R08_Head_Metalness.png",
+     "file": "ASTRA_R08_Head_Metalness.png",
+     "embedded_bytes": 4774,
+     "format": "PNG",
+     "size": [
+      1024,
+      1024
+     ],
+     "mode": "L"
+    },
+    {
+     "name": "ASTRA_R08_Head_Normal.png",
+     "file": "ASTRA_R08_Head_Normal.png",
+     "embedded_bytes": 2153642,
+     "format": "PNG",
+     "size": [
+      1024,
+      1024
+     ],
+     "mode": "RGB"
+    },
+    {
+     "name": "ASTRA_R08_Head_Roughness.png",
+     "file": "ASTRA_R08_Head_Roughness.png",
+     "embedded_bytes": 428052,
+     "format": "PNG",
+     "size": [
+      1024,
+      1024
+     ],
+     "mode": "L"
+    }
+   ],
+   "animation_stacks": []
+  },
+  "clips": {
+   "Idle": {
+    "file": "export/animations/ASTRA_R08_Idle.fbx",
+    "bytes": 346380,
+    "fbx_version": 7400,
+    "global_settings": {
+     "UpAxis": 1,
+     "UpAxisSign": 1,
+     "FrontAxis": 2,
+     "FrontAxisSign": 1,
+     "CoordAxis": 0,
+     "CoordAxisSign": 1,
+     "UnitScaleFactor": 0.9999999776482582,
+     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "TimeMode": 6,
+     "CustomFrameRate": 30.0
+    },
+    "models": {
+     "LimbNode": [
+      "Chest",
+      "Head",
+      "Jaw",
+      "LeftFoot",
+      "LeftHand",
+      "LeftHip",
+      "LeftLowerArm",
+      "LeftLowerLeg",
+      "LeftShoulder",
+      "LeftToes",
+      "LeftUpperArm",
+      "LeftUpperLeg",
+      "LeftWrist",
+      "Neck",
+      "Pelvis",
+      "RightFoot",
+      "RightHand",
+      "RightHip",
+      "RightLowerArm",
+      "RightLowerLeg",
+      "RightShoulder",
+      "RightToes",
+      "RightUpperArm",
+      "RightUpperLeg",
+      "RightWrist",
+      "Root",
+      "Spine"
+     ],
+     "Null": [
+      "ASTRA_R08"
+     ]
+    },
+    "meshes": {},
+    "embedded_images": [],
+    "animation_stacks": [
+     "Idle"
+    ],
+    "animation_curves": {
+     "count": 252,
+     "keys_per_curve": [
+      91,
+      91
+     ]
+    }
+   },
+   "Walk": {
+    "file": "export/animations/ASTRA_R08_Walk.fbx",
+    "bytes": 247244,
+    "fbx_version": 7400,
+    "global_settings": {
+     "UpAxis": 1,
+     "UpAxisSign": 1,
+     "FrontAxis": 2,
+     "FrontAxisSign": 1,
+     "CoordAxis": 0,
+     "CoordAxisSign": 1,
+     "UnitScaleFactor": 0.9999999776482582,
+     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "TimeMode": 6,
+     "CustomFrameRate": 30.0
+    },
+    "models": {
+     "LimbNode": [
+      "Chest",
+      "Head",
+      "Jaw",
+      "LeftFoot",
+      "LeftHand",
+      "LeftHip",
+      "LeftLowerArm",
+      "LeftLowerLeg",
+      "LeftShoulder",
+      "LeftToes",
+      "LeftUpperArm",
+      "LeftUpperLeg",
+      "LeftWrist",
+      "Neck",
+      "Pelvis",
+      "RightFoot",
+      "RightHand",
+      "RightHip",
+      "RightLowerArm",
+      "RightLowerLeg",
+      "RightShoulder",
+      "RightToes",
+      "RightUpperArm",
+      "RightUpperLeg",
+      "RightWrist",
+      "Root",
+      "Spine"
+     ],
+     "Null": [
+      "ASTRA_R08"
+     ]
+    },
+    "meshes": {},
+    "embedded_images": [],
+    "animation_stacks": [
+     "Walk"
+    ],
+    "animation_curves": {
+     "count": 252,
+     "keys_per_curve": [
+      31,
+      31
+     ]
+    }
+   },
+   "Run": {
+    "file": "export/animations/ASTRA_R08_Run.fbx",
+    "bytes": 216508,
+    "fbx_version": 7400,
+    "global_settings": {
+     "UpAxis": 1,
+     "UpAxisSign": 1,
+     "FrontAxis": 2,
+     "FrontAxisSign": 1,
+     "CoordAxis": 0,
+     "CoordAxisSign": 1,
+     "UnitScaleFactor": 0.9999999776482582,
+     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "TimeMode": 6,
+     "CustomFrameRate": 30.0
+    },
+    "models": {
+     "LimbNode": [
+      "Chest",
+      "Head",
+      "Jaw",
+      "LeftFoot",
+      "LeftHand",
+      "LeftHip",
+      "LeftLowerArm",
+      "LeftLowerLeg",
+      "LeftShoulder",
+      "LeftToes",
+      "LeftUpperArm",
+      "LeftUpperLeg",
+      "LeftWrist",
+      "Neck",
+      "Pelvis",
+      "RightFoot",
+      "RightHand",
+      "RightHip",
+      "RightLowerArm",
+      "RightLowerLeg",
+      "RightShoulder",
+      "RightToes",
+      "RightUpperArm",
+      "RightUpperLeg",
+      "RightWrist",
+      "Root",
+      "Spine"
+     ],
+     "Null": [
+      "ASTRA_R08"
+     ]
+    },
+    "meshes": {},
+    "embedded_images": [],
+    "animation_stacks": [
+     "Run"
+    ],
+    "animation_curves": {
+     "count": 252,
+     "keys_per_curve": [
+      19,
+      19
+     ]
+    }
+   },
+   "Attack": {
+    "file": "export/animations/ASTRA_R08_Attack.fbx",
+    "bytes": 248092,
+    "fbx_version": 7400,
+    "global_settings": {
+     "UpAxis": 1,
+     "UpAxisSign": 1,
+     "FrontAxis": 2,
+     "FrontAxisSign": 1,
+     "CoordAxis": 0,
+     "CoordAxisSign": 1,
+     "UnitScaleFactor": 0.9999999776482582,
+     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "TimeMode": 6,
+     "CustomFrameRate": 30.0
+    },
+    "models": {
+     "LimbNode": [
+      "Chest",
+      "Head",
+      "Jaw",
+      "LeftFoot",
+      "LeftHand",
+      "LeftHip",
+      "LeftLowerArm",
+      "LeftLowerLeg",
+      "LeftShoulder",
+      "LeftToes",
+      "LeftUpperArm",
+      "LeftUpperLeg",
+      "LeftWrist",
+      "Neck",
+      "Pelvis",
+      "RightFoot",
+      "RightHand",
+      "RightHip",
+      "RightLowerArm",
+      "RightLowerLeg",
+      "RightShoulder",
+      "RightToes",
+      "RightUpperArm",
+      "RightUpperLeg",
+      "RightWrist",
+      "Root",
+      "Spine"
+     ],
+     "Null": [
+      "ASTRA_R08"
+     ]
+    },
+    "meshes": {},
+    "embedded_images": [],
+    "animation_stacks": [
+     "Attack"
+    ],
+    "animation_curves": {
+     "count": 252,
+     "keys_per_curve": [
+      37,
+      37
+     ]
+    }
+   },
+   "Lunge": {
+    "file": "export/animations/ASTRA_R08_Lunge.fbx",
+    "bytes": 240684,
+    "fbx_version": 7400,
+    "global_settings": {
+     "UpAxis": 1,
+     "UpAxisSign": 1,
+     "FrontAxis": 2,
+     "FrontAxisSign": 1,
+     "CoordAxis": 0,
+     "CoordAxisSign": 1,
+     "UnitScaleFactor": 0.9999999776482582,
+     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "TimeMode": 6,
+     "CustomFrameRate": 30.0
+    },
+    "models": {
+     "LimbNode": [
+      "Chest",
+      "Head",
+      "Jaw",
+      "LeftFoot",
+      "LeftHand",
+      "LeftHip",
+      "LeftLowerArm",
+      "LeftLowerLeg",
+      "LeftShoulder",
+      "LeftToes",
+      "LeftUpperArm",
+      "LeftUpperLeg",
+      "LeftWrist",
+      "Neck",
+      "Pelvis",
+      "RightFoot",
+      "RightHand",
+      "RightHip",
+      "RightLowerArm",
+      "RightLowerLeg",
+      "RightShoulder",
+      "RightToes",
+      "RightUpperArm",
+      "RightUpperLeg",
+      "RightWrist",
+      "Root",
+      "Spine"
+     ],
+     "Null": [
+      "ASTRA_R08"
+     ]
+    },
+    "meshes": {},
+    "embedded_images": [],
+    "animation_stacks": [
+     "Lunge"
+    ],
+    "animation_curves": {
+     "count": 252,
+     "keys_per_curve": [
+      34,
+      34
+     ]
+    }
+   },
+   "HeadTrack": {
+    "file": "export/animations/ASTRA_R08_HeadTrack.fbx",
+    "bytes": 334124,
+    "fbx_version": 7400,
+    "global_settings": {
+     "UpAxis": 1,
+     "UpAxisSign": 1,
+     "FrontAxis": 2,
+     "FrontAxisSign": 1,
+     "CoordAxis": 0,
+     "CoordAxisSign": 1,
+     "UnitScaleFactor": 0.9999999776482582,
+     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "TimeMode": 6,
+     "CustomFrameRate": 30.0
+    },
+    "models": {
+     "LimbNode": [
+      "Chest",
+      "Head",
+      "Jaw",
+      "LeftFoot",
+      "LeftHand",
+      "LeftHip",
+      "LeftLowerArm",
+      "LeftLowerLeg",
+      "LeftShoulder",
+      "LeftToes",
+      "LeftUpperArm",
+      "LeftUpperLeg",
+      "LeftWrist",
+      "Neck",
+      "Pelvis",
+      "RightFoot",
+      "RightHand",
+      "RightHip",
+      "RightLowerArm",
+      "RightLowerLeg",
+      "RightShoulder",
+      "RightToes",
+      "RightUpperArm",
+      "RightUpperLeg",
+      "RightWrist",
+      "Root",
+      "Spine"
+     ],
+     "Null": [
+      "ASTRA_R08"
+     ]
+    },
+    "meshes": {},
+    "embedded_images": [],
+    "animation_stacks": [
+     "HeadTrack"
+    ],
+    "animation_curves": {
+     "count": 252,
+     "keys_per_curve": [
+      103,
+      103
+     ]
+    }
+   },
+   "JawSnap": {
+    "file": "export/animations/ASTRA_R08_JawSnap.fbx",
+    "bytes": 247276,
+    "fbx_version": 7400,
+    "global_settings": {
+     "UpAxis": 1,
+     "UpAxisSign": 1,
+     "FrontAxis": 2,
+     "FrontAxisSign": 1,
+     "CoordAxis": 0,
+     "CoordAxisSign": 1,
+     "UnitScaleFactor": 0.9999999776482582,
+     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "TimeMode": 6,
+     "CustomFrameRate": 30.0
+    },
+    "models": {
+     "LimbNode": [
+      "Chest",
+      "Head",
+      "Jaw",
+      "LeftFoot",
+      "LeftHand",
+      "LeftHip",
+      "LeftLowerArm",
+      "LeftLowerLeg",
+      "LeftShoulder",
+      "LeftToes",
+      "LeftUpperArm",
+      "LeftUpperLeg",
+      "LeftWrist",
+      "Neck",
+      "Pelvis",
+      "RightFoot",
+      "RightHand",
+      "RightHip",
+      "RightLowerArm",
+      "RightLowerLeg",
+      "RightShoulder",
+      "RightToes",
+      "RightUpperArm",
+      "RightUpperLeg",
+      "RightWrist",
+      "Root",
+      "Spine"
+     ],
+     "Null": [
+      "ASTRA_R08"
+     ]
+    },
+    "meshes": {},
+    "embedded_images": [],
+    "animation_stacks": [
+     "JawSnap"
+    ],
+    "animation_curves": {
+     "count": 252,
+     "keys_per_curve": [
+      31,
+      31
+     ]
+    }
+   },
+   "HitReact": {
+    "file": "export/animations/ASTRA_R08_HitReact.fbx",
+    "bytes": 216524,
+    "fbx_version": 7400,
+    "global_settings": {
+     "UpAxis": 1,
+     "UpAxisSign": 1,
+     "FrontAxis": 2,
+     "FrontAxisSign": 1,
+     "CoordAxis": 0,
+     "CoordAxisSign": 1,
+     "UnitScaleFactor": 0.9999999776482582,
+     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "TimeMode": 6,
+     "CustomFrameRate": 30.0
+    },
+    "models": {
+     "LimbNode": [
+      "Chest",
+      "Head",
+      "Jaw",
+      "LeftFoot",
+      "LeftHand",
+      "LeftHip",
+      "LeftLowerArm",
+      "LeftLowerLeg",
+      "LeftShoulder",
+      "LeftToes",
+      "LeftUpperArm",
+      "LeftUpperLeg",
+      "LeftWrist",
+      "Neck",
+      "Pelvis",
+      "RightFoot",
+      "RightHand",
+      "RightHip",
+      "RightLowerArm",
+      "RightLowerLeg",
+      "RightShoulder",
+      "RightToes",
+      "RightUpperArm",
+      "RightUpperLeg",
+      "RightWrist",
+      "Root",
+      "Spine"
+     ],
+     "Null": [
+      "ASTRA_R08"
+     ]
+    },
+    "meshes": {},
+    "embedded_images": [],
+    "animation_stacks": [
+     "HitReact"
+    ],
+    "animation_curves": {
+     "count": 252,
+     "keys_per_curve": [
+      19,
+      19
+     ]
+    }
+   },
+   "Death": {
+    "file": "export/animations/ASTRA_R08_Death.fbx",
+    "bytes": 292860,
+    "fbx_version": 7400,
+    "global_settings": {
+     "UpAxis": 1,
+     "UpAxisSign": 1,
+     "FrontAxis": 2,
+     "FrontAxisSign": 1,
+     "CoordAxis": 0,
+     "CoordAxisSign": 1,
+     "UnitScaleFactor": 0.9999999776482582,
+     "OriginalUnitScaleFactor": 0.9999999776482582,
+     "TimeMode": 6,
+     "CustomFrameRate": 30.0
+    },
+    "models": {
+     "LimbNode": [
+      "Chest",
+      "Head",
+      "Jaw",
+      "LeftFoot",
+      "LeftHand",
+      "LeftHip",
+      "LeftLowerArm",
+      "LeftLowerLeg",
+      "LeftShoulder",
+      "LeftToes",
+      "LeftUpperArm",
+      "LeftUpperLeg",
+      "LeftWrist",
+      "Neck",
+      "Pelvis",
+      "RightFoot",
+      "RightHand",
+      "RightHip",
+      "RightLowerArm",
+      "RightLowerLeg",
+      "RightShoulder",
+      "RightToes",
+      "RightUpperArm",
+      "RightUpperLeg",
+      "RightWrist",
+      "Root",
+      "Spine"
+     ],
+     "Null": [
+      "ASTRA_R08"
+     ]
+    },
+    "meshes": {},
+    "embedded_images": [],
+    "animation_stacks": [
+     "Death"
+    ],
+    "animation_curves": {
+     "count": 252,
+     "keys_per_curve": [
+      61,
+      61
+     ]
+    }
+   }
+  }
+ },
+ "imports": {
+  "python": {
+   "importer": "python",
+   "objects": [
+    "ARMATURE:ASTRA_R08",
+    "MESH:ASTRA_R08_Body",
+    "MESH:ASTRA_R08_Eyes",
+    "MESH:ASTRA_R08_Head"
+   ],
+   "bones": 27,
+   "bone_names_match": true,
+   "hierarchy_match": true,
+   "scale_to_source": 0.01,
+   "bone_head_error_studs": 2.384185791015625e-06,
+   "root_bone_at_origin": true,
+   "meshes": {
+    "ASTRA_R08_Body": {
+     "vertices": 4930,
+     "source_vertices": 4930,
+     "triangles": 9852,
+     "source_triangles": 9852,
+     "uv_layers": 1,
+     "materials": [
+      "ASTRA_R08_Body"
+     ],
+     "vertex_order_preserved": true,
+     "rest_position_error_studs": 2.844339835661458e-06,
+     "uv_range": [
+      [
+       0.0031,
+       0.0032
+      ],
+      [
+       0.9969,
+       0.9948
+      ]
+     ],
+     "uv_error": 0.0,
+     "weight_error": 0.0,
+     "max_influences": 4,
+     "weight_on_root": 0.0,
+     "material_images": [
+      {
+       "name": "ASTRA_R08_Body",
+       "images": [
+        {
+         "image": "ASTRA_R08_Body_Color.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Base Color@Principled BSDF"
+         ]
+        },
+        {
+         "image": "ASTRA_R08_Body_Normal.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Color@Normal Map"
+         ]
+        },
+        {
+         "image": "ASTRA_R08_Body_Roughness.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Roughness@Principled BSDF"
+         ]
+        },
+        {
+         "image": "ASTRA_R08_Body_Metalness.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Metallic@Principled BSDF"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    "ASTRA_R08_Head": {
+     "vertices": 5733,
+     "source_vertices": 5733,
+     "triangles": 11082,
+     "source_triangles": 11082,
+     "uv_layers": 1,
+     "materials": [
+      "ASTRA_R08_Head"
+     ],
+     "vertex_order_preserved": true,
+     "rest_position_error_studs": 3.6310047448750993e-06,
+     "uv_range": [
+      [
+       0.0012,
+       0.0011
+      ],
+      [
+       0.9959,
+       0.9989
+      ]
+     ],
+     "uv_error": 0.0,
+     "weight_error": 0.0,
+     "max_influences": 2,
+     "weight_on_root": 0.0,
+     "material_images": [
+      {
+       "name": "ASTRA_R08_Head",
+       "images": [
+        {
+         "image": "ASTRA_R08_Head_Color.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Base Color@Principled BSDF"
+         ]
+        },
+        {
+         "image": "ASTRA_R08_Head_Normal.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Color@Normal Map"
+         ]
+        },
+        {
+         "image": "ASTRA_R08_Head_Roughness.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Roughness@Principled BSDF"
+         ]
+        },
+        {
+         "image": "ASTRA_R08_Head_Metalness.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Metallic@Principled BSDF"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    "ASTRA_R08_Eyes": {
+     "vertices": 12,
+     "source_vertices": 12,
+     "triangles": 16,
+     "source_triangles": 16,
+     "uv_layers": 1,
+     "materials": [
+      "ASTRA_R08_Eyes"
+     ],
+     "vertex_order_preserved": true,
+     "rest_position_error_studs": 7.496574987442273e-07,
+     "uv_range": [
+      [
+       0.02,
+       0.02
+      ],
+      [
+       0.98,
+       0.98
+      ]
+     ],
+     "uv_error": 0.0,
+     "weight_error": 0.0,
+     "max_influences": 1,
+     "weight_on_root": 0.0,
+     "material_images": [
+      {
+       "name": "ASTRA_R08_Eyes",
+       "images": []
+      }
+     ]
+    }
+   },
+   "import_seconds": 0.26,
+   "clips": {
+    "Idle": {
+     "file": "export/animations/ASTRA_R08_Idle.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      90.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "30": 0.0,
+      "60": 0.0,
+      "90": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    },
+    "Walk": {
+     "file": "export/animations/ASTRA_R08_Walk.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      30.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "10": 0.0,
+      "20": 0.0,
+      "30": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    },
+    "Run": {
+     "file": "export/animations/ASTRA_R08_Run.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      18.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "6": 0.0,
+      "12": 0.0,
+      "18": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    },
+    "Attack": {
+     "file": "export/animations/ASTRA_R08_Attack.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      36.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "12": 1e-05,
+      "24": 1e-05,
+      "36": 0.0
+     },
+     "max_error_studs": 1e-05,
+     "max_error_mm": 0.0
+    },
+    "Lunge": {
+     "file": "export/animations/ASTRA_R08_Lunge.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      33.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "11": 0.0,
+      "22": 0.0,
+      "33": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    },
+    "HeadTrack": {
+     "file": "export/animations/ASTRA_R08_HeadTrack.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      102.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "34": 0.0,
+      "68": 0.0,
+      "102": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    },
+    "JawSnap": {
+     "file": "export/animations/ASTRA_R08_JawSnap.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      30.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "10": 0.0,
+      "20": 0.0,
+      "30": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    },
+    "HitReact": {
+     "file": "export/animations/ASTRA_R08_HitReact.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      18.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "6": 0.0,
+      "12": 1e-05,
+      "18": 0.0
+     },
+     "max_error_studs": 1e-05,
+     "max_error_mm": 0.0
+    },
+    "Death": {
+     "file": "export/animations/ASTRA_R08_Death.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      60.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "20": 1e-05,
+      "40": 1e-05,
+      "60": 1e-05
+     },
+     "max_error_studs": 1e-05,
+     "max_error_mm": 0.0
+    }
+   }
+  },
+  "ufbx": {
+   "importer": "ufbx",
+   "objects": [
+    "ARMATURE:ASTRA_R08",
+    "MESH:ASTRA_R08_Body",
+    "MESH:ASTRA_R08_Eyes",
+    "MESH:ASTRA_R08_Head"
+   ],
+   "bones": 27,
+   "bone_names_match": true,
+   "hierarchy_match": true,
+   "scale_to_source": 0.01,
+   "bone_head_error_studs": 1.430511474609375e-06,
+   "root_bone_at_origin": true,
+   "meshes": {
+    "ASTRA_R08_Body": {
+     "vertices": 4930,
+     "source_vertices": 4930,
+     "triangles": 9852,
+     "source_triangles": 9852,
+     "uv_layers": 1,
+     "materials": [
+      "ASTRA_R08_Body"
+     ],
+     "vertex_order_preserved": true,
+     "rest_position_error_studs": 2.2452766070824026e-06,
+     "uv_range": [
+      [
+       0.0031,
+       0.0032
+      ],
+      [
+       0.9969,
+       0.9948
+      ]
+     ],
+     "uv_error": 0.0,
+     "weight_error": 0.0,
+     "max_influences": 4,
+     "weight_on_root": 0.0,
+     "material_images": [
+      {
+       "name": "ASTRA_R08_Body",
+       "images": [
+        {
+         "image": "ASTRA_R08_Body_Color.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Base Color@Principled BSDF"
+         ]
+        },
+        {
+         "image": "ASTRA_R08_Body_Roughness.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Roughness@Principled BSDF"
+         ]
+        },
+        {
+         "image": "ASTRA_R08_Body_Metalness.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Metallic@Principled BSDF"
+         ]
+        },
+        {
+         "image": "ASTRA_R08_Body_Normal.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Color@Normal Map"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    "ASTRA_R08_Head": {
+     "vertices": 5733,
+     "source_vertices": 5733,
+     "triangles": 11082,
+     "source_triangles": 11082,
+     "uv_layers": 1,
+     "materials": [
+      "ASTRA_R08_Head"
+     ],
+     "vertex_order_preserved": true,
+     "rest_position_error_studs": 1.7169887680523743e-06,
+     "uv_range": [
+      [
+       0.0012,
+       0.0011
+      ],
+      [
+       0.9959,
+       0.9989
+      ]
+     ],
+     "uv_error": 0.0,
+     "weight_error": 0.0,
+     "max_influences": 2,
+     "weight_on_root": 0.0,
+     "material_images": [
+      {
+       "name": "ASTRA_R08_Head",
+       "images": [
+        {
+         "image": "ASTRA_R08_Head_Color.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Base Color@Principled BSDF"
+         ]
+        },
+        {
+         "image": "ASTRA_R08_Head_Roughness.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Roughness@Principled BSDF"
+         ]
+        },
+        {
+         "image": "ASTRA_R08_Head_Metalness.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Metallic@Principled BSDF"
+         ]
+        },
+        {
+         "image": "ASTRA_R08_Head_Normal.png",
+         "size": [
+          1024,
+          1024
+         ],
+         "packed": true,
+         "feeds": [
+          "Color@Normal Map"
+         ]
+        }
+       ]
+      }
+     ]
+    },
+    "ASTRA_R08_Eyes": {
+     "vertices": 12,
+     "source_vertices": 12,
+     "triangles": 16,
+     "source_triangles": 16,
+     "uv_layers": 1,
+     "materials": [
+      "ASTRA_R08_Eyes"
+     ],
+     "vertex_order_preserved": true,
+     "rest_position_error_studs": 1.045911069752492e-06,
+     "uv_range": [
+      [
+       0.02,
+       0.02
+      ],
+      [
+       0.98,
+       0.98
+      ]
+     ],
+     "uv_error": 0.0,
+     "weight_error": 0.0,
+     "max_influences": 1,
+     "weight_on_root": 0.0,
+     "material_images": [
+      {
+       "name": "ASTRA_R08_Eyes",
+       "images": []
+      }
+     ]
+    }
+   },
+   "import_seconds": 0.19,
+   "clips": {
+    "Idle": {
+     "file": "export/animations/ASTRA_R08_Idle.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      90.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "30": 0.0,
+      "60": 0.0,
+      "90": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    },
+    "Walk": {
+     "file": "export/animations/ASTRA_R08_Walk.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      30.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "10": 0.0,
+      "20": 0.0,
+      "30": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    },
+    "Run": {
+     "file": "export/animations/ASTRA_R08_Run.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      18.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "6": 1e-05,
+      "12": 1e-05,
+      "18": 0.0
+     },
+     "max_error_studs": 1e-05,
+     "max_error_mm": 0.0
+    },
+    "Attack": {
+     "file": "export/animations/ASTRA_R08_Attack.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      36.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "12": 0.0,
+      "24": 0.0,
+      "36": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    },
+    "Lunge": {
+     "file": "export/animations/ASTRA_R08_Lunge.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      33.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "11": 0.0,
+      "22": 0.0,
+      "33": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    },
+    "HeadTrack": {
+     "file": "export/animations/ASTRA_R08_HeadTrack.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      102.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "34": 0.0,
+      "68": 0.0,
+      "102": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    },
+    "JawSnap": {
+     "file": "export/animations/ASTRA_R08_JawSnap.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      30.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "10": 0.0,
+      "20": 0.0,
+      "30": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    },
+    "HitReact": {
+     "file": "export/animations/ASTRA_R08_HitReact.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      18.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "6": 0.0,
+      "12": 0.0,
+      "18": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    },
+    "Death": {
+     "file": "export/animations/ASTRA_R08_Death.fbx",
+     "actions_created": 1,
+     "frame_range": [
+      0.0,
+      60.0
+     ],
+     "deformation_error_studs": {
+      "0": 0.0,
+      "20": 0.0,
+      "40": 0.0,
+      "60": 0.0
+     },
+     "max_error_studs": 0.0,
+     "max_error_mm": 0.0
+    }
+   }
+  }
+ },
+ "checks": [
+  {
+   "check": "ASTRA_R08_Body: triangles <= 20000",
+   "passed": true,
+   "detail": 9852
+  },
+  {
+   "check": "ASTRA_R08_Body: closed (no open edges, no doubled edges)",
+   "passed": true,
+   "detail": {
+    "open_edges": 0,
+    "doubled": 0
+   }
+  },
+  {
+   "check": "ASTRA_R08_Body: triangles only",
+   "passed": true,
+   "detail": 3
+  },
+  {
+   "check": "ASTRA_R08_Body: one UV set inside 0..1",
+   "passed": true,
+   "detail": {
+    "sets": 1,
+    "min": [
+     0.0031,
+     0.0032
+    ],
+    "max": [
+     0.9969,
+     0.9948
+    ]
+   }
+  },
+  {
+   "check": "ASTRA_R08_Body: at most 4 bones per vertex",
+   "passed": true,
+   "detail": 4
+  },
+  {
+   "check": "ASTRA_R08_Body: every vertex weighted, weights sum to 1",
+   "passed": true,
+   "detail": {
+    "unweighted": 0,
+    "sums": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "check": "ASTRA_R08_Body: Root bone carries no weight",
+   "passed": true,
+   "detail": [
+    "Chest",
+    "Head",
+    "LeftFoot",
+    "LeftHand",
+    "LeftHip",
+    "LeftLowerArm",
+    "LeftLowerLeg",
+    "LeftShoulder",
+    "LeftToes",
+    "LeftUpperArm",
+    "LeftUpperLeg",
+    "LeftWrist",
+    "Neck",
+    "Pelvis",
+    "RightFoot",
+    "RightHand",
+    "RightHip",
+    "RightLowerArm",
+    "RightLowerLeg",
+    "RightShoulder",
+    "RightToes",
+    "RightUpperArm",
+    "RightUpperLeg",
+    "RightWrist",
+    "Spine"
+   ]
+  },
+  {
+   "check": "ASTRA_R08_Eyes: triangles <= 20000",
+   "passed": true,
+   "detail": 16
+  },
+  {
+   "check": "ASTRA_R08_Eyes: closed (no open edges, no doubled edges)",
+   "passed": true,
+   "detail": {
+    "open_edges": 0,
+    "doubled": 0
+   }
+  },
+  {
+   "check": "ASTRA_R08_Eyes: triangles only",
+   "passed": true,
+   "detail": 3
+  },
+  {
+   "check": "ASTRA_R08_Eyes: one UV set inside 0..1",
+   "passed": true,
+   "detail": {
+    "sets": 1,
+    "min": [
+     0.02,
+     0.02
+    ],
+    "max": [
+     0.98,
+     0.98
+    ]
+   }
+  },
+  {
+   "check": "ASTRA_R08_Eyes: at most 4 bones per vertex",
+   "passed": true,
+   "detail": 1
+  },
+  {
+   "check": "ASTRA_R08_Eyes: every vertex weighted, weights sum to 1",
+   "passed": true,
+   "detail": {
+    "unweighted": 0,
+    "sums": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "check": "ASTRA_R08_Eyes: Root bone carries no weight",
+   "passed": true,
+   "detail": [
+    "Head"
+   ]
+  },
+  {
+   "check": "ASTRA_R08_Head: triangles <= 20000",
+   "passed": true,
+   "detail": 11082
+  },
+  {
+   "check": "ASTRA_R08_Head: closed (no open edges, no doubled edges)",
+   "passed": true,
+   "detail": {
+    "open_edges": 0,
+    "doubled": 0
+   }
+  },
+  {
+   "check": "ASTRA_R08_Head: triangles only",
+   "passed": true,
+   "detail": 3
+  },
+  {
+   "check": "ASTRA_R08_Head: one UV set inside 0..1",
+   "passed": true,
+   "detail": {
+    "sets": 1,
+    "min": [
+     0.0012,
+     0.0011
+    ],
+    "max": [
+     0.9959,
+     0.9989
+    ]
+   }
+  },
+  {
+   "check": "ASTRA_R08_Head: at most 4 bones per vertex",
+   "passed": true,
+   "detail": 2
+  },
+  {
+   "check": "ASTRA_R08_Head: every vertex weighted, weights sum to 1",
+   "passed": true,
+   "detail": {
+    "unweighted": 0,
+    "sums": [
+     1.0,
+     1.0
+    ]
+   }
+  },
+  {
+   "check": "ASTRA_R08_Head: Root bone carries no weight",
+   "passed": true,
+   "detail": [
+    "Head",
+    "Jaw"
+   ]
+  },
+  {
+   "check": "skeleton: 27 bones, no leaf bones",
+   "passed": true,
+   "detail": 27
+  },
+  {
+   "check": "skeleton: Root bone at the origin",
+   "passed": true,
+   "detail": true
+  },
+  {
+   "check": "texture ASTRA_R08_Body_Color.png: embedded, 1024 px, RGB",
+   "passed": true,
+   "detail": {
+    "bytes": 1466658,
+    "size": [
+     1024,
+     1024
+    ],
+    "mode": "RGB",
+    "format": "PNG"
+   }
+  },
+  {
+   "check": "texture ASTRA_R08_Body_Metalness.png: embedded, 1024 px, L",
+   "passed": true,
+   "detail": {
+    "bytes": 17396,
+    "size": [
+     1024,
+     1024
+    ],
+    "mode": "L",
+    "format": "PNG"
+   }
+  },
+  {
+   "check": "texture ASTRA_R08_Body_Normal.png: embedded, 1024 px, RGB",
+   "passed": true,
+   "detail": {
+    "bytes": 2303640,
+    "size": [
+     1024,
+     1024
+    ],
+    "mode": "RGB",
+    "format": "PNG"
+   }
+  },
+  {
+   "check": "texture ASTRA_R08_Body_Roughness.png: embedded, 1024 px, L",
+   "passed": true,
+   "detail": {
+    "bytes": 482206,
+    "size": [
+     1024,
+     1024
+    ],
+    "mode": "L",
+    "format": "PNG"
+   }
+  },
+  {
+   "check": "texture ASTRA_R08_Head_Color.png: embedded, 1024 px, RGB",
+   "passed": true,
+   "detail": {
+    "bytes": 1345672,
+    "size": [
+     1024,
+     1024
+    ],
+    "mode": "RGB",
+    "format": "PNG"
+   }
+  },
+  {
+   "check": "texture ASTRA_R08_Head_Metalness.png: embedded, 1024 px, L",
+   "passed": true,
+   "detail": {
+    "bytes": 4774,
+    "size": [
+     1024,
+     1024
+    ],
+    "mode": "L",
+    "format": "PNG"
+   }
+  },
+  {
+   "check": "texture ASTRA_R08_Head_Normal.png: embedded, 1024 px, RGB",
+   "passed": true,
+   "detail": {
+    "bytes": 2153642,
+    "size": [
+     1024,
+     1024
+    ],
+    "mode": "RGB",
+    "format": "PNG"
+   }
+  },
+  {
+   "check": "texture ASTRA_R08_Head_Roughness.png: embedded, 1024 px, L",
+   "passed": true,
+   "detail": {
+    "bytes": 428052,
+    "size": [
+     1024,
+     1024
+    ],
+    "mode": "L",
+    "format": "PNG"
+   }
+  },
+  {
+   "check": "ASTRA_R08_Body: one material",
+   "passed": true,
+   "detail": [
+    "ASTRA_R08_Body"
+   ]
+  },
+  {
+   "check": "ASTRA_R08_Head: one material",
+   "passed": true,
+   "detail": [
+    "ASTRA_R08_Head"
+   ]
+  },
+  {
+   "check": "axis system: Y up, -Z forward (Blender default for Roblox)",
+   "passed": true,
+   "detail": {
+    "UpAxis": 1,
+    "UpAxisSign": 1,
+    "FrontAxis": 2,
+    "FrontAxisSign": 1,
+    "CoordAxis": 0,
+    "CoordAxisSign": 1,
+    "UnitScaleFactor": 0.9999999776482582,
+    "OriginalUnitScaleFactor": 0.9999999776482582,
+    "TimeMode": 6,
+    "CustomFrameRate": 30.0
+   }
+  },
+  {
+   "check": "animation Idle: exactly one animation in the file, named Idle",
+   "passed": true,
+   "detail": [
+    "Idle"
+   ]
+  },
+  {
+   "check": "animation Idle: 30 frames per second",
+   "passed": true,
+   "detail": {
+    "TimeMode": 6,
+    "fps": 30.0
+   }
+  },
+  {
+   "check": "animation Walk: exactly one animation in the file, named Walk",
+   "passed": true,
+   "detail": [
+    "Walk"
+   ]
+  },
+  {
+   "check": "animation Walk: 30 frames per second",
+   "passed": true,
+   "detail": {
+    "TimeMode": 6,
+    "fps": 30.0
+   }
+  },
+  {
+   "check": "animation Run: exactly one animation in the file, named Run",
+   "passed": true,
+   "detail": [
+    "Run"
+   ]
+  },
+  {
+   "check": "animation Run: 30 frames per second",
+   "passed": true,
+   "detail": {
+    "TimeMode": 6,
+    "fps": 30.0
+   }
+  },
+  {
+   "check": "animation Attack: exactly one animation in the file, named Attack",
+   "passed": true,
+   "detail": [
+    "Attack"
+   ]
+  },
+  {
+   "check": "animation Attack: 30 frames per second",
+   "passed": true,
+   "detail": {
+    "TimeMode": 6,
+    "fps": 30.0
+   }
+  },
+  {
+   "check": "animation Lunge: exactly one animation in the file, named Lunge",
+   "passed": true,
+   "detail": [
+    "Lunge"
+   ]
+  },
+  {
+   "check": "animation Lunge: 30 frames per second",
+   "passed": true,
+   "detail": {
+    "TimeMode": 6,
+    "fps": 30.0
+   }
+  },
+  {
+   "check": "animation HeadTrack: exactly one animation in the file, named HeadTrack",
+   "passed": true,
+   "detail": [
+    "HeadTrack"
+   ]
+  },
+  {
+   "check": "animation HeadTrack: 30 frames per second",
+   "passed": true,
+   "detail": {
+    "TimeMode": 6,
+    "fps": 30.0
+   }
+  },
+  {
+   "check": "animation JawSnap: exactly one animation in the file, named JawSnap",
+   "passed": true,
+   "detail": [
+    "JawSnap"
+   ]
+  },
+  {
+   "check": "animation JawSnap: 30 frames per second",
+   "passed": true,
+   "detail": {
+    "TimeMode": 6,
+    "fps": 30.0
+   }
+  },
+  {
+   "check": "animation HitReact: exactly one animation in the file, named HitReact",
+   "passed": true,
+   "detail": [
+    "HitReact"
+   ]
+  },
+  {
+   "check": "animation HitReact: 30 frames per second",
+   "passed": true,
+   "detail": {
+    "TimeMode": 6,
+    "fps": 30.0
+   }
+  },
+  {
+   "check": "animation Death: exactly one animation in the file, named Death",
+   "passed": true,
+   "detail": [
+    "Death"
+   ]
+  },
+  {
+   "check": "animation Death: 30 frames per second",
+   "passed": true,
+   "detail": {
+    "TimeMode": 6,
+    "fps": 30.0
+   }
+  },
+  {
+   "check": "python importer: skeleton matches (names, parents, joint positions)",
+   "passed": true,
+   "detail": {
+    "bones": 27,
+    "head_error_studs": 2.384185791015625e-06
+   }
+  },
+  {
+   "check": "python importer: ASTRA_R08_Body geometry, UVs and weights match the source",
+   "passed": true,
+   "detail": {
+    "vertices": 4930,
+    "triangles": 9852,
+    "pos_err": 2.844339835661458e-06,
+    "weight_err": 0.0
+   }
+  },
+  {
+   "check": "python importer: ASTRA_R08_Head geometry, UVs and weights match the source",
+   "passed": true,
+   "detail": {
+    "vertices": 5733,
+    "triangles": 11082,
+    "pos_err": 3.6310047448750993e-06,
+    "weight_err": 0.0
+   }
+  },
+  {
+   "check": "python importer: ASTRA_R08_Eyes geometry, UVs and weights match the source",
+   "passed": true,
+   "detail": {
+    "vertices": 12,
+    "triangles": 16,
+    "pos_err": 7.496574987442273e-07,
+    "weight_err": 0.0
+   }
+  },
+  {
+   "check": "python importer: Idle plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "python importer: Walk plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "python importer: Run plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "python importer: Attack plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "python importer: Lunge plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "python importer: HeadTrack plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "python importer: JawSnap plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "python importer: HitReact plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "python importer: Death plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "ufbx importer: skeleton matches (names, parents, joint positions)",
+   "passed": true,
+   "detail": {
+    "bones": 27,
+    "head_error_studs": 1.430511474609375e-06
+   }
+  },
+  {
+   "check": "ufbx importer: ASTRA_R08_Body geometry, UVs and weights match the source",
+   "passed": true,
+   "detail": {
+    "vertices": 4930,
+    "triangles": 9852,
+    "pos_err": 2.2452766070824026e-06,
+    "weight_err": 0.0
+   }
+  },
+  {
+   "check": "ufbx importer: ASTRA_R08_Head geometry, UVs and weights match the source",
+   "passed": true,
+   "detail": {
+    "vertices": 5733,
+    "triangles": 11082,
+    "pos_err": 1.7169887680523743e-06,
+    "weight_err": 0.0
+   }
+  },
+  {
+   "check": "ufbx importer: ASTRA_R08_Eyes geometry, UVs and weights match the source",
+   "passed": true,
+   "detail": {
+    "vertices": 12,
+    "triangles": 16,
+    "pos_err": 1.045911069752492e-06,
+    "weight_err": 0.0
+   }
+  },
+  {
+   "check": "ufbx importer: Idle plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "ufbx importer: Walk plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "ufbx importer: Run plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "ufbx importer: Attack plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "ufbx importer: Lunge plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "ufbx importer: HeadTrack plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "ufbx importer: JawSnap plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "ufbx importer: HitReact plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  },
+  {
+   "check": "ufbx importer: Death plays back on the re-imported rig like the source",
+   "passed": true,
+   "detail": 0.0
+  }
+ ]
+}

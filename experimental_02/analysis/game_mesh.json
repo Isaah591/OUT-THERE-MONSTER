@@ -1,0 +1,54 @@
+{
+ "body_relief": {
+  "height_mean": 0.010770567475391225,
+  "height_min": -0.029200000000000004,
+  "height_max": 0.046
+ },
+ "head_relief": {
+  "height_mean": 0.008947354168885861,
+  "height_min": -0.032,
+  "height_max": 0.04424638998303562
+ },
+ "jaw_relief": {
+  "height_mean": 0.0037931929291926173,
+  "height_min": -0.024626994560658935,
+  "height_max": 0.043012177182734014
+ },
+ "ASTRA_R08_Body": {
+  "triangles": 9870,
+  "vertices": 4939,
+  "uv_coverage": 0.629,
+  "uv_outside_0_1": 0,
+  "uv_zero_area_faces": 1
+ },
+ "ASTRA_R08_Head": {
+  "triangles": 11084,
+  "vertices": 5734,
+  "uv_coverage": 0.653,
+  "uv_outside_0_1": 0,
+  "uv_zero_area_faces": 0
+ },
+ "ASTRA_R08_Eyes": {
+  "triangles": 16,
+  "vertices": 12,
+  "uv_coverage": 0.353,
+  "uv_outside_0_1": 0,
+  "uv_zero_area_faces": 0
+ },
+ "cells_m": {
+  "body": 0.068,
+  "head": 0.046
+ },
+ "regions": [
+  "solid",
+  "jaw",
+  "tooth_upper",
+  "tooth_lower",
+  "gum_upper",
+  "gum_band",
+  "sinew",
+  "web",
+  "throat",
+  "rod"
+ ]
+}

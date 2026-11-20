@@ -1,0 +1,77 @@
+{
+ "fps": 30,
+ "clips": [
+  {
+   "name": "Idle",
+   "frames": 91,
+   "seconds": 3.0,
+   "fps": 30,
+   "loop": true,
+   "keys": 46
+  },
+  {
+   "name": "Walk",
+   "frames": 31,
+   "seconds": 1.0,
+   "fps": 30,
+   "loop": true,
+   "keys": 16
+  },
+  {
+   "name": "Run",
+   "frames": 19,
+   "seconds": 0.6,
+   "fps": 30,
+   "loop": true,
+   "keys": 10
+  },
+  {
+   "name": "Attack",
+   "frames": 37,
+   "seconds": 1.2,
+   "fps": 30,
+   "loop": false,
+   "keys": 19
+  },
+  {
+   "name": "Lunge",
+   "frames": 34,
+   "seconds": 1.1,
+   "fps": 30,
+   "loop": false,
+   "keys": 18
+  },
+  {
+   "name": "HeadTrack",
+   "frames": 103,
+   "seconds": 3.4,
+   "fps": 30,
+   "loop": false,
+   "keys": 52
+  },
+  {
+   "name": "JawSnap",
+   "frames": 31,
+   "seconds": 1.0,
+   "fps": 30,
+   "loop": false,
+   "keys": 16
+  },
+  {
+   "name": "HitReact",
+   "frames": 19,
+   "seconds": 0.6,
+   "fps": 30,
+   "loop": false,
+   "keys": 10
+  },
+  {
+   "name": "Death",
+   "frames": 61,
+   "seconds": 2.0,
+   "fps": 30,
+   "loop": false,
+   "keys": 31
+  }
+ ]
+}

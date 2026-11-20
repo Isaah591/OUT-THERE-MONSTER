@@ -306,6 +306,13 @@ def main(src=STAGE2, out=OUT):
     ao = build_armature(B)
     report = {}
 
+    # zero-volume fins (back-to-back face pairs) out of the skins, then check every mesh is closed
+    import game_mesh as GM
+    for nm in MESHES:
+        ob = bpy.data.objects[nm]
+        report.setdefault("fins_removed", {})[nm] = GM.remove_fins(ob)
+        oe, de = GM.open_edges(ob.data)
+        assert oe == 0 and de == 0, f"{nm}: {oe} open and {de} doubled edges"
     body = bpy.data.objects["ASTRA_R08_Body"]
     # the soles stand on the floor (the sampled armour relief left them up to 2.5 cm below it)
     co = np.zeros(len(body.data.vertices) * 3)

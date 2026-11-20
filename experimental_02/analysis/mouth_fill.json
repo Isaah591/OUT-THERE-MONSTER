@@ -1,0 +1,44 @@
+{
+ "sheet_head_closeup": {
+  "teeth": 0.282,
+  "tissue": 0.116,
+  "dark": 0.369,
+  "largest_dark": 0.275
+ },
+ "model_head": {
+  "teeth": 0.394,
+  "tissue": 0.031,
+  "dark": 0.338,
+  "largest_dark": 0.305
+ },
+ "model_mouth": {
+  "teeth": 0.377,
+  "tissue": 0.032,
+  "dark": 0.355,
+  "largest_dark": 0.317
+ },
+ "model_hfront": {
+  "teeth": 0.361,
+  "tissue": 0.043,
+  "dark": 0.264,
+  "largest_dark": 0.21
+ },
+ "model_front": {
+  "teeth": 0.349,
+  "tissue": 0.041,
+  "dark": 0.265,
+  "largest_dark": 0.21
+ },
+ "model_tq": {
+  "teeth": 0.383,
+  "tissue": 0.032,
+  "dark": 0.331,
+  "largest_dark": 0.285
+ },
+ "model_mouthside": {
+  "teeth": 0.418,
+  "tissue": 0.104,
+  "dark": 0.176,
+  "largest_dark": 0.126
+ }
+}

@@ -80,14 +80,23 @@ if __name__ == "__main__":
         iou = json.load(open(p))
     t = stats["teeth"]
     hd = stats["head"]
+    game = {}
+    gp = os.path.join(AN, "fbx_verification.json")
+    if os.path.exists(gp):
+        g = json.load(open(gp))
+        game = dict(tris=sum(m["triangles"] for m in g["structure"]["base"]["meshes"].values()),
+                    passed=sum(c["passed"] for c in g["checks"]), checks=len(g["checks"]))
     left = [
-        "BUILT FROM A BLANK SCENE: NO EARLIER MODEL, MESH OR SCRIPT IS LOADED",
-        f"{stats['triangles_total']:,} TRIANGLES, {stats['height_m']:.2f} M TALL, EVERY RUST PLATE IS GEOMETRY",
-        f"{t['upper'] + t['lower']} TEETH MODELLED ONE BY ONE ({t['upper']} UPPER / {t['lower']} LOWER), {t['shortest_m'] * 100:.0f}-{t['longest_m'] * 100:.0f} CM LONG",
-        f"REAR UPPER TEETH {min(t['rear_upper_lengths_m']) * 100:.0f}-{max(t['rear_upper_lengths_m']) * 100:.0f} CM: AS LONG AS THE FRONT ONES",
+        "MODEL 02 HIPS: A PELVIS BLOCK WITH A HIP UNDER EACH HALF; THE RIGHT THIGH HANGS FROM UNDER THE RIGHT HALF",
+        "MODEL 02 SKULL: CURVED CONTOUR RINGS - ROUNDED UNEVEN FOREHEAD, JUTTING BROW, DEEP SQUARE SOCKETS, ARMOUR ON THE CURVE",
+        f"HIGH-DETAIL SOURCE {stats['triangles_total']:,} TRIANGLES, {stats['height_m']:.2f} M TALL, EVERY RUST PLATE IS GEOMETRY",
+        f"{t['upper'] + t['lower']} TEETH MODELLED ONE BY ONE ({t['upper']} UPPER / {t['lower']} LOWER), {t['shortest_m'] * 100:.0f}-{t['longest_m'] * 100:.0f} CM LONG; "
+        f"REAR UPPER {min(t['rear_upper_lengths_m']) * 100:.0f}-{max(t['rear_upper_lengths_m']) * 100:.0f} CM",
         f"JAW RIM IS A 3D CURVE: {hd['gape_m'] * 100:.0f} CM GAPE, CHIN HOOKS {hd['chin_forward_of_hinge_m'] * 100:.0f} CM FORWARD, LIP DIPS {hd['lip_dip_m'] * 100:.0f} CM",
-        "ONE STUDIO RIG FOR ALL VIEWS (TURNED WITH THE CAMERA)",
     ]
+    if game:
+        left.append(f"ROBLOX GAME MODEL: {game['tris']:,} TRIANGLES, 27-BONE RIG WITH ITS OWN JAW BONE, 9 TEST CLIPS, "
+                    f"FBX CHECKS {game['passed']}/{game['checks']}")
     right = []
     if iou:
         right.append("SILHOUETTE OVERLAP WITH THE SHEET: FRONT %.2f / THREE-QUARTER %.2f / SIDE %.2f" % (

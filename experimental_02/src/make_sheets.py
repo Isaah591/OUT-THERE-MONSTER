@@ -55,7 +55,7 @@ def model_sheet(rdir, facts, out, k=2):
     im = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(im)
     label(d, (22 * k, 12 * k), "ASTRA R08 - EXPERIMENTAL MODEL 02", 15 * k)
-    label(d, (478 * k, 14 * k), "(INDEPENDENT RECONSTRUCTION, FROM SCRATCH)", 12 * k, fill=DIM)
+    label(d, (478 * k, 14 * k), "(HIPS AND SKULL REBUILT  +  ROBLOX GAME MODEL)", 12 * k, fill=DIM)
     d.line([(1016 * k, 28 * k), (1118 * k, 28 * k)], fill=DIM, width=k)
     label(d, (1132 * k, 22 * k), "3D MODEL  /  CYCLES RENDER SHEET", 7 * k, fill=DIM, bold=False, shadow=False)
     top = [("front", "FRONT VIEW", (0, 52, 490, 548)), ("tq", "THREE-QUARTER VIEW", (498, 52, 1008, 548)),

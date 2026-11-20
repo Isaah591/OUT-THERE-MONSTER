@@ -1,0 +1,72 @@
+{
+ "fins_removed": {
+  "ASTRA_R08_Body": 18,
+  "ASTRA_R08_Head": 2,
+  "ASTRA_R08_Eyes": 0
+ },
+ "ASTRA_R08_Body": {
+  "vertices": 4930,
+  "max_influences": 4,
+  "mean_influences": 1.94,
+  "one_bone_vertices": 1328,
+  "root_weight": 0.0,
+  "min_row_sum": 1.0,
+  "vertices_per_bone": {
+   "Pelvis": 987,
+   "Spine": 565,
+   "Chest": 762,
+   "Neck": 430,
+   "Head": 137,
+   "RightShoulder": 225,
+   "RightUpperArm": 433,
+   "RightLowerArm": 389,
+   "RightWrist": 280,
+   "RightHand": 283,
+   "LeftShoulder": 357,
+   "LeftUpperArm": 324,
+   "LeftLowerArm": 202,
+   "LeftWrist": 139,
+   "LeftHand": 129,
+   "RightHip": 325,
+   "RightUpperLeg": 446,
+   "RightLowerLeg": 443,
+   "RightFoot": 501,
+   "RightToes": 256,
+   "LeftHip": 354,
+   "LeftUpperLeg": 418,
+   "LeftLowerLeg": 453,
+   "LeftFoot": 460,
+   "LeftToes": 262
+  },
+  "sole_vertices_lifted_to_floor": 144
+ },
+ "ASTRA_R08_Head": {
+  "vertices": 5733,
+  "max_influences": 2,
+  "mean_influences": 1.12,
+  "one_bone_vertices": 5070,
+  "root_weight": 0.0,
+  "min_row_sum": 1.0,
+  "vertices_per_bone": {
+   "Head": 4059,
+   "Jaw": 2337
+  },
+  "rigid_jaw_vertices": 1674,
+  "rigid_skull_vertices": 3396,
+  "stretching_vertices": 663
+ },
+ "ASTRA_R08_Eyes": {
+  "vertices": 12,
+  "max_influences": 1,
+  "mean_influences": 1.0,
+  "one_bone_vertices": 12,
+  "root_weight": 0.0,
+  "min_row_sum": 1.0,
+  "vertices_per_bone": {
+   "Head": 12
+  }
+ },
+ "height_studs": 10.304,
+ "height_m": 2.885,
+ "bones": 27
+}

@@ -2,3 +2,5 @@ bvenv/
 __pycache__/
 *.blend1
 experimental_02/model/work/
+experimental_02/renders/game/_frames/
+experimental_02/renders/game/_clip/

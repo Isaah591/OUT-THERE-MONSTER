@@ -745,6 +745,43 @@ def finish_object(name, solid_ob, solid_parts, shells, solid_region, cell_cage, 
     return ob, dict(height_mean=float(H.mean()), height_min=float(H.min()), height_max=float(H.max()))
 
 
+def remove_fins(ob):
+    """Delete pairs of faces lying back to back on the same corners - zero-volume fins left where the
+    union welded a sliver shut.  The faces round them close the surface.  Returns the count removed."""
+    bm = bmesh.new()
+    bm.from_mesh(ob.data)
+    bm.verts.ensure_lookup_table()
+    seen, kill = {}, set()
+    for f in bm.faces:
+        k = tuple(sorted(v.index for v in f.verts))
+        if k in seen:
+            kill.add(f)
+            kill.add(seen[k])
+        else:
+            seen[k] = f
+    n = len(kill)
+    if kill:
+        bmesh.ops.delete(bm, geom=list(kill), context="FACES_ONLY")
+        loose = [v for v in bm.verts if not v.link_faces]
+        if loose:
+            bmesh.ops.delete(bm, geom=loose, context="VERTS")
+    bm.to_mesh(ob.data)
+    bm.free()
+    ob.data.update()
+    return n
+
+
+def open_edges(me):
+    """(edges used by one face only or not in opposite directions, directed edges used twice)."""
+    de = {}
+    for p in me.polygons:
+        vs = list(p.vertices)
+        for j in range(len(vs)):
+            e = (vs[j], vs[(j + 1) % len(vs)])
+            de[e] = de.get(e, 0) + 1
+    return sum(1 for (a, b) in de if (b, a) not in de), sum(1 for c in de.values() if c > 1)
+
+
 def triangulate(ob):
     bm = bmesh.new()
     bm.from_mesh(ob.data)
@@ -857,8 +894,12 @@ def main(out=OUT):
 
     pack(body_ob, margin=0.0030, scale_by_region=dict(rod=0.8))
     pack(head_ob, margin=0.0030, scale_by_region=dict(throat=0.35, gum_band=0.9, web=0.8))
+    for o in (body_ob, head_ob):
+        stats[o.name + "_fins_removed"] = remove_fins(o)
     for o in (body_ob, head_ob, eyes):
         triangulate(o)
+        oe, de = open_edges(o.data)
+        assert oe == 0 and de == 0, f"{o.name}: {oe} open and {de} doubled edges"
         nm, tr = manifold_report(o.data)
         area, outside, zero = uv_stats(o.data)
         stats[o.name] = dict(triangles=tr, vertices=len(o.data.vertices), uv_coverage=round(area, 3), uv_outside_0_1=outside,
