@@ -44,14 +44,41 @@ def project(view, P, W, H):
     return W / 2 + (d @ r) / z * k, H / 2 - (d @ u) / z * k
 
 
-def crop_box(view, path, lo, hi, pad=0.04):
+# hip joints of the two models (body.py POSE of each) and the body's centre line
+HIPS = {1: dict(R=(-0.145, -0.30, 1.44), L=(0.18, 0.03, 1.39)), 2: dict(R=(-0.170, -0.085, 1.34), L=(0.245, 0.050, 1.34))}
+CENTRE_X = 0.005
+
+
+def crop_box(view, path, lo, hi, pad=0.04, model=None):
     im = Image.open(path).convert("RGB")
     W, H = im.size
     pts = [project(view, (x, y, z), W, H) for x in (lo[0], hi[0]) for y in (lo[1], hi[1]) for z in (lo[2], hi[2])]
     xs, ys = [p[0] for p in pts], [p[1] for p in pts]
     x0, x1, y0, y1 = min(xs), max(xs), min(ys), max(ys)
     px, py = (x1 - x0) * pad, (y1 - y0) * pad
-    return im.crop((int(max(0, x0 - px)), int(max(0, y0 - py)), int(min(W, x1 + px)), int(min(H, y1 + py))))
+    box = (int(max(0, x0 - px)), int(max(0, y0 - py)), int(min(W, x1 + px)), int(min(H, y1 + py)))
+    im = im.crop(box)
+    if model:
+        d = ImageDraw.Draw(im)
+        r = max(6, im.width // 60)
+        if view == "front":                      # the body's centre line
+            a = project(view, (CENTRE_X, 0.0, lo[2]), W, H)
+            b = project(view, (CENTRE_X, 0.0, hi[2]), W, H)
+            for t in np.arange(0, 1, 0.04):
+                p0 = (a[0] + (b[0] - a[0]) * t - box[0], a[1] + (b[1] - a[1]) * t - box[1])
+                p1 = (a[0] + (b[0] - a[0]) * (t + 0.02) - box[0], a[1] + (b[1] - a[1]) * (t + 0.02) - box[1])
+                d.line([p0, p1], fill=(240, 240, 240), width=2)
+        for side, col in (("R", (80, 200, 255)), ("L", (255, 150, 90))):
+            q = project(view, HIPS[model][side], W, H)
+            c = (q[0] - box[0], q[1] - box[1])
+            d.ellipse([c[0] - r, c[1] - r, c[0] + r, c[1] + r], outline=col, width=4)
+            f = font(max(14, im.width // 28))
+            txt = "right hip" if side == "R" else "left hip"
+            if view == "side" and side == "R":           # in profile the two hips lie close: label the right one leftward
+                d.text((c[0] - r - 6 - d.textlength(txt, font=f), c[1] - r - 4), txt, font=f, fill=col)
+            else:
+                d.text((c[0] + r + 4, c[1] - r + (8 if view == "side" else 0)), txt, font=f, fill=col)
+    return im
 
 
 def label(d, xy, text, size, fill=FG, bold=True):
@@ -92,8 +119,8 @@ def text_block(width, lines, size=15):
 
 
 def main():
-    lo, hi = (-0.62, -0.75, 0.55), (0.72, 0.55, 1.78)       # the hips, thighs and knees
-    hips = [(crop_box(v, os.path.join(M1, v + ".png"), lo, hi), crop_box(v, os.path.join(M2, v + ".png"), lo, hi), cap)
+    lo, hi = (-0.62, -0.75, 0.62), (0.72, 0.55, 1.86)       # the hips, thighs and knees
+    hips = [(crop_box(v, os.path.join(M1, v + ".png"), lo, hi, model=1), crop_box(v, os.path.join(M2, v + ".png"), lo, hi, model=2), cap)
             for v, cap in (("front", "FRONT"), ("tq", "THREE-QUARTER"), ("side", "SIDE"))]
     skull = []
     for v, cap in (("hq_r", "FROM THE CREATURE'S RIGHT"), ("hq_l", "FROM ITS LEFT"), ("htop", "FROM ABOVE")):
@@ -116,7 +143,7 @@ def main():
         "stride; a hip block hangs under each half of it with the hip joint at its centre (22 cm either side of the pelvis "
         "centre, the right one 7 cm ahead of it and the left 7 cm behind with the stride, both at the same height); a small groin block sits between the thighs.  Each "
         "thigh now leaves the underside of its own hip block.  Knees, ankles and feet keep the stance fitted to the sheet "
-        "(silhouette overlap 0.80 / 0.74 / 0.77 in front / three-quarter / side)."])
+        "(silhouette overlap 0.80 / 0.74 / 0.77 in front / three-quarter / side).  Circles: the hip joints; dashed: the body's centre line."])
     t2 = text_block(TW, [
         "PRIORITY 2 - SKULL.  Model 01's face was a flat vertical mask (a 7 x 4 grid) with box-shaped brows on a ten-sided "
         "cranium.  Model 02 builds the head from ten horizontal contours, each a rounded outline seen from above, so the face "
