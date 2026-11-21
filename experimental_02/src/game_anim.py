@@ -166,9 +166,12 @@ class Rig:
             return floor - z
         return 0.0
 
-    def key(self, frame):
+    def key(self, frame, bones=None):
+        """Key every bone (or only `bones`, for clips that must layer over others in Roblox)."""
         self.update()
         for p in self.pb:
+            if bones is not None and p.name not in bones:
+                continue
             q = p.rotation_quaternion.copy()
             if p.name in self.last and q.dot(self.last[p.name]) < 0:
                 q.negate()
@@ -256,6 +259,24 @@ def run(g, u):
     gait(g, u, stride=1.50, lift=0.26, stance=0.40, bob=0.050, sway=0.030, lean=16.0, arm=24.0, crouch=0.07, jaw=11.0)
 
 
+def chase(g, u):
+    """Run's harder sister: lower, leaning further, longer stride, the long arm reaching ahead,
+    head thrust forward and the jaws snapping twice a stride."""
+    gait(g, u, stride=1.60, lift=0.30, stance=0.38, bob=0.060, sway=0.028, lean=24.0, arm=26.0, crouch=0.13, jaw=12.0)
+    c = cos(2 * pi * u)
+    g.r("Neck", -4.0 + 3.0 * cos(4 * pi * u), 0.0, 2.5 * cos(2 * pi * u))
+    g.r("Head", 4.0 + 2.5 * cos(4 * pi * u + 0.6), 0.0, 1.5 * cos(2 * pi * u))
+    g.r("Jaw", 13.0 + 9.0 * sin(4 * pi * u))
+    g.r("RightUpperArm", 22.0 * c - 24.0)
+    g.r("RightLowerArm", -16.0 - 8.0 * (1 - c) * 0.5)
+    g.r("RightWrist", 8.0 * cos(2 * pi * u - 0.7) - 6.0)
+
+
+# matching ground speed of the in-place locomotion clips (feet do not slide at this speed):
+# stride / (stance share x cycle time)
+GROUND_SPEED_M_S = {"Walk": 1.00 / (0.60 * 1.0), "Run": 1.50 / (0.40 * 0.6), "Chase": 1.60 / (0.38 * 0.6)}
+
+
 def blend(keys, u):
     """Piecewise smooth interpolation of dicts of numbers keyed by phase."""
     ks = sorted(keys)
@@ -325,15 +346,23 @@ LUNGE = {    # a bite: draw back, throw the head forward, snap
            "RightUpperArm.x": -16, "LeftUpperArm.x": -22, "legLeft.foot": 10, "legLeft.dz": 0.03},
     1.00: {},
 }
-HEADTRACK = {  # range of the neck and head: left, right, up, down
-    0.00: {}, 0.14: {"Neck.z": 22, "Head.z": 30, "Head.y": 5, "Chest.z": 5}, 0.28: {},
-    0.42: {"Neck.z": -22, "Head.z": -30, "Head.y": -5, "Chest.z": -5}, 0.56: {},
-    0.68: {"Neck.x": -14, "Head.x": -20, "Jaw.x": 6}, 0.84: {"Neck.x": 12, "Head.x": 18}, 1.00: {},
+HEADTRACK = {  # range of the neck and head (Neck and Head only): left, right, up, down
+    0.00: {}, 0.14: {"Neck.z": 22, "Head.z": 30, "Head.y": 5}, 0.28: {},
+    0.42: {"Neck.z": -22, "Head.z": -30, "Head.y": -5}, 0.56: {},
+    0.68: {"Neck.x": -14, "Head.x": -20}, 0.84: {"Neck.x": 12, "Head.x": 18}, 1.00: {},
 }
-JAWSNAP = {    # the jaw alone: open, shut, open, shut
-    0.00: {}, 0.20: {"Jaw.x": 14}, 0.34: {"Jaw.x": -21, "Head.x": 2}, 0.52: {"Jaw.x": 11}, 0.66: {"Jaw.x": -21, "Head.x": 2},
+JAWSNAP = {    # the Jaw bone alone: gape wider, snap shut, open, snap shut, back to rest
+    0.00: {}, 0.20: {"Jaw.x": 14}, 0.34: {"Jaw.x": -21}, 0.52: {"Jaw.x": 11}, 0.66: {"Jaw.x": -21},
     0.80: {"Jaw.x": -21}, 1.00: {},
 }
+# jaw range: 0 = the sheet's open mouth (rest), +16 = widest gape, -21 = shut as far as the teeth allow
+JAW_RANGE_DEG = (-21.0, 16.0)
+
+
+def jaw_chatter(g, u):
+    """The Jaw bone alone, looping: restless working of the jaw (layer it over Idle or Chase)."""
+    g.reset()
+    g.r("Jaw", 3.0 + 7.0 * sin(2 * pi * 3 * u) + 3.0 * sin(2 * pi * 7 * u + 0.8) - 4.0 * max(0.0, sin(2 * pi * 2 * u)) ** 6)
 HITREACT = {   # struck from the front
     0.00: {},
     0.16: {"py": 0.16, "pz": -0.05, "Pelvis.x": -4, "Spine.x": -11, "Chest.x": -9, "Chest.z": 9, "Neck.x": -8, "Head.x": -15, "Head.z": -12,
@@ -380,13 +409,18 @@ CLIPS = [   # name, seconds, loops, pose function
     ("Idle", 3.0, True, with_contact(idle)),
     ("Walk", 1.0, True, with_contact(walk)),
     ("Run", 0.6, True, with_contact(run)),
+    ("Chase", 0.6, True, with_contact(chase)),
     ("Attack", 1.2, False, clip(ATTACK)),
     ("Lunge", 1.1, False, clip(LUNGE, head=True)),
-    ("HeadTrack", 3.4, False, clip(HEADTRACK, contact=False)),
-    ("JawSnap", 1.0, False, clip(JAWSNAP, contact=False)),
     ("HitReact", 0.6, False, clip(HITREACT)),
     ("Death", 2.0, False, clip(DEATH, head=True, trunk=True)),
+    ("JawSnap", 1.0, False, clip(JAWSNAP, contact=False)),
+    ("JawChatter", 1.0, True, jaw_chatter),
+    ("HeadTrack", 3.4, False, clip(HEADTRACK, contact=False)),
 ]
+# clips that key only some bones, so in Roblox they can play over a full-body clip at a higher
+# priority and move just these bones (the jaw on its own; the neck and head on their own)
+PARTIAL = {"JawSnap": ["Jaw"], "JawChatter": ["Jaw"], "HeadTrack": ["Neck", "Head"]}
 
 
 def make_actions(ao, step=2):
@@ -408,14 +442,17 @@ def make_actions(ao, step=2):
         for f in frames:
             u = f / n
             fn(g, 0.0 if (loop and f == n) else u)
-            g.key(f)
+            g.key(f, PARTIAL.get(name))
         act.frame_range = (0, n)
         act.use_frame_range = True
         try:
             act.use_cyclic = loop
         except Exception:
             pass
-        info.append(dict(name=name, frames=n + 1, seconds=secs, fps=FPS, loop=loop, keys=len(frames)))
+        info.append(dict(name=name, frames=n + 1, seconds=secs, fps=FPS, loop=loop, keys=len(frames),
+                         bones=PARTIAL.get(name, "all"),
+                         ground_speed_m_s=round(GROUND_SPEED_M_S[name], 2) if name in GROUND_SPEED_M_S else None,
+                         ground_speed_studs_s=round(GROUND_SPEED_M_S[name] / 0.28, 1) if name in GROUND_SPEED_M_S else None))
         print(f"[game_anim]    {name}: {n + 1} frames, {len(frames)} keys", flush=True)
     g.reset()
     ao.animation_data.action = None
@@ -427,11 +464,15 @@ def set_clip(ao, name):
     sc = bpy.context.scene
     if ao.animation_data is None:
         ao.animation_data_create()
+    ao.animation_data.action = None
+    # back to the rest pose first: a clip that keys only some bones must not inherit the others'
+    # pose from whatever played before it
+    for p in ao.pose.bones:
+        p.rotation_mode = "QUATERNION"
+        p.rotation_quaternion = Quaternion()
+        p.location = (0.0, 0.0, 0.0)
+        p.scale = (1.0, 1.0, 1.0)
     if name is None:
-        ao.animation_data.action = None
-        for p in ao.pose.bones:
-            p.rotation_quaternion = Quaternion()
-            p.location = (0.0, 0.0, 0.0)
         return
     act = bpy.data.actions[name]
     ao.animation_data.action = act
@@ -449,7 +490,7 @@ def main(path=GAME):
     sc.render.fps = FPS
     ao = bpy.data.objects[ARMATURE]
     info = make_actions(ao)
-    json.dump(dict(fps=FPS, clips=info), open(os.path.join(ROOT, "analysis", "game_animations.json"), "w"), indent=1)
+    json.dump(dict(fps=FPS, jaw_range_deg=JAW_RANGE_DEG, clips=info), open(os.path.join(ROOT, "analysis", "game_animations.json"), "w"), indent=1)
     bpy.ops.wm.save_as_mainfile(filepath=path, compress=True)
     print("[game_anim] saved", path, flush=True)
 

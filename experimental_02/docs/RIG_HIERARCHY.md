@@ -112,21 +112,26 @@ Computed, not painted (`src/game_rig.py`):
 - head mesh: 3,396 vertices on Head alone, 1,674 on Jaw alone, 663 shared (the sinews, webs and
   throat that must stretch when the mouth moves); eyes on Head alone.
 
-## Test animations
+## Animations
 
-| Clip | Frames (30 fps) | Loops | File |
-|---|---|---|---|
-| Idle | 91 | yes | `export/animations/ASTRA_R08_Idle.fbx` |
-| Walk | 31 | yes | `export/animations/ASTRA_R08_Walk.fbx` |
-| Run (chase) | 19 | yes | `export/animations/ASTRA_R08_Run.fbx` |
-| Attack (long-arm swipe) | 37 | no | `export/animations/ASTRA_R08_Attack.fbx` |
-| Lunge (bite) | 34 | no | `export/animations/ASTRA_R08_Lunge.fbx` |
-| HeadTrack | 103 | no | `export/animations/ASTRA_R08_HeadTrack.fbx` |
-| JawSnap | 31 | no | `export/animations/ASTRA_R08_JawSnap.fbx` |
-| HitReact | 19 | no | `export/animations/ASTRA_R08_HitReact.fbx` |
-| Death | 61 | no | `export/animations/ASTRA_R08_Death.fbx` |
+| Clip | Frames (30 fps) | Loops | Bones keyed | File |
+|---|---|---|---|---|
+| Idle | 91 | yes | all | `export/animations/ASTRA_R08_Idle.fbx` |
+| Walk | 31 | yes | all | `export/animations/ASTRA_R08_Walk.fbx` |
+| Run | 19 | yes | all | `export/animations/ASTRA_R08_Run.fbx` |
+| Chase | 19 | yes | all | `export/animations/ASTRA_R08_Chase.fbx` |
+| Attack | 37 | no | all | `export/animations/ASTRA_R08_Attack.fbx` |
+| Lunge | 34 | no | all | `export/animations/ASTRA_R08_Lunge.fbx` |
+| HitReact | 19 | no | all | `export/animations/ASTRA_R08_HitReact.fbx` |
+| Death | 61 | no | all | `export/animations/ASTRA_R08_Death.fbx` |
+| JawSnap | 31 | no | Jaw | `export/animations/ASTRA_R08_JawSnap.fbx` |
+| JawChatter | 31 | yes | Jaw | `export/animations/ASTRA_R08_JawChatter.fbx` |
+| HeadTrack | 103 | no | Neck, Head | `export/animations/ASTRA_R08_HeadTrack.fbx` |
 
 All in place (no root motion), keyed every second frame in Blender and baked to every frame in
-the FBX.  The feet are planted by a two-bone solver in Walk and Run, and arms (and in Lunge and
-Death the head) are laid on the floor rather than through it.  They are tests of the rig, not
-finished animation.
+the FBX.  The feet are planted by a two-bone solver in Walk, Run and Chase, and arms (and in Lunge
+and Death the head) are laid on the floor rather than through it.  JawSnap and JawChatter key the
+Jaw bone only and HeadTrack only Neck and Head, so in Roblox they play over any full-body clip and
+move just those bones.  Every clip file carries the same 27 bones with the character's bind pose
+as their rest transforms (checked: `FBX_VERIFICATION.md`).  The Roblox handoff package with import
+steps is `../handoff/ASTRA_R08_Roblox/`.

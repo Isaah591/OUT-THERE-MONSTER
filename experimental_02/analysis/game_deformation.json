@@ -34,6 +34,17 @@
    "lowest_point_m": -0.06,
    "rigid_skull_and_jaw_error_mm": 0.001
   },
+  "Chase": {
+   "max_edge_stretch": 2.11,
+   "max_edge_shrink": 0.09,
+   "worst_at": {
+    "frame": 6,
+    "mesh": "ASTRA_R08_Body",
+    "bone": "LeftUpperLeg"
+   },
+   "lowest_point_m": -0.06,
+   "rigid_skull_and_jaw_error_mm": 0.001
+  },
   "Attack": {
    "max_edge_stretch": 2.39,
    "max_edge_shrink": 0.07,
@@ -56,28 +67,6 @@
    "lowest_point_m": -0.036,
    "rigid_skull_and_jaw_error_mm": 0.001
   },
-  "HeadTrack": {
-   "max_edge_stretch": 1.64,
-   "max_edge_shrink": 0.37,
-   "worst_at": {
-    "frame": 14,
-    "mesh": "ASTRA_R08_Body",
-    "bone": "Head"
-   },
-   "lowest_point_m": -0.0,
-   "rigid_skull_and_jaw_error_mm": 0.001
-  },
-  "JawSnap": {
-   "max_edge_stretch": 1.32,
-   "max_edge_shrink": 0.74,
-   "worst_at": {
-    "frame": 20,
-    "mesh": "ASTRA_R08_Head",
-    "bone": "Jaw"
-   },
-   "lowest_point_m": -0.0,
-   "rigid_skull_and_jaw_error_mm": 0.001
-  },
   "HitReact": {
    "max_edge_stretch": 1.4,
    "max_edge_shrink": 0.57,
@@ -98,6 +87,39 @@
     "bone": "RightUpperArm"
    },
    "lowest_point_m": -0.047,
+   "rigid_skull_and_jaw_error_mm": 0.001
+  },
+  "JawSnap": {
+   "max_edge_stretch": 1.32,
+   "max_edge_shrink": 0.74,
+   "worst_at": {
+    "frame": 20,
+    "mesh": "ASTRA_R08_Head",
+    "bone": "Jaw"
+   },
+   "lowest_point_m": -0.0,
+   "rigid_skull_and_jaw_error_mm": 0.001
+  },
+  "JawChatter": {
+   "max_edge_stretch": 1.16,
+   "max_edge_shrink": 0.81,
+   "worst_at": {
+    "frame": 22,
+    "mesh": "ASTRA_R08_Head",
+    "bone": "Jaw"
+   },
+   "lowest_point_m": -0.0,
+   "rigid_skull_and_jaw_error_mm": 0.001
+  },
+  "HeadTrack": {
+   "max_edge_stretch": 1.64,
+   "max_edge_shrink": 0.37,
+   "worst_at": {
+    "frame": 14,
+    "mesh": "ASTRA_R08_Body",
+    "bone": "Head"
+   },
+   "lowest_point_m": -0.0,
    "rigid_skull_and_jaw_error_mm": 0.001
   }
  }

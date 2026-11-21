@@ -126,9 +126,15 @@ def export_all(game=GAME):
         sc.name = name                      # the exporter names the file's one animation take after the scene
         select_only([ao])
         p = os.path.join(ANIM_DIR, f"ASTRA_R08_{name}.fbx")
-        bpy.ops.export_scene.fbx(filepath=p, object_types={"ARMATURE"}, bake_anim=True, bake_anim_use_all_bones=True,
+        # full-body clips key every bone; the jaw-only and head-only clips carry curves for their own
+        # bones only, so in Roblox they can play over a full-body clip without freezing the rest
+        bpy.ops.export_scene.fbx(filepath=p, object_types={"ARMATURE"}, bake_anim=True,
+                                 bake_anim_use_all_bones=name not in GA.PARTIAL,
                                  bake_anim_use_nla_strips=False, bake_anim_use_all_actions=False,
-                                 bake_anim_force_startend_keying=True, bake_anim_step=1.0, bake_anim_simplify_factor=0.0,
+                                 bake_anim_force_startend_keying=True, bake_anim_step=1.0,
+                                 # 0 = every frame of every channel; for the partial clips a token factor lets
+                                 # Blender drop the channels that never move (keys are linear, so values are kept)
+                                 bake_anim_simplify_factor=1e-2 if name in GA.PARTIAL else 0.0,
                                  path_mode="AUTO", embed_textures=False, **COMMON)
         files["clips"][name] = p
     sc.name = scene_name
@@ -299,6 +305,81 @@ def fbx_structure(path):
         info["weight_sum_range"] = [round(float(wsum.min()), 5), round(float(wsum.max()), 5)]
         meshes[info["model"] or str(gid)] = info
     out["meshes"] = meshes
+
+    def props70(e):
+        d = {}
+        for c in e.elems:
+            if c.id == b"Properties70":
+                for p in c.elems:
+                    d[_name(p.props[0])] = tuple(p.props[4:])
+        return d
+    # the skeleton: every LimbNode, its parent and its default (rest) local transform
+    skel, mtx = {}, {}
+    for mid, (t, nm) in models.items():
+        if t not in ("LimbNode", "Null"):
+            continue
+        pp = props70(objs[mid])
+        par = [models[q][1] for q in parent_of.get(mid, []) if q in models]
+        skel[nm] = dict(type=t, parent=par[0] if par else None, T=[float(v) for v in pp.get("Lcl Translation", (0, 0, 0))],
+                        R=[float(v) for v in pp.get("Lcl Rotation", (0, 0, 0))], S=[float(v) for v in pp.get("Lcl Scaling", (1, 1, 1))])
+    from scipy.spatial.transform import Rotation as _Rr
+
+    def local_m(d):
+        M = np.eye(4)
+        M[:3, :3] = _Rr.from_euler("xyz", d["R"], degrees=True).as_matrix() * np.array(d["S"])[None, :]
+        M[:3, 3] = d["T"]
+        return M
+
+    def global_m(nm):
+        if nm in mtx:
+            return mtx[nm]
+        d = skel[nm]
+        M = local_m(d)
+        if d["parent"] in skel:
+            M = global_m(d["parent"]) @ M
+        mtx[nm] = M
+        return M
+    for nm in skel:
+        global_m(nm)
+    out["skeleton"] = {k: v for k, v in skel.items() if v["type"] == "LimbNode"}
+    out["skeleton_globals"] = {k: mtx[k].round(6).tolist() for k in skel}
+    # bind pose (only in files with skinned meshes)
+    bind = {}
+    for oid, e in objs.items():
+        if e.id == b"Pose":
+            for pn in e.elems:
+                if pn.id == b"PoseNode":
+                    sub = {c.id: c for c in pn.elems}
+                    nid = sub[b"Node"].props[0]
+                    if nid in models:
+                        bind[models[nid][1]] = np.asarray(sub[b"Matrix"].props[0], float).reshape(4, 4).T
+    if bind:
+        errs = [float(np.abs(bind[k] - mtx[k]).max()) for k in bind if k in mtx and skel[k]["type"] == "LimbNode"]
+        out["bind_pose"] = dict(nodes=len(bind), bones_in_bind_pose=sum(1 for k in bind if k in skel and skel[k]["type"] == "LimbNode"),
+                                max_diff_from_rest=max(errs) if errs else None)
+    # animated channels per node
+    anim = {}
+    for c in top[b"Connections"].elems:
+        if c.id == b"C" and c.props[0] == b"OP" and c.props[1] in objs and objs[c.props[1]].id == b"AnimationCurveNode" and c.props[2] in models:
+            anim.setdefault(models[c.props[2]][1], set()).add(_name(c.props[3]))
+    out["animated"] = {k: sorted(v) for k, v in sorted(anim.items())}
+    # materials and the texture on each of their channels
+    mats, texfile = {}, {}
+    for oid, e in objs.items():
+        if e.id == b"Material":
+            mats[oid] = dict(name=_name(e.props[1]), textures={}, models=[])
+        elif e.id == b"Texture":
+            sub = {c.id: c for c in e.elems}
+            fn = sub.get(b"RelativeFilename") or sub.get(b"FileName")
+            texfile[oid] = os.path.basename(_name(fn.props[0]).replace("\\", "/")) if fn else _name(e.props[1])
+    for c in top[b"Connections"].elems:
+        if c.id != b"C":
+            continue
+        if c.props[0] == b"OP" and c.props[1] in texfile and c.props[2] in mats:
+            mats[c.props[2]]["textures"][_name(c.props[3])] = texfile[c.props[1]]
+        elif c.props[0] == b"OO" and c.props[1] in mats and c.props[2] in models:
+            mats[c.props[1]]["models"].append(models[c.props[2]][1])
+    out["materials"] = {m["name"]: dict(textures=dict(sorted(m["textures"].items())), models=m["models"]) for m in mats.values()}
     # which way the creature faces in the file's own coordinates: where the head mesh lies relative to
     # the body mesh, horizontally, after each mesh's own Lcl transform (Euler XYZ, degrees)
     from scipy.spatial.transform import Rotation as _R
@@ -326,6 +407,25 @@ def fbx_structure(path):
         t, Rm, sc_ = model_tx(mids[0])
         W = (V * sc_) @ Rm.T + t
         cents[models[mids[0]][1]] = W.mean(0)
+    allW = {}
+    for gid, g in geoms.items():
+        mids = [p for p in parent_of.get(gid, []) if p in models]
+        if mids:
+            V = np.asarray({c.id: c for c in g.elems}[b"Vertices"].props[0], float).reshape(-1, 3)
+            t, Rm, sc_ = model_tx(mids[0])
+            allW[models[mids[0]][1]] = (V * sc_) @ Rm.T + t
+    if allW:
+        upi = 1 if gs.get("UpAxis") == 1 else 2
+        P = np.concatenate(list(allW.values()))
+        B = allW.get("ASTRA_R08_Body", P)
+        soles = B[B[:, upi] < P[:, upi].min() + 0.35]
+        hz = [i for i in range(3) if i != upi]
+        root = mtx.get("Root")
+        out["placement"] = dict(lowest_point=round(float(P[:, upi].min()), 4), highest_point=round(float(P[:, upi].max()), 4),
+                                root_bone_position=None if root is None else root[:3, 3].round(5).tolist(),
+                                root_bone_direction=None if root is None else (root[:3, 1] / np.linalg.norm(root[:3, 1])).round(4).tolist(),
+                                feet_centre_offset_from_origin=round(float(np.linalg.norm(soles[:, hz].mean(0))), 3),
+                                footprint_min=soles[:, hz].min(0).round(3).tolist(), footprint_max=soles[:, hz].max(0).round(3).tolist())
     if "ASTRA_R08_Head" in cents and "ASTRA_R08_Body" in cents:
         dv = cents["ASTRA_R08_Head"] - cents["ASTRA_R08_Body"]
         up = np.array([0.0, 1.0, 0.0]) if gs.get("UpAxis") == 1 else np.array([0.0, 0.0, 1.0])
@@ -482,6 +582,12 @@ def verify_importer(which, files, R):
         c["frame_range"] = [round(float(act.frame_range[0]), 3), round(float(act.frame_range[1]), 3)]
         if arm.animation_data is None:
             arm.animation_data_create()
+        arm.animation_data.action = None
+        for pb in arm.pose.bones:            # rest pose first: a clip that keys only some bones inherits nothing
+            pb.location = (0.0, 0.0, 0.0)
+            pb.rotation_quaternion = (1.0, 0.0, 0.0, 0.0)
+            pb.rotation_euler = (0.0, 0.0, 0.0)
+            pb.scale = (1.0, 1.0, 1.0)
         arm.animation_data.action = act
         try:
             if arm.animation_data.action_slot is None and len(act.slots):
@@ -548,6 +654,43 @@ def conformance(struct_base, struct_clips, imports):
     fz = struct_base.get("facing")
     chk("facing: in the file's own frame the creature faces -Z (Roblox's front) with Y up",
         fz is not None and fz["head_from_body"][2] < -0.9, fz)
+    # every clip on the character's own skeleton and bind pose
+    bs = struct_base["skeleton"]
+    bp = struct_base.get("bind_pose", {})
+    chk("bind pose: the character file's bind pose is its rest skeleton (all 27 bones)",
+        bp.get("bones_in_bind_pose") == len(bs) == 27 and (bp.get("max_diff_from_rest") or 0) < 1e-4, bp)
+    for name, s_ in struct_clips.items():
+        sk = s_["skeleton"]
+        same_tree = sorted(sk) == sorted(bs) and all(sk[k]["parent"] == bs[k]["parent"] for k in bs if k in sk)
+        dT = max(float(np.abs(np.array(sk[k]["T"]) - bs[k]["T"]).max()) for k in bs if k in sk)
+        dR = max(float(np.abs(np.array(sk[k]["R"]) - bs[k]["R"]).max()) for k in bs if k in sk)
+        dS = max(float(np.abs(np.array(sk[k]["S"]) - bs[k]["S"]).max()) for k in bs if k in sk)
+        chk(f"animation {name}: same 27 bones, same hierarchy, same rest / bind pose as the character",
+            same_tree and dT < 1e-4 and dR < 1e-3 and dS < 1e-6, dict(bones=len(sk), max_dT_studs=dT, max_dR_deg=dR, max_dS=dS))
+        moving = sorted(k for k, v in s_["animated"].items() if k in bs)
+        if name in GA.PARTIAL:
+            chk(f"animation {name}: animates only {', '.join(GA.PARTIAL[name])}", moving == sorted(GA.PARTIAL[name]), moving)
+        else:
+            chk(f"animation {name}: keys every bone", len(moving) == 27, len(moving))
+    # textures on the right channels of the right material
+    for key in ("Body", "Head"):
+        m = struct_base["materials"].get(f"ASTRA_R08_{key}", {})
+        want = {"DiffuseColor": f"ASTRA_R08_{key}_Color.png", "NormalMap": f"ASTRA_R08_{key}_Normal.png",
+                "ShininessExponent": f"ASTRA_R08_{key}_Roughness.png", "ReflectionFactor": f"ASTRA_R08_{key}_Metalness.png"}
+        got = {k: m.get("textures", {}).get(k) for k in want}
+        chk(f"material ASTRA_R08_{key}: colour, normal, roughness and metalness maps linked on their channels, on mesh ASTRA_R08_{key}",
+            got == want and m.get("models") == [f"ASTRA_R08_{key}"], dict(textures=m.get("textures"), meshes=m.get("models")))
+    me = struct_base["materials"].get("ASTRA_R08_Eyes", {})
+    chk("material ASTRA_R08_Eyes: on mesh ASTRA_R08_Eyes (colour only, no maps)", me.get("models") == ["ASTRA_R08_Eyes"], me)
+    # root position and orientation
+    pl = struct_base.get("placement", {})
+    rp = pl.get("root_bone_position") or [9, 9, 9]
+    rd = pl.get("root_bone_direction") or [0, 0, 0]
+    chk("root: Root bone at the origin, pointing straight up (+Y)", max(abs(v) for v in rp) < 1e-4 and rd[1] > 0.999, dict(position=rp, direction=rd))
+    chk("root: soles on the ground plane (lowest point at Y = 0)", abs(pl.get("lowest_point", 9)) < 0.01, pl.get("lowest_point"))
+    chk("root: origin under the creature, between its feet", pl.get("feet_centre_offset_from_origin", 9) < 1.0
+        and all(a <= 0 <= b for a, b in zip(pl.get("footprint_min", [1, 1]), pl.get("footprint_max", [-1, -1]))),
+        dict(feet_centre_offset_studs=pl.get("feet_centre_offset_from_origin"), footprint=[pl.get("footprint_min"), pl.get("footprint_max")]))
     for name, s in struct_clips.items():
         chk(f"animation {name}: exactly one animation in the file, named {name}", s["animation_stacks"] == [name], s["animation_stacks"])
         gsc = s["global_settings"]

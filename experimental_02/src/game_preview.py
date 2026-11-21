@@ -75,10 +75,10 @@ def label(d, xy, text, size, fill=FG, bold=True, shadow=True):
 
 POSES = [("Rest", None, 0, "rest pose (the sheet's stance)"), ("Idle", "Idle", 30, "idle - breathing"),
          ("Walk", "Walk", 8, "walk - right foot planted"), ("Walk", "Walk", 23, "walk - left foot planted"),
-         ("Run", "Run", 4, "run / chase"), ("Attack", "Attack", 9, "attack - wind-up"),
+         ("Run", "Run", 4, "run"), ("Chase", "Chase", 9, "chase"), ("Attack", "Attack", 9, "attack - wind-up"),
          ("Attack", "Attack", 15, "attack - swipe"), ("Lunge", "Lunge", 9, "lunge - draw back"),
          ("Lunge", "Lunge", 16, "lunge - bite"), ("HeadTrack", "HeadTrack", 14, "head tracking - left"),
-         ("HeadTrack", "HeadTrack", 43, "head tracking - right"), ("HitReact", "HitReact", 4, "hit reaction"),
+         ("HitReact", "HitReact", 4, "hit reaction"),
          ("Death", "Death", 30, "death - knees give"), ("Death", "Death", 60, "death - down")]
 CLOSE = [("JawSnap", 6, "jaw open (Jaw bone only)", "pose_jaw"), ("JawSnap", 10, "jaw shut - the skull does not move", "pose_jaw"),
          ("Attack", 15, "shoulder at full swing", "pose_shoulder2"), ("Run", 6, "hips at full stride", "pose_hips")]
@@ -154,8 +154,8 @@ def poses(res=430, samples=24):
 # ------------------------------------------------------------------------------- deformation test: clip
 
 SEQUENCE = [("Idle", 0, 44), ("Walk", 0, 30), ("Walk", 0, 30), ("Run", 0, 18), ("Run", 0, 18), ("Run", 0, 18),
-            ("Attack", 0, 36), ("Lunge", 0, 33), ("JawSnap", 0, 30), ("HeadTrack", 0, 102), ("HitReact", 0, 18),
-            ("Death", 0, 60)]
+            ("Chase", 0, 18), ("Chase", 0, 18), ("Chase", 0, 18), ("Attack", 0, 36), ("Lunge", 0, 33),
+            ("JawSnap", 0, 30), ("JawChatter", 0, 30), ("HeadTrack", 0, 102), ("HitReact", 0, 18), ("Death", 0, 60)]
 
 
 def clip(res=480, samples=10, step=2, view="pose_tq"):

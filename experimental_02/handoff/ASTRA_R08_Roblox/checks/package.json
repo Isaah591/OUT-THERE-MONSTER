@@ -1,0 +1,118 @@
+{
+ "package": "handoff/ASTRA_R08_Roblox",
+ "files": 51,
+ "zip": "handoff/ASTRA_R08_Roblox.zip",
+ "zip_files": 40,
+ "zip_mb": 31.0,
+ "folder_mb": 75.6,
+ "blend": {
+  "file": "ASTRA_R08_game.blend",
+  "images": [
+   {
+    "image": "ASTRA_R08_Body_Color.png",
+    "path": "//textures/ASTRA_R08_Body_Color.png",
+    "exists": true,
+    "size": [
+     1024,
+     1024
+    ]
+   },
+   {
+    "image": "ASTRA_R08_Body_Metalness.png",
+    "path": "//textures/ASTRA_R08_Body_Metalness.png",
+    "exists": true,
+    "size": [
+     1024,
+     1024
+    ]
+   },
+   {
+    "image": "ASTRA_R08_Body_Normal.png",
+    "path": "//textures/ASTRA_R08_Body_Normal.png",
+    "exists": true,
+    "size": [
+     1024,
+     1024
+    ]
+   },
+   {
+    "image": "ASTRA_R08_Body_Roughness.png",
+    "path": "//textures/ASTRA_R08_Body_Roughness.png",
+    "exists": true,
+    "size": [
+     1024,
+     1024
+    ]
+   },
+   {
+    "image": "ASTRA_R08_Head_Color.png",
+    "path": "//textures/ASTRA_R08_Head_Color.png",
+    "exists": true,
+    "size": [
+     1024,
+     1024
+    ]
+   },
+   {
+    "image": "ASTRA_R08_Head_Metalness.png",
+    "path": "//textures/ASTRA_R08_Head_Metalness.png",
+    "exists": true,
+    "size": [
+     1024,
+     1024
+    ]
+   },
+   {
+    "image": "ASTRA_R08_Head_Normal.png",
+    "path": "//textures/ASTRA_R08_Head_Normal.png",
+    "exists": true,
+    "size": [
+     1024,
+     1024
+    ]
+   },
+   {
+    "image": "ASTRA_R08_Head_Roughness.png",
+    "path": "//textures/ASTRA_R08_Head_Roughness.png",
+    "exists": true,
+    "size": [
+     1024,
+     1024
+    ]
+   }
+  ],
+  "images_ok": true,
+  "objects": [
+   "ARMATURE:ASTRA_R08",
+   "MESH:ASTRA_R08_Body",
+   "MESH:ASTRA_R08_Eyes",
+   "MESH:ASTRA_R08_Head"
+  ],
+  "actions": [
+   "Attack",
+   "Chase",
+   "Death",
+   "HeadTrack",
+   "HitReact",
+   "Idle",
+   "JawChatter",
+   "JawSnap",
+   "Lunge",
+   "Run",
+   "Walk"
+  ],
+  "materials": {
+   "ASTRA_R08_Body": [
+    "ASTRA_R08_Body"
+   ],
+   "ASTRA_R08_Eyes": [
+    "ASTRA_R08_Eyes"
+   ],
+   "ASTRA_R08_Head": [
+    "ASTRA_R08_Head"
+   ]
+  },
+  "bones": 27
+ },
+ "fbx_checks": "116/116"
+}

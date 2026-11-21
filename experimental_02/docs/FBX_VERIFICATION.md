@@ -44,12 +44,14 @@ Skeleton: 27 bones, names and parents identical, joint positions within 2.50e-06
 | Idle | 0-90 | 0.0 mm |
 | Walk | 0-30 | 0.0 mm |
 | Run | 0-18 | 0.0 mm |
+| Chase | 0-18 | 0.0 mm |
 | Attack | 0-36 | 0.0 mm |
 | Lunge | 0-33 | 0.0 mm |
-| HeadTrack | 0-102 | 0.0 mm |
-| JawSnap | 0-30 | 0.0 mm |
 | HitReact | 0-18 | 0.0 mm |
 | Death | 0-60 | 0.0 mm |
+| JawSnap | 0-30 | 0.0 mm |
+| JawChatter | 0-30 | 0.0 mm |
+| HeadTrack | 0-102 | 0.0 mm |
 
 ### C++ importer (ufbx)
 
@@ -66,16 +68,18 @@ Skeleton: 27 bones, names and parents identical, joint positions within 1.43e-06
 | Idle | 0-90 | 0.0 mm |
 | Walk | 0-30 | 0.0 mm |
 | Run | 0-18 | 0.0 mm |
+| Chase | 0-18 | 0.0 mm |
 | Attack | 0-36 | 0.0 mm |
 | Lunge | 0-33 | 0.0 mm |
-| HeadTrack | 0-102 | 0.0 mm |
-| JawSnap | 0-30 | 0.0 mm |
 | HitReact | 0-18 | 0.0 mm |
 | Death | 0-60 | 0.0 mm |
+| JawSnap | 0-30 | 0.0 mm |
+| JawChatter | 0-30 | 0.0 mm |
+| HeadTrack | 0-102 | 0.0 mm |
 
 ## Roblox import requirements
 
-79 of 79 checks passed.
+116 of 116 checks passed.
 
 | Check | Result | Detail |
 |---|---|---|
@@ -114,24 +118,57 @@ Skeleton: 27 bones, names and parents identical, joint positions within 1.43e-06
 | ASTRA_R08_Head: one material | pass | ["ASTRA_R08_Head"] |
 | axis system: Y up (Roblox's Blender guide: Z Forward, Y Up) | pass | {"UpAxis": 1, "UpAxisSign": 1, "FrontAxis": 2, "FrontAxisSign": -1, "CoordAxis": 0, "CoordAxisSign": -1, "UnitScaleFactor": 100.0, "Original |
 | facing: in the file's own frame the creature faces -Z (Roblox's front) with Y up | pass | {"head_from_body": [-0.106, 0.0, -0.994], "head_above_body": 4.013} |
+| bind pose: the character file's bind pose is its rest skeleton (all 27 bones) | pass | {"nodes": 31, "bones_in_bind_pose": 27, "max_diff_from_rest": 2.3830673798741486e-06} |
+| animation Idle: same 27 bones, same hierarchy, same rest / bind pose as the character | pass | {"bones": 27, "max_dT_studs": 0.0, "max_dR_deg": 0.0, "max_dS": 0.0} |
+| animation Idle: keys every bone | pass | 27 |
+| animation Walk: same 27 bones, same hierarchy, same rest / bind pose as the character | pass | {"bones": 27, "max_dT_studs": 0.0, "max_dR_deg": 0.0, "max_dS": 0.0} |
+| animation Walk: keys every bone | pass | 27 |
+| animation Run: same 27 bones, same hierarchy, same rest / bind pose as the character | pass | {"bones": 27, "max_dT_studs": 0.0, "max_dR_deg": 0.0, "max_dS": 0.0} |
+| animation Run: keys every bone | pass | 27 |
+| animation Chase: same 27 bones, same hierarchy, same rest / bind pose as the character | pass | {"bones": 27, "max_dT_studs": 0.0, "max_dR_deg": 0.0, "max_dS": 0.0} |
+| animation Chase: keys every bone | pass | 27 |
+| animation Attack: same 27 bones, same hierarchy, same rest / bind pose as the character | pass | {"bones": 27, "max_dT_studs": 0.0, "max_dR_deg": 0.0, "max_dS": 0.0} |
+| animation Attack: keys every bone | pass | 27 |
+| animation Lunge: same 27 bones, same hierarchy, same rest / bind pose as the character | pass | {"bones": 27, "max_dT_studs": 0.0, "max_dR_deg": 0.0, "max_dS": 0.0} |
+| animation Lunge: keys every bone | pass | 27 |
+| animation HitReact: same 27 bones, same hierarchy, same rest / bind pose as the character | pass | {"bones": 27, "max_dT_studs": 0.0, "max_dR_deg": 0.0, "max_dS": 0.0} |
+| animation HitReact: keys every bone | pass | 27 |
+| animation Death: same 27 bones, same hierarchy, same rest / bind pose as the character | pass | {"bones": 27, "max_dT_studs": 0.0, "max_dR_deg": 0.0, "max_dS": 0.0} |
+| animation Death: keys every bone | pass | 27 |
+| animation JawSnap: same 27 bones, same hierarchy, same rest / bind pose as the character | pass | {"bones": 27, "max_dT_studs": 0.0, "max_dR_deg": 0.0, "max_dS": 0.0} |
+| animation JawSnap: animates only Jaw | pass | ["Jaw"] |
+| animation JawChatter: same 27 bones, same hierarchy, same rest / bind pose as the character | pass | {"bones": 27, "max_dT_studs": 0.0, "max_dR_deg": 0.0, "max_dS": 0.0} |
+| animation JawChatter: animates only Jaw | pass | ["Jaw"] |
+| animation HeadTrack: same 27 bones, same hierarchy, same rest / bind pose as the character | pass | {"bones": 27, "max_dT_studs": 0.0, "max_dR_deg": 0.0, "max_dS": 0.0} |
+| animation HeadTrack: animates only Neck, Head | pass | ["Head", "Neck"] |
+| material ASTRA_R08_Body: colour, normal, roughness and metalness maps linked on their channels, on mesh ASTRA_R08_Body | pass | {"textures": {"DiffuseColor": "ASTRA_R08_Body_Color.png", "NormalMap": "ASTRA_R08_Body_Normal.png", "ReflectionFactor": "ASTRA_R08_Body_Meta |
+| material ASTRA_R08_Head: colour, normal, roughness and metalness maps linked on their channels, on mesh ASTRA_R08_Head | pass | {"textures": {"DiffuseColor": "ASTRA_R08_Head_Color.png", "NormalMap": "ASTRA_R08_Head_Normal.png", "ReflectionFactor": "ASTRA_R08_Head_Meta |
+| material ASTRA_R08_Eyes: on mesh ASTRA_R08_Eyes (colour only, no maps) | pass | {"textures": {}, "models": ["ASTRA_R08_Eyes"]} |
+| root: Root bone at the origin, pointing straight up (+Y) | pass | {"position": [0.0, 0.0, 0.0], "direction": [-0.0, 1.0, -0.0]} |
+| root: soles on the ground plane (lowest point at Y = 0) | pass | -0.0 |
+| root: origin under the creature, between its feet | pass | {"feet_centre_offset_studs": 0.542, "footprint": [[-2.322, -5.175], [4.275, 2.12]]} |
 | animation Idle: exactly one animation in the file, named Idle | pass | ["Idle"] |
 | animation Idle: 30 frames per second | pass | {"TimeMode": 6, "fps": 30.0} |
 | animation Walk: exactly one animation in the file, named Walk | pass | ["Walk"] |
 | animation Walk: 30 frames per second | pass | {"TimeMode": 6, "fps": 30.0} |
 | animation Run: exactly one animation in the file, named Run | pass | ["Run"] |
 | animation Run: 30 frames per second | pass | {"TimeMode": 6, "fps": 30.0} |
+| animation Chase: exactly one animation in the file, named Chase | pass | ["Chase"] |
+| animation Chase: 30 frames per second | pass | {"TimeMode": 6, "fps": 30.0} |
 | animation Attack: exactly one animation in the file, named Attack | pass | ["Attack"] |
 | animation Attack: 30 frames per second | pass | {"TimeMode": 6, "fps": 30.0} |
 | animation Lunge: exactly one animation in the file, named Lunge | pass | ["Lunge"] |
 | animation Lunge: 30 frames per second | pass | {"TimeMode": 6, "fps": 30.0} |
-| animation HeadTrack: exactly one animation in the file, named HeadTrack | pass | ["HeadTrack"] |
-| animation HeadTrack: 30 frames per second | pass | {"TimeMode": 6, "fps": 30.0} |
-| animation JawSnap: exactly one animation in the file, named JawSnap | pass | ["JawSnap"] |
-| animation JawSnap: 30 frames per second | pass | {"TimeMode": 6, "fps": 30.0} |
 | animation HitReact: exactly one animation in the file, named HitReact | pass | ["HitReact"] |
 | animation HitReact: 30 frames per second | pass | {"TimeMode": 6, "fps": 30.0} |
 | animation Death: exactly one animation in the file, named Death | pass | ["Death"] |
 | animation Death: 30 frames per second | pass | {"TimeMode": 6, "fps": 30.0} |
+| animation JawSnap: exactly one animation in the file, named JawSnap | pass | ["JawSnap"] |
+| animation JawSnap: 30 frames per second | pass | {"TimeMode": 6, "fps": 30.0} |
+| animation JawChatter: exactly one animation in the file, named JawChatter | pass | ["JawChatter"] |
+| animation JawChatter: 30 frames per second | pass | {"TimeMode": 6, "fps": 30.0} |
+| animation HeadTrack: exactly one animation in the file, named HeadTrack | pass | ["HeadTrack"] |
+| animation HeadTrack: 30 frames per second | pass | {"TimeMode": 6, "fps": 30.0} |
 | python importer: skeleton matches (names, parents, joint positions) | pass | {"bones": 27, "head_error_studs": 2.5033950805664062e-06} |
 | python importer: ASTRA_R08_Body geometry, UVs and weights match the source | pass | {"vertices": 4930, "triangles": 9852, "pos_err": 3.249867929433492e-06, "weight_err": 0.0} |
 | python importer: ASTRA_R08_Head geometry, UVs and weights match the source | pass | {"vertices": 5733, "triangles": 11082, "pos_err": 4.1405956263673716e-06, "weight_err": 0.0} |
@@ -139,12 +176,14 @@ Skeleton: 27 bones, names and parents identical, joint positions within 1.43e-06
 | python importer: Idle plays back on the re-imported rig like the source | pass | 0.0 |
 | python importer: Walk plays back on the re-imported rig like the source | pass | 0.0 |
 | python importer: Run plays back on the re-imported rig like the source | pass | 0.0 |
+| python importer: Chase plays back on the re-imported rig like the source | pass | 0.0 |
 | python importer: Attack plays back on the re-imported rig like the source | pass | 0.0 |
 | python importer: Lunge plays back on the re-imported rig like the source | pass | 0.0 |
-| python importer: HeadTrack plays back on the re-imported rig like the source | pass | 0.0 |
-| python importer: JawSnap plays back on the re-imported rig like the source | pass | 0.0 |
 | python importer: HitReact plays back on the re-imported rig like the source | pass | 0.0 |
 | python importer: Death plays back on the re-imported rig like the source | pass | 0.0 |
+| python importer: JawSnap plays back on the re-imported rig like the source | pass | 0.0 |
+| python importer: JawChatter plays back on the re-imported rig like the source | pass | 0.0 |
+| python importer: HeadTrack plays back on the re-imported rig like the source | pass | 0.0 |
 | ufbx importer: skeleton matches (names, parents, joint positions) | pass | {"bones": 27, "head_error_studs": 1.430511474609375e-06} |
 | ufbx importer: ASTRA_R08_Body geometry, UVs and weights match the source | pass | {"vertices": 4930, "triangles": 9852, "pos_err": 2.5652508908180494e-06, "weight_err": 0.0} |
 | ufbx importer: ASTRA_R08_Head geometry, UVs and weights match the source | pass | {"vertices": 5733, "triangles": 11082, "pos_err": 2.3478395272391595e-06, "weight_err": 0.0} |
@@ -152,12 +191,14 @@ Skeleton: 27 bones, names and parents identical, joint positions within 1.43e-06
 | ufbx importer: Idle plays back on the re-imported rig like the source | pass | 0.0 |
 | ufbx importer: Walk plays back on the re-imported rig like the source | pass | 0.0 |
 | ufbx importer: Run plays back on the re-imported rig like the source | pass | 0.0 |
+| ufbx importer: Chase plays back on the re-imported rig like the source | pass | 0.0 |
 | ufbx importer: Attack plays back on the re-imported rig like the source | pass | 0.0 |
 | ufbx importer: Lunge plays back on the re-imported rig like the source | pass | 0.0 |
-| ufbx importer: HeadTrack plays back on the re-imported rig like the source | pass | 0.0 |
-| ufbx importer: JawSnap plays back on the re-imported rig like the source | pass | 0.0 |
 | ufbx importer: HitReact plays back on the re-imported rig like the source | pass | 0.0 |
 | ufbx importer: Death plays back on the re-imported rig like the source | pass | 0.0 |
+| ufbx importer: JawSnap plays back on the re-imported rig like the source | pass | 0.0 |
+| ufbx importer: JawChatter plays back on the re-imported rig like the source | pass | 0.0 |
+| ufbx importer: HeadTrack plays back on the re-imported rig like the source | pass | 0.0 |
 
 ## Not tested here
 

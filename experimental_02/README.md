@@ -9,8 +9,11 @@ and turns the creature into a rigged, animatable Roblox enemy:
 2. **Head geometry** — the skull is rebuilt as a curved, organic form instead of a flat mask on
    a block.
 3. **Roblox rigging** — a 21k-triangle game model with UV maps and baked textures, a 27-bone
-   skeleton with an independent jaw, nine test clips, and FBX files checked against Roblox's
+   skeleton with an independent jaw, eleven clips, and FBX files checked against Roblox's
    import requirements.
+4. **Roblox handoff package** — [`handoff/ASTRA_R08_Roblox/`](handoff/ASTRA_R08_Roblox/README.md)
+   (and `handoff/ASTRA_R08_Roblox.zip`): everything for Roblox Studio in one place, with exact import
+   steps, the bone list, a controller and a test script.
 
 ![Model 02 sheet](renders/ASTRA_R08_EXP02_sheet.png)
 
@@ -18,7 +21,7 @@ and turns the creature into a rigged, animatable Roblox enemy:
 
 | Asked for | Where |
 |---|---|
-| 1. Complete Blender project | `model/astra_r08_exp02_game.blend` — the rigged game model: three meshes, skeleton, materials (textures from `textures/`), the nine clips as actions.  `model/astra_r08_exp02_highdetail.blend` — the high-detail source.  `src/` rebuilds both from nothing (commands below). |
+| 1. Complete Blender project | `model/astra_r08_exp02_game.blend` — the rigged game model: three meshes, skeleton, materials (textures from `textures/`), the eleven clips as actions.  Packaged with textures linked locally: `handoff/ASTRA_R08_Roblox/ASTRA_R08_game.blend`.  `model/astra_r08_exp02_highdetail.blend` — the high-detail source.  `src/` rebuilds both from nothing (commands below). |
 | 2. Roblox-compatible FBX | `export/ASTRA_R08.fbx` (meshes + skeleton, textures embedded) and `export/animations/ASTRA_R08_<Clip>.fbx` (one clip per file).  Import steps: [docs/ROBLOX_IMPORT.md](docs/ROBLOX_IMPORT.md). |
 | 3. UV maps | One UV set per mesh, inside 0–1, islands packed apart (only 0.1 % of the body's texels and 0.01 % of the head's are shared, at slivers left where blocks were united), in the .blend and the FBX.  Layouts: `textures/uv/ASTRA_R08_<Body or Head>_UV_layout.png` and `_UV_over_color.png`. |
 | 4. Texture maps and materials | `textures/ASTRA_R08_<Body or Head>_<Color, Normal, Roughness, Metalness>.png` (1024 × 1024, the Roblox set); `textures/source/*_2048.png` (2048 masters, plus albedo and ambient-occlusion maps); one material per mesh. |
@@ -28,7 +31,8 @@ and turns the creature into a rigged, animatable Roblox enemy:
 | 8. Deformation test | `renders/game/ASTRA_R08_game_poses.png` (14 poses × 2 views + close-ups), `renders/game/ASTRA_R08_deformation_test.mp4` (all clips in sequence), `analysis/game_deformation.json` (measured). |
 | Before / after | `renders/ASTRA_R08_EXP02_vs_EXP01.png` (hips and skull, Model 01 beside Model 02). |
 | Against the approved sheet | `renders/ASTRA_R08_EXP02_vs_approved.png`, `renders/silhouette_check.png`; game model beside the high-detail model: `renders/game/ASTRA_R08_game_vs_highdetail.png`. |
-| FBX checks | [docs/FBX_VERIFICATION.md](docs/FBX_VERIFICATION.md), `analysis/fbx_verification.json` — 79 of 79 checks passed. |
+| FBX checks | [docs/FBX_VERIFICATION.md](docs/FBX_VERIFICATION.md), `analysis/fbx_verification.json` — 116 of 116 checks passed. |
+| Roblox handoff package | [handoff/ASTRA_R08_Roblox/README.md](handoff/ASTRA_R08_Roblox/README.md) — FBX, clips, textures, .blend, bone list (`rig/BONES.md`, `rig/bones.csv`), Roblox scripts (`roblox/`), checks, previews, manifest; zipped as `handoff/ASTRA_R08_Roblox.zip`. |
 
 ## Priority 1 — right leg
 
@@ -94,15 +98,19 @@ Built in five scripted stages from the same blocks as the high-detail model (`sr
    across each joint; at most 4 bones per vertex, nothing on Root; the skull is carried by Head
    alone and the lower jaw with its teeth and gum by Jaw alone, so the mouth opens without
    bending the skull.  Units converted to studs.
-4. **Test clips** (`game_anim.py`).  Idle, Walk, Run (chase), Attack, Lunge, HeadTrack, JawSnap,
-   HitReact, Death — in place, 30 fps, feet planted by a two-bone solver, limbs kept out of the
-   floor.  They prove the rig; they are not finished animation.
+4. **Clips** (`game_anim.py`).  Idle, Walk, Run, Chase, Attack, Lunge, HitReact, Death (full
+   body), JawSnap and JawChatter (Jaw bone only) and HeadTrack (Neck and Head only) — in place,
+   30 fps, feet planted by a two-bone solver, limbs kept out of the floor.  The partial clips layer
+   over the full-body ones in Roblox.  They prove the rig; they are not finished animation.
 5. **Export and verification** (`game_export.py`).  Roblox's Blender settings (Unit System None,
    FBX Unit Scale, Z Forward, Y Up, Path Mode Copy + Embed Textures, no leaf bones, one clip per
    file).  Every file is then read back three ways — the raw FBX structure, Blender's Python
    importer and Blender's C++ importer (ufbx) — and compared with the source: geometry, UVs,
-   weights and skeleton identical to within 0.000003 studs; every clip played from its own file
-   on the re-imported rig matches the source to 0.0 mm.
+   weights and skeleton identical to within 0.000003 studs; every clip file carries the same
+   skeleton and bind pose; every clip played from its own file on the re-imported rig matches the
+   source to 0.0 mm; textures linked on the right channels; root at the origin, facing -Z.
+6. **Handoff** (`handoff.py`).  Assembles `handoff/ASTRA_R08_Roblox/` and its zip, re-saving the
+   .blend with package-relative texture links and checking the package's own files.
 
 | Game model | |
 |---|---|
@@ -110,7 +118,7 @@ Built in five scripted stages from the same blocks as the high-detail model (`sr
 | Triangles | Body 9,852 · Head 11,082 · Eyes 16 |
 | Bones | 27; ≤ 4 per vertex (mean 1.94 body, 1.12 head) |
 | Textures | 4 maps × 2 meshes, 1024 px, embedded in the FBX |
-| Deformation (largest edge stretch in each clip) | Idle 1.10 · Walk 1.78 · Run 2.02 · Attack 2.39 (right armpit, top of the swing) · Lunge 1.58 · HeadTrack 1.64 · JawSnap 1.32 · HitReact 1.40 · Death 2.04 |
+| Deformation (largest edge stretch in each clip) | Idle 1.10 · Walk 1.78 · Run 2.02 · Chase 2.11 · Attack 2.39 (right armpit, top of the swing) · Lunge 1.58 · HitReact 1.40 · Death 2.04 · JawSnap 1.32 · JawChatter 1.16 · HeadTrack 1.64 |
 | Skull and lower jaw | rigid to 0.001 mm in every clip |
 
 ![Deformation test](renders/game/ASTRA_R08_game_poses.png)
@@ -126,7 +134,8 @@ Built in five scripted stages from the same blocks as the high-detail model (`sr
 - The game model's plates are in its maps and a coarse relief (about ±4 cm) of its outline; the
   individual stepped slabs exist only in the high-detail model.  The thin strands that twist
   round each cheek sinew are texture only.
-- The clips are test animation, in place.
+- The clips are test animation, in place; the Roblox scripts in `roblox/` are syntax-checked
+  but have not run in Studio.
 - Proportions are the same compromise as Model 01 (the sheet's panels disagree with one another
   on the head's size: 32 / 39 / 42 % of the height; the model has 40 %).
 
@@ -154,6 +163,10 @@ bvenv/bin/python experimental_02/src/game_export.py
 
 ```bash
 bvenv/bin/python experimental_02/src/game_preview.py poses
+```
+
+```bash
+bvenv/bin/python experimental_02/src/handoff.py
 ```
 
 The high-detail build takes about 8 s, the game mesh 15 s, the bake about 22 minutes on four
