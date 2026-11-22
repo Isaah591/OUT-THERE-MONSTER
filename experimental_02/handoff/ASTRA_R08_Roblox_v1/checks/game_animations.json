@@ -1,0 +1,137 @@
+{
+ "fps": 30,
+ "jaw_range_deg": [
+  -21.0,
+  16.0
+ ],
+ "clips": [
+  {
+   "name": "Idle",
+   "frames": 91,
+   "seconds": 3.0,
+   "fps": 30,
+   "loop": true,
+   "keys": 46,
+   "bones": "all",
+   "ground_speed_m_s": null,
+   "ground_speed_studs_s": null
+  },
+  {
+   "name": "Walk",
+   "frames": 31,
+   "seconds": 1.0,
+   "fps": 30,
+   "loop": true,
+   "keys": 16,
+   "bones": "all",
+   "ground_speed_m_s": 1.67,
+   "ground_speed_studs_s": 6.0
+  },
+  {
+   "name": "Run",
+   "frames": 19,
+   "seconds": 0.6,
+   "fps": 30,
+   "loop": true,
+   "keys": 10,
+   "bones": "all",
+   "ground_speed_m_s": 6.25,
+   "ground_speed_studs_s": 22.3
+  },
+  {
+   "name": "Chase",
+   "frames": 19,
+   "seconds": 0.6,
+   "fps": 30,
+   "loop": true,
+   "keys": 10,
+   "bones": "all",
+   "ground_speed_m_s": 7.02,
+   "ground_speed_studs_s": 25.1
+  },
+  {
+   "name": "Attack",
+   "frames": 37,
+   "seconds": 1.2,
+   "fps": 30,
+   "loop": false,
+   "keys": 19,
+   "bones": "all",
+   "ground_speed_m_s": null,
+   "ground_speed_studs_s": null
+  },
+  {
+   "name": "Lunge",
+   "frames": 34,
+   "seconds": 1.1,
+   "fps": 30,
+   "loop": false,
+   "keys": 18,
+   "bones": "all",
+   "ground_speed_m_s": null,
+   "ground_speed_studs_s": null
+  },
+  {
+   "name": "HitReact",
+   "frames": 19,
+   "seconds": 0.6,
+   "fps": 30,
+   "loop": false,
+   "keys": 10,
+   "bones": "all",
+   "ground_speed_m_s": null,
+   "ground_speed_studs_s": null
+  },
+  {
+   "name": "Death",
+   "frames": 61,
+   "seconds": 2.0,
+   "fps": 30,
+   "loop": false,
+   "keys": 31,
+   "bones": "all",
+   "ground_speed_m_s": null,
+   "ground_speed_studs_s": null
+  },
+  {
+   "name": "JawSnap",
+   "frames": 31,
+   "seconds": 1.0,
+   "fps": 30,
+   "loop": false,
+   "keys": 16,
+   "bones": [
+    "Jaw"
+   ],
+   "ground_speed_m_s": null,
+   "ground_speed_studs_s": null
+  },
+  {
+   "name": "JawChatter",
+   "frames": 31,
+   "seconds": 1.0,
+   "fps": 30,
+   "loop": true,
+   "keys": 16,
+   "bones": [
+    "Jaw"
+   ],
+   "ground_speed_m_s": null,
+   "ground_speed_studs_s": null
+  },
+  {
+   "name": "HeadTrack",
+   "frames": 103,
+   "seconds": 3.4,
+   "fps": 30,
+   "loop": false,
+   "keys": 52,
+   "bones": [
+    "Neck",
+    "Head"
+   ],
+   "ground_speed_m_s": null,
+   "ground_speed_studs_s": null
+  }
+ ]
+}
