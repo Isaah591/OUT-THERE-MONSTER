@@ -5,11 +5,12 @@
     bvenv/bin/python experimental_02/src/game_preview.py compare   # game model beside the high-detail model
     bvenv/bin/python experimental_02/src/game_preview.py rig       # rig reference picture
     bvenv/bin/python experimental_02/src/game_preview.py uv        # UV layouts over the colour maps
+    bvenv/bin/python experimental_02/src/game_preview.py deep      # deep joint bends, v1 body above v2 body
     env: SAMPLES, RES
 
-Everything is rendered from the game file itself (astra_r08_exp02_game.blend: the 21k-triangle
-meshes with their baked 1024-pixel textures, posed by the skeleton), in the same studio and with
-the same cameras as the high-detail renders.
+Everything is rendered from the game file itself (astra_r08_exp02_game.blend: the game meshes,
+each under Roblox's 20,000-triangle limit, with their baked 1024-pixel textures, posed by the
+skeleton), in the same studio and with the same cameras as the high-detail renders.
 """
 import os, sys, json, time, subprocess, shutil
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -43,8 +44,8 @@ def log(*a):
     print("[game_preview]", *a, flush=True)
 
 
-def open_game(samples=32):
-    bpy.ops.wm.open_mainfile(filepath=GAME)
+def open_game(samples=32, path=None):
+    bpy.ops.wm.open_mainfile(filepath=path or GAME)
     sc = bpy.context.scene
     ao = bpy.data.objects[GA.ARMATURE]
     ao.scale = (STUD, STUD, STUD)               # studs -> metres, so the metric cameras of views.py fit
@@ -123,7 +124,8 @@ def poses(res=430, samples=24):
     im = Image.new("RGB", (W, H), BG)
     d = ImageDraw.Draw(im)
     label(d, (14, 10), "ASTRA R08 - GAME MODEL - DEFORMATION TEST", 26)
-    label(d, (14, 40), "the Roblox meshes (9,852 + 11,082 triangles, baked 1024 px maps) posed by the 27-bone skeleton; "
+    tris = [sum(len(p.vertices) - 2 for p in bpy.data.objects[n].data.polygons) for n in ("ASTRA_R08_Body", "ASTRA_R08_Head")]
+    label(d, (14, 40), f"the Roblox meshes ({tris[0]:,} + {tris[1]:,} triangles, baked 1024 px maps) posed by the 27-bone skeleton; "
           "rows: three-quarter and side view of the same frame", 13, fill=DIM, bold=False, shadow=False)
     y = head_h
     for r, row in enumerate(rows):
@@ -143,8 +145,10 @@ def poses(res=430, samples=24):
         label(d, (x + 8, y + 6), text, 13)
         x += cwh[0] + gap
     y += cwh[1] + 10
-    label(d, (14, y), "weights: computed per block, shared across each joint over its width, relaxed across the seams; "
-          "<= 4 bones per vertex, none on Root; skull on Head only, lower jaw / its teeth / gum on Jaw only", 12,
+    v2 = bpy.data.objects["ASTRA_R08_Body"].get("body_version") == "v2"
+    label(d, (14, y), ("weights: every limb segment rigid on its own bone (armoured joints), the torso skin blended Pelvis / Spine / Chest; "
+                       if v2 else "weights: computed per block, shared across each joint over its width, relaxed across the seams; ")
+          + "<= 4 bones per vertex, none on Root; skull on Head only, lower jaw / its teeth / gum on Jaw only", 12,
           fill=DIM, bold=False, shadow=False)
     out = os.path.join(OUT, "ASTRA_R08_game_poses.png")
     im.save(out)
@@ -460,6 +464,60 @@ def stats(step=1, min_edge_studs=0.107):
     json.dump(dict(edge_min_studs=min_edge_studs, clips=out), open(os.path.join(ROOT, "analysis", "game_deformation.json"), "w"), indent=1)
 
 
+# ------------------------------------------------------------------------------- deep bends, v1 against v2
+
+# the v1 game file as packaged (its own textures beside it), kept when the joints were rebuilt
+V1_GAME = os.path.join(ROOT, "handoff", "ASTRA_R08_Roblox_v1", "ASTRA_R08_game.blend")
+DEEP = [("R elbow 120", "RightLowerArm", "X", -120, ("RightLowerArm", -35, 5, 1.3)),
+        ("L elbow 120", "LeftLowerArm", "X", -120, ("LeftLowerArm", 40, 5, 1.2)),
+        ("R knee 120", "RightLowerLeg", "X", 120, ("RightLowerLeg", -80, 5, 1.3)),
+        ("L knee 120", "LeftLowerLeg", "X", 120, ("LeftLowerLeg", 80, 5, 1.3)),
+        ("R shoulder fwd 90", "RightUpperArm", "X", -90, ("RightUpperArm", -45, 15, 1.6)),
+        ("L shoulder fwd 90", "LeftUpperArm", "X", -90, ("LeftUpperArm", 45, 15, 1.6)),
+        ("R hip fwd 90", "RightUpperLeg", "X", -90, ("RightUpperLeg", -90, 5, 2.2)),
+        ("Spine bend 45", "Spine", "X", 45, ("Spine", 90, 5, 3.2)),
+        ("Chest bend 45", "Chest", "X", -45, ("Chest", 90, 5, 3.2)),
+        ("Neck turn 45", "Neck", "Z", 45, ("Neck", 150, 15, 1.5))]
+
+
+def deep(res=330, samples=20):
+    """Each deep bend on the v1 body (top row) and the v2 body (row below), same pose, same camera."""
+    from mathutils import Quaternion
+    rows = {}
+    for tag, path in (("v1", V1_GAME), ("v2", GAME)):
+        sc, ao = open_game(samples, path)
+        B = {b.name: np.array(b.head_local) * STUD for b in ao.data.bones}
+        tiles = []
+        for i, (lab, bone, axis, deg, (at, az, el, width)) in enumerate(DEEP):
+            GA.set_clip(ao, None)
+            sc.frame_set(0)
+            ao.pose.bones[bone].rotation_quaternion = Quaternion({"X": (1, 0, 0), "Y": (0, 1, 0), "Z": (0, 0, 1)}[axis], np.radians(deg))
+            v = views.cam(az, el, tuple(B[at]), 8.0, width, (420, 400))
+            p = os.path.join(OUT, f"_deep_{tag}_{i}.png")
+            shoot(sc, v, p, res)
+            t = Image.open(p).convert("RGB")
+            os.remove(p)
+            label(ImageDraw.Draw(t), (8, 6), f"{tag}  {lab}", 15)
+            tiles.append(t)
+        GA.set_clip(ao, None)
+        rows[tag] = tiles
+        log(f"   {tag}: {len(tiles)} bends")
+    w, h = rows["v1"][0].size
+    per = 5
+    im = Image.new("RGB", (per * w, 4 * h + 56), BG)
+    d = ImageDraw.Draw(im)
+    label(d, (12, 10), "ASTRA R08 - DEEP JOINT BENDS: v1 (blended skin, above) and v2 (armoured joints, below) - same pose, same camera", 17)
+    label(d, (12, 32), "each joint bent on its own, everything else at rest; game models with their baked textures", 13, fill=DIM, bold=False)
+    for i in range(len(DEEP)):
+        x = (i % per) * w
+        y = 56 + (i // per) * 2 * h
+        im.paste(rows["v1"][i], (x, y))
+        im.paste(rows["v2"][i], (x, y + h))
+    out = os.path.join(OUT, "ASTRA_R08_deep_bends_v1_v2.png")
+    im.save(out)
+    log("saved", out)
+
+
 # working views for the close-ups of the deformation test
 import head as _HD                                               # noqa: E402
 views.VIEWS["pose_jaw"] = views.cam(80.0, 2.0, _HD.Hw(0.0, 0.32, -0.22), 6.0, 1.75, (480, 420))
@@ -479,4 +537,4 @@ if __name__ == "__main__":
         kw["samples"] = int(S)
     if R:
         kw["res"] = int(R)
-    dict(poses=poses, clip=clip, compare=compare, rig=rig, uv=lambda **k: uv(), stats=lambda **k: stats())[what](**kw)
+    dict(poses=poses, clip=clip, compare=compare, rig=rig, uv=lambda **k: uv(), stats=lambda **k: stats(), deep=deep)[what](**kw)

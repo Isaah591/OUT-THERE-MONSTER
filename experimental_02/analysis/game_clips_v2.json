@@ -1,0 +1,153 @@
+{
+ "source": "model/astra_r08_exp02_game_v1.blend",
+ "target": "model/astra_r08_exp02_game.blend",
+ "bones": 27,
+ "skeleton_max_difference": 0.0,
+ "clips": [
+  {
+   "clip": "Idle",
+   "channels": 114,
+   "keys": 5244,
+   "max_key_difference": 0.0,
+   "frames": 91,
+   "loop": true
+  },
+  {
+   "clip": "Walk",
+   "channels": 114,
+   "keys": 1824,
+   "max_key_difference": 0.0,
+   "frames": 31,
+   "loop": true
+  },
+  {
+   "clip": "Run",
+   "channels": 114,
+   "keys": 1140,
+   "max_key_difference": 0.0,
+   "frames": 19,
+   "loop": true
+  },
+  {
+   "clip": "Chase",
+   "channels": 114,
+   "keys": 1140,
+   "max_key_difference": 0.0,
+   "frames": 19,
+   "loop": true
+  },
+  {
+   "clip": "Attack",
+   "channels": 114,
+   "keys": 2166,
+   "max_key_difference": 0.0,
+   "frames": 37,
+   "loop": false
+  },
+  {
+   "clip": "Lunge",
+   "channels": 114,
+   "keys": 2052,
+   "max_key_difference": 0.0,
+   "frames": 34,
+   "loop": false
+  },
+  {
+   "clip": "HitReact",
+   "channels": 114,
+   "keys": 1140,
+   "max_key_difference": 0.0,
+   "frames": 19,
+   "loop": false
+  },
+  {
+   "clip": "Death",
+   "channels": 114,
+   "keys": 3534,
+   "max_key_difference": 0.0,
+   "frames": 61,
+   "loop": false
+  },
+  {
+   "clip": "JawSnap",
+   "channels": 4,
+   "keys": 64,
+   "max_key_difference": 0.0,
+   "frames": 31,
+   "loop": false
+  },
+  {
+   "clip": "JawChatter",
+   "channels": 4,
+   "keys": 64,
+   "max_key_difference": 0.0,
+   "frames": 31,
+   "loop": true
+  },
+  {
+   "clip": "HeadTrack",
+   "channels": 8,
+   "keys": 416,
+   "max_key_difference": 0.0,
+   "frames": 103,
+   "loop": false
+  }
+ ],
+ "floor": {
+  "Idle": {
+   "v1_lowest_studs": -0.066,
+   "v2_lowest_studs": -0.066,
+   "largest_v2_minus_v1_studs": 0.0
+  },
+  "Walk": {
+   "v1_lowest_studs": -0.159,
+   "v2_lowest_studs": -0.16,
+   "largest_v2_minus_v1_studs": 0.003
+  },
+  "Run": {
+   "v1_lowest_studs": -0.213,
+   "v2_lowest_studs": -0.213,
+   "largest_v2_minus_v1_studs": 0.001
+  },
+  "Chase": {
+   "v1_lowest_studs": -0.216,
+   "v2_lowest_studs": -0.216,
+   "largest_v2_minus_v1_studs": 0.002
+  },
+  "Attack": {
+   "v1_lowest_studs": -0.069,
+   "v2_lowest_studs": -0.069,
+   "largest_v2_minus_v1_studs": 0.0
+  },
+  "Lunge": {
+   "v1_lowest_studs": -0.13,
+   "v2_lowest_studs": -0.13,
+   "largest_v2_minus_v1_studs": 0.0
+  },
+  "HitReact": {
+   "v1_lowest_studs": -0.136,
+   "v2_lowest_studs": -0.136,
+   "largest_v2_minus_v1_studs": 0.0
+  },
+  "Death": {
+   "v1_lowest_studs": -0.167,
+   "v2_lowest_studs": -0.167,
+   "largest_v2_minus_v1_studs": 0.002
+  },
+  "JawSnap": {
+   "v1_lowest_studs": -0.0,
+   "v2_lowest_studs": -0.0,
+   "largest_v2_minus_v1_studs": 0.0
+  },
+  "JawChatter": {
+   "v1_lowest_studs": -0.0,
+   "v2_lowest_studs": -0.0,
+   "largest_v2_minus_v1_studs": 0.0
+  },
+  "HeadTrack": {
+   "v1_lowest_studs": -0.0,
+   "v2_lowest_studs": -0.0,
+   "largest_v2_minus_v1_studs": 0.0
+  }
+ }
+}

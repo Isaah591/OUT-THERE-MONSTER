@@ -782,10 +782,10 @@ def open_edges(me):
     return sum(1 for (a, b) in de if (b, a) not in de), sum(1 for c in de.values() if c > 1)
 
 
-def triangulate(ob):
+def triangulate(ob, ngon="BEAUTY"):
     bm = bmesh.new()
     bm.from_mesh(ob.data)
-    bmesh.ops.triangulate(bm, faces=bm.faces, quad_method="BEAUTY", ngon_method="BEAUTY")
+    bmesh.ops.triangulate(bm, faces=bm.faces, quad_method="BEAUTY", ngon_method=ngon)
     bm.to_mesh(ob.data)
     bm.free()
     ob.data.update()
@@ -829,6 +829,125 @@ def joints(m):
     return J
 
 
+def body_v2(m, trees):
+    """The v2 body (armoured joints, game_body_v2.py): one object holding every piece, with the
+    per-vertex data the rig stage needs - which piece / bone it follows, knuckles, seams, cage."""
+    import game_body_v2 as B2
+    import game_rig as GR
+    skel = GR.skeleton(joints(m))
+    bones = [b[0] for b in skel]
+    pieces = B2.build(m, skel, refine_part, unite, mesh_arrays, clean)
+    allV, allF, piece, part, knuck, seam = [], [], [], [], [], []
+    tparts = None
+    for k, pc in enumerate(pieces):
+        o = len(allV)
+        V = np.asarray(pc["V"], float)
+        allV += list(V)
+        allF += [[i + o for i in f] for f in pc["F"]]
+        piece += [k] * len(V)
+        knuck += list(np.asarray(pc["knuckle"], bool))
+        if pc.get("parts") is not None:              # the skinned torso: which block each vertex is on
+            tparts = pc["parts"]
+            lab, sm, _ = label_parts(V, tparts)
+            part += list(lab)
+            seam += list(sm)
+        else:
+            part += [-1] * len(V)
+            seam += [False] * len(V)
+    for pc in pieces:
+        if pc.get("object") is not None:
+            dm = pc["object"].data
+            bpy.data.objects.remove(pc["object"])
+            bpy.data.meshes.remove(dm)
+    ob = new_object("U_body_v2", allV, allF)
+    clean_v2 = remove_fins(ob)
+    nm, tr = manifold_report(ob.data)
+    assert nm == 0, f"v2 body: {nm} open or doubled edges"
+    unwrap_solid(ob)
+    me = ob.data
+    V, F = mesh_arrays(me)
+    assert len(V) == len(allV), "vertex order must survive the unwrap"
+    piece, part, knuck, seam = (np.array(x) for x in (piece, part, knuck, seam))
+    # skinned parts: the torso's blocks, then the rods driven into the torso (separate closed pieces
+    # that take the torso's weights at their base)
+    part_names = [t[0] for t in tparts]
+    for k, pc in enumerate(pieces):
+        if pc["bone"] is None and pc.get("parts") is None:
+            part_names.append(pc["name"])
+            part[piece == k] = len(part_names) - 1
+    # armour relief, as v1 - but not on the knuckles (buried at rest), the rods or the torso's seams
+    N = vertex_normals(me)
+    H = sample_height(V, N, trees) * RELIEF
+    isrod = np.array([pieces[k].get("rod", False) for k in piece])
+    # faces buried inside a neighbouring piece at rest (end caps at the pivots, the parts a joint
+    # slides into) take no relief: sampled from inside another block it would stand up in spikes
+    # when the joint bends and shows them
+    buried = np.zeros(len(V), bool)
+    lo = np.array([np.asarray(pc["V"]).min(0) for pc in pieces]) - 0.05
+    hi = np.array([np.asarray(pc["V"]).max(0) for pc in pieces]) + 0.05
+    for k, pc in enumerate(pieces):
+        if pc.get("rod"):
+            continue
+        solid = B2.Inside(np.asarray(pc["V"], float), pc["F"])
+        for j in range(len(pieces)):
+            if j == k or (hi[j] < lo[k]).any() or (lo[j] > hi[k]).any():
+                continue
+            idx = np.nonzero(piece == j)[0]
+            for i in idx:
+                if not buried[i] and solid(V[i]):
+                    buried[i] = True
+    fixed = knuck | isrod | seam | buried
+    H[fixed] = 0.0
+    # and the relief fades out within a few cm of any other piece: where two pieces meet, the heights
+    # sampled from the high-detail blocks interleave and would stand up as flaps when the joint moves
+    from scipy.spatial import cKDTree
+    near = np.full(len(V), 1.0)
+    for k in range(len(pieces)):
+        mk = piece == k
+        if mk.any() and (~mk).any():
+            d, _ = cKDTree(V[~mk]).query(V[mk])
+            near[mk] = d
+    t = np.clip((near - 0.012) / (0.07 - 0.012), 0.0, 1.0)
+    H = H * (t * t * (3 - 2 * t))
+    H = smooth_scalar(me, H, fixed)
+    V2 = V + N * H[:, None]
+    me.vertices.foreach_set("co", V2.reshape(-1))
+    me.update()
+    # bake cage: up to 3 cm, less where another piece is close (so its rays do not reach into it)
+    from scipy.spatial import cKDTree
+    cage = np.full(len(V2), 0.030)
+    for k in range(len(pieces)):
+        mk = piece == k
+        others = ~mk
+        if not others.any():
+            continue
+        d, _ = cKDTree(V2[others]).query(V2[mk])
+        cage[mk] = np.clip(d * 0.8, 0.012, 0.030)
+    reg = np.full(len(F), RID["solid"], np.int32)
+    for fi, f in enumerate(F):
+        if isrod[f].all():
+            reg[fi] = RID["rod"]
+    rb = np.array([bones.index(pieces[k]["bone"]) if pieces[k]["bone"] else -1 for k in piece], np.int32)
+    for nm_, arr, typ, dom in (("region", reg, "INT", "FACE"), ("part", part.astype(np.int32), "INT", "POINT"),
+                               ("piece", piece.astype(np.int32), "INT", "POINT"), ("rigid_bone", rb, "INT", "POINT"),
+                               ("cage", cage, "FLOAT", "POINT"), ("jaw", np.zeros(len(V2)), "FLOAT", "POINT"),
+                               ("on_seam", seam.astype(float), "FLOAT", "POINT"), ("knuckle", knuck.astype(float), "FLOAT", "POINT")):
+        a = me.attributes.new(nm_, typ, dom)
+        a.data.foreach_set("value", arr)
+    for p_ in me.polygons:
+        p_.use_smooth = True
+    ob.name = me.name = "ASTRA_R08_Body"
+    ob["parts"] = json.dumps(part_names)
+    ob["pieces"] = json.dumps([dict(name=pc["name"], bone=pc["bone"]) for pc in pieces])
+    ob["body_version"] = "v2"
+    a = me.attributes.new("buried", "FLOAT", "POINT")
+    a.data.foreach_set("value", buried.astype(float))
+    info = dict(buried_vertices=int(buried.sum()), pieces=[dict(name=pc["name"], bone=pc["bone"], vertices=int((piece == k).sum()),
+                             knuckle_vertices=int((knuck & (piece == k)).sum())) for k, pc in enumerate(pieces)],
+                fins_removed=clean_v2, relief_mean=float(H.mean()), shoulder_plates=dict(B2.PLATES))
+    return ob, info
+
+
 def main(out=OUT):
     t0 = time.time()
     bpy.ops.wm.read_factory_settings(use_empty=True)
@@ -849,12 +968,14 @@ def main(out=OUT):
         (body_parts if rd["group"] == "body" else head_parts).append((f"rod_{rd['group']}_{i}", P, F))
     log(f"blocks cut: body {len(body_parts)}, head {len(head_parts)} + jaw  ({time.time() - t0:.1f} s)")
 
-    ub = unite("U_body", body_parts)
-    clean(ub)
+    V2_BODY = os.environ.get("ASTRA_BODY", "v2") != "v1"
+    if not V2_BODY:
+        ub = unite("U_body", body_parts)
+        clean(ub)
     uh = unite("U_head", head_parts)
     clean(uh)
     uj = new_object("U_jaw", jawV, jawF)
-    for o in (ub, uh, uj):
+    for o in ((ub, uh, uj) if not V2_BODY else (uh, uj)):
         nm, tr = manifold_report(o.data)
         log(f"   {o.name}: {tr} triangles, {nm} open or doubled edges")
         assert nm == 0, "the united skin must be watertight"
@@ -866,7 +987,11 @@ def main(out=OUT):
     bt = [trees[n] for n in names[:3]]
     ht = [trees[n] for n in names[3:]]
     stats = {}
-    body_ob, stats["body_relief"] = finish_object("ASTRA_R08_Body", ub, body_parts, None, "solid", 0.030, bt)
+    if V2_BODY:
+        body_ob, stats["body_v2"] = body_v2(m, bt)
+        log(f"v2 body: {len(stats['body_v2']['pieces'])} pieces ({time.time() - t0:.1f} s)")
+    else:
+        body_ob, stats["body_relief"] = finish_object("ASTRA_R08_Body", ub, body_parts, None, "solid", 0.030, bt)
 
     skull_tree = BVHTree.FromPolygons([tuple(p) for p in skV], skF)
     jaw_tree = BVHTree.FromPolygons([tuple(p) for p in jawV], jawF)
@@ -882,7 +1007,7 @@ def main(out=OUT):
     head_ob["parts"] = json.dumps([p[0] for p in head_parts] + ["jaw"])
     eyes = eyes_object(m)
 
-    for o in (ub, uh, uj):
+    for o in ((ub, uh, uj) if not V2_BODY else (uh, uj)):
         dm = o.data
         bpy.data.objects.remove(o)
         bpy.data.meshes.remove(dm)
@@ -894,10 +1019,11 @@ def main(out=OUT):
 
     pack(body_ob, margin=0.0030, scale_by_region=dict(rod=0.8))
     pack(head_ob, margin=0.0030, scale_by_region=dict(throat=0.35, gum_band=0.9, web=0.8))
-    for o in (body_ob, head_ob):
-        stats[o.name + "_fins_removed"] = remove_fins(o)
     for o in (body_ob, head_ob, eyes):
-        triangulate(o)
+        # v2 body: the torso union keeps a few concave many-sided faces; ear clipping splits them safely
+        triangulate(o, "EAR_CLIP" if (o is body_ob and V2_BODY) else "BEAUTY")
+        # splitting the boolean's many-sided faces leaves a few zero-area back-to-back fins: drop them
+        stats[o.name + "_fins_removed"] = remove_fins(o)
         oe, de = open_edges(o.data)
         assert oe == 0 and de == 0, f"{o.name}: {oe} open and {de} doubled edges"
         nm, tr = manifold_report(o.data)
@@ -905,7 +1031,11 @@ def main(out=OUT):
         stats[o.name] = dict(triangles=tr, vertices=len(o.data.vertices), uv_coverage=round(area, 3), uv_outside_0_1=outside,
                              uv_zero_area_faces=zero)
         log(f"   {o.name}: {tr} triangles, {len(o.data.vertices)} vertices, UV cover {area:.2f}, outside 0..1: {outside}")
-    stats["cells_m"] = dict(body=CELL_BODY, head=CELL_HEAD)
+    if V2_BODY:
+        import game_body_v2 as B2
+        cells = dict(torso=B2.CELL_TORSO, limbs=B2.CELL_LIMB, foot=B2.CELL_FOOT, toes=B2.CELL_TOE, neck=B2.CELL_NECK)
+    stats["cells_m"] = dict(body=CELL_BODY if not V2_BODY else cells, head=CELL_HEAD)
+    stats["body_version"] = "v2" if V2_BODY else "v1"
     stats["regions"] = REGIONS
     an = os.path.join(ROOT, "analysis")
     json.dump(stats, open(os.path.join(an, "game_mesh.json"), "w"), indent=1)

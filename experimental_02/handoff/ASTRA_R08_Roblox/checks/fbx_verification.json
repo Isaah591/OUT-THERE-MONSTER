@@ -19,7 +19,7 @@
  "structure": {
   "base": {
    "file": "export/ASTRA_R08.fbx",
-   "bytes": 10206684,
+   "bytes": 9645132,
    "fbx_version": 7400,
    "global_settings": {
     "UpAxis": 1,
@@ -75,25 +75,24 @@
    "meshes": {
     "ASTRA_R08_Body": {
      "model": "ASTRA_R08_Body",
-     "vertices": 4930,
-     "polygons": 9852,
-     "triangles": 9852,
+     "vertices": 6767,
+     "polygons": 13386,
+     "triangles": 13386,
      "max_polygon_sides": 3,
      "open_edges": 0,
      "repeated_directed_edges": 0,
      "uv_sets": 1,
      "uv_min": [
-      0.0031,
-      0.0032
+      0.0028,
+      0.0028
      ],
      "uv_max": [
-      0.9969,
-      0.9948
+      0.9972,
+      0.9969
      ],
-     "skin_clusters": 25,
+     "skin_clusters": 24,
      "bones_with_weights": [
       "Chest",
-      "Head",
       "LeftFoot",
       "LeftHand",
       "LeftHip",
@@ -1431,7 +1430,7 @@
    "bind_pose": {
     "nodes": 31,
     "bones_in_bind_pose": 27,
-    "max_diff_from_rest": 2.3830673798741486e-06
+    "max_diff_from_rest": 2.3830673794300594e-06
    },
    "animated": {},
    "materials": {
@@ -1477,29 +1476,29 @@
      1.0,
      -0.0
     ],
-    "feet_centre_offset_from_origin": 0.542,
+    "feet_centre_offset_from_origin": 0.41,
     "footprint_min": [
-     -2.322,
+     -2.302,
      -5.175
     ],
     "footprint_max": [
-     4.275,
-     2.12
+     4.274,
+     2.122
     ]
    },
    "facing": {
     "head_from_body": [
-     -0.106,
+     -0.069,
      0.0,
-     -0.994
+     -0.998
     ],
-    "head_above_body": 4.013
+    "head_above_body": 3.857
    },
    "embedded_images": [
     {
      "name": "ASTRA_R08_Body_Color.png",
      "file": "ASTRA_R08_Body_Color.png",
-     "embedded_bytes": 1466658,
+     "embedded_bytes": 1276274,
      "format": "PNG",
      "size": [
       1024,
@@ -1510,7 +1509,7 @@
     {
      "name": "ASTRA_R08_Body_Metalness.png",
      "file": "ASTRA_R08_Body_Metalness.png",
-     "embedded_bytes": 17396,
+     "embedded_bytes": 22908,
      "format": "PNG",
      "size": [
       1024,
@@ -1521,7 +1520,7 @@
     {
      "name": "ASTRA_R08_Body_Normal.png",
      "file": "ASTRA_R08_Body_Normal.png",
-     "embedded_bytes": 2303640,
+     "embedded_bytes": 1775137,
      "format": "PNG",
      "size": [
       1024,
@@ -1532,7 +1531,7 @@
     {
      "name": "ASTRA_R08_Body_Roughness.png",
      "file": "ASTRA_R08_Body_Roughness.png",
-     "embedded_bytes": 482206,
+     "embedded_bytes": 424526,
      "format": "PNG",
      "size": [
       1024,
@@ -17161,10 +17160,10 @@
    "root_bone_at_origin": true,
    "meshes": {
     "ASTRA_R08_Body": {
-     "vertices": 4930,
-     "source_vertices": 4930,
-     "triangles": 9852,
-     "source_triangles": 9852,
+     "vertices": 6767,
+     "source_vertices": 6767,
+     "triangles": 13386,
+     "source_triangles": 13386,
      "uv_layers": 1,
      "materials": [
       "ASTRA_R08_Body"
@@ -17173,12 +17172,12 @@
      "rest_position_error_studs": 3.249867929433492e-06,
      "uv_range": [
       [
-       0.0031,
-       0.0032
+       0.0028,
+       0.0028
       ],
       [
-       0.9969,
-       0.9948
+       0.9972,
+       0.9969
       ]
      ],
      "uv_error": 0.0,
@@ -17347,7 +17346,7 @@
      ]
     }
    },
-   "import_seconds": 0.26,
+   "import_seconds": 0.27,
    "clips": {
     "Idle": {
      "file": "export/animations/ASTRA_R08_Idle.fbx",
@@ -17543,24 +17542,24 @@
    "root_bone_at_origin": true,
    "meshes": {
     "ASTRA_R08_Body": {
-     "vertices": 4930,
-     "source_vertices": 4930,
-     "triangles": 9852,
-     "source_triangles": 9852,
+     "vertices": 6767,
+     "source_vertices": 6767,
+     "triangles": 13386,
+     "source_triangles": 13386,
      "uv_layers": 1,
      "materials": [
       "ASTRA_R08_Body"
      ],
      "vertex_order_preserved": true,
-     "rest_position_error_studs": 2.5652508908180494e-06,
+     "rest_position_error_studs": 2.563905940444755e-06,
      "uv_range": [
       [
-       0.0031,
-       0.0032
+       0.0028,
+       0.0028
       ],
       [
-       0.9969,
-       0.9948
+       0.9972,
+       0.9969
       ]
      ],
      "uv_error": 0.0,
@@ -17914,7 +17913,7 @@
   {
    "check": "ASTRA_R08_Body: triangles <= 20000",
    "passed": true,
-   "detail": 9852
+   "detail": 13386
   },
   {
    "check": "ASTRA_R08_Body: closed (no open edges, no doubled edges)",
@@ -17935,12 +17934,12 @@
    "detail": {
     "sets": 1,
     "min": [
-     0.0031,
-     0.0032
+     0.0028,
+     0.0028
     ],
     "max": [
-     0.9969,
-     0.9948
+     0.9972,
+     0.9969
     ]
    }
   },
@@ -17965,7 +17964,6 @@
    "passed": true,
    "detail": [
     "Chest",
-    "Head",
     "LeftFoot",
     "LeftHand",
     "LeftHip",
@@ -18118,7 +18116,7 @@
    "check": "texture ASTRA_R08_Body_Color.png: embedded, 1024 px, RGB",
    "passed": true,
    "detail": {
-    "bytes": 1466658,
+    "bytes": 1276274,
     "size": [
      1024,
      1024
@@ -18131,7 +18129,7 @@
    "check": "texture ASTRA_R08_Body_Metalness.png: embedded, 1024 px, L",
    "passed": true,
    "detail": {
-    "bytes": 17396,
+    "bytes": 22908,
     "size": [
      1024,
      1024
@@ -18144,7 +18142,7 @@
    "check": "texture ASTRA_R08_Body_Normal.png: embedded, 1024 px, RGB",
    "passed": true,
    "detail": {
-    "bytes": 2303640,
+    "bytes": 1775137,
     "size": [
      1024,
      1024
@@ -18157,7 +18155,7 @@
    "check": "texture ASTRA_R08_Body_Roughness.png: embedded, 1024 px, L",
    "passed": true,
    "detail": {
-    "bytes": 482206,
+    "bytes": 424526,
     "size": [
      1024,
      1024
@@ -18253,11 +18251,11 @@
    "passed": true,
    "detail": {
     "head_from_body": [
-     -0.106,
+     -0.069,
      0.0,
-     -0.994
+     -0.998
     ],
-    "head_above_body": 4.013
+    "head_above_body": 3.857
    }
   },
   {
@@ -18266,7 +18264,7 @@
    "detail": {
     "nodes": 31,
     "bones_in_bind_pose": 27,
-    "max_diff_from_rest": 2.3830673798741486e-06
+    "max_diff_from_rest": 2.3830673794300594e-06
    }
   },
   {
@@ -18506,15 +18504,15 @@
    "check": "root: origin under the creature, between its feet",
    "passed": true,
    "detail": {
-    "feet_centre_offset_studs": 0.542,
+    "feet_centre_offset_studs": 0.41,
     "footprint": [
      [
-      -2.322,
+      -2.302,
       -5.175
      ],
      [
-      4.275,
-      2.12
+      4.274,
+      2.122
      ]
     ]
    }
@@ -18696,8 +18694,8 @@
    "check": "python importer: ASTRA_R08_Body geometry, UVs and weights match the source",
    "passed": true,
    "detail": {
-    "vertices": 4930,
-    "triangles": 9852,
+    "vertices": 6767,
+    "triangles": 13386,
     "pos_err": 3.249867929433492e-06,
     "weight_err": 0.0
    }
@@ -18789,9 +18787,9 @@
    "check": "ufbx importer: ASTRA_R08_Body geometry, UVs and weights match the source",
    "passed": true,
    "detail": {
-    "vertices": 4930,
-    "triangles": 9852,
-    "pos_err": 2.5652508908180494e-06,
+    "vertices": 6767,
+    "triangles": 13386,
+    "pos_err": 2.563905940444755e-06,
     "weight_err": 0.0
    }
   },

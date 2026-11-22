@@ -1,8 +1,34 @@
 {
  "model": "model/astra_r08_exp02_game.blend",
+ "body_pieces": 37,
+ "interlocking_joints": [
+  "RightLowerArm/RightUpperArm",
+  "RightWrist/RightLowerArm",
+  "RightHand/RightWrist",
+  "LeftShoulder/Chest",
+  "LeftUpperArm/LeftShoulder",
+  "LeftLowerArm/LeftUpperArm",
+  "LeftWrist/LeftLowerArm",
+  "LeftHand/LeftWrist",
+  "RightUpperLeg/RightHip",
+  "RightLowerLeg/RightUpperLeg",
+  "RightFoot/RightLowerLeg",
+  "RightToes/RightFoot",
+  "RightToes/RightFoot",
+  "RightToes/RightFoot",
+  "RightToes/RightFoot",
+  "LeftUpperLeg/LeftHip",
+  "LeftLowerLeg/LeftUpperLeg",
+  "LeftFoot/LeftLowerLeg",
+  "LeftToes/LeftFoot",
+  "LeftToes/LeftFoot",
+  "LeftToes/LeftFoot",
+  "LeftToes/LeftFoot",
+  "Neck/Chest"
+ ],
  "saved": false,
  "vertices": {
-  "ASTRA_R08_Body": 4930,
+  "ASTRA_R08_Body": 6767,
   "ASTRA_R08_Head": 5733,
   "ASTRA_R08_Eyes": 12
  },
@@ -25,16 +51,16 @@
    "section": "Root"
   },
   "Pelvis": {
-   "vertices_any": 987,
-   "vertices_dominant": 638,
-   "vertices_alone": 99,
+   "vertices_any": 1309,
+   "vertices_dominant": 900,
+   "vertices_alone": 179,
    "shares_with": {
-    "Spine": 293,
-    "Chest": 29,
-    "RightHip": 311,
-    "RightUpperLeg": 256,
-    "LeftHip": 323,
-    "LeftUpperLeg": 241
+    "Spine": 542,
+    "Chest": 508,
+    "RightShoulder": 14,
+    "LeftShoulder": 19,
+    "RightHip": 308,
+    "LeftHip": 326
    },
    "parent": "Root",
    "children": [
@@ -51,19 +77,15 @@
    "section": "Pelvis"
   },
   "Spine": {
-   "vertices_any": 565,
-   "vertices_dominant": 246,
-   "vertices_alone": 1,
+   "vertices_any": 542,
+   "vertices_dominant": 0,
+   "vertices_alone": 0,
    "shares_with": {
-    "Pelvis": 293,
-    "Chest": 300,
-    "Neck": 27,
-    "RightShoulder": 27,
-    "LeftShoulder": 44,
-    "LeftUpperArm": 15,
-    "RightHip": 33,
-    "RightUpperLeg": 40,
-    "LeftHip": 7
+    "Pelvis": 542,
+    "Chest": 506,
+    "RightShoulder": 13,
+    "LeftShoulder": 19,
+    "RightHip": 6
    },
    "parent": "Pelvis",
    "children": [
@@ -78,17 +100,15 @@
    "section": "Torso"
   },
   "Chest": {
-   "vertices_any": 762,
-   "vertices_dominant": 415,
-   "vertices_alone": 52,
+   "vertices_any": 912,
+   "vertices_dominant": 616,
+   "vertices_alone": 230,
    "shares_with": {
-    "Pelvis": 29,
-    "Spine": 300,
-    "Neck": 302,
-    "Head": 15,
-    "RightShoulder": 107,
-    "LeftShoulder": 255,
-    "LeftUpperArm": 103
+    "Pelvis": 508,
+    "Spine": 506,
+    "RightShoulder": 94,
+    "LeftShoulder": 113,
+    "RightHip": 2
    },
    "parent": "Spine",
    "children": [
@@ -105,17 +125,10 @@
    "section": "Torso"
   },
   "Neck": {
-   "vertices_any": 430,
-   "vertices_dominant": 144,
-   "vertices_alone": 6,
-   "shares_with": {
-    "Spine": 27,
-    "Chest": 302,
-    "Head": 137,
-    "RightShoulder": 62,
-    "LeftShoulder": 102,
-    "LeftUpperArm": 9
-   },
+   "vertices_any": 393,
+   "vertices_dominant": 393,
+   "vertices_alone": 393,
+   "shares_with": {},
    "parent": "Chest",
    "children": [
     "Head"
@@ -129,12 +142,10 @@
    "section": "Neck"
   },
   "Head": {
-   "vertices_any": 4208,
-   "vertices_dominant": 3805,
+   "vertices_any": 4071,
+   "vertices_dominant": 3735,
    "vertices_alone": 3408,
    "shares_with": {
-    "Chest": 15,
-    "Neck": 137,
     "Jaw": 663
    },
    "parent": "Neck",
@@ -167,14 +178,13 @@
    "section": "Jaw"
   },
   "RightShoulder": {
-   "vertices_any": 225,
-   "vertices_dominant": 66,
-   "vertices_alone": 17,
+   "vertices_any": 94,
+   "vertices_dominant": 6,
+   "vertices_alone": 0,
    "shares_with": {
-    "Spine": 27,
-    "Chest": 107,
-    "Neck": 62,
-    "RightUpperArm": 101
+    "Pelvis": 14,
+    "Spine": 13,
+    "Chest": 94
    },
    "parent": "Chest",
    "children": [
@@ -189,13 +199,10 @@
    "section": "R shoulder"
   },
   "RightUpperArm": {
-   "vertices_any": 433,
-   "vertices_dominant": 321,
-   "vertices_alone": 218,
-   "shares_with": {
-    "RightShoulder": 101,
-    "RightLowerArm": 114
-   },
+   "vertices_any": 450,
+   "vertices_dominant": 450,
+   "vertices_alone": 450,
+   "shares_with": {},
    "parent": "RightShoulder",
    "children": [
     "RightLowerArm"
@@ -209,14 +216,10 @@
    "section": "R upper arm"
   },
   "RightLowerArm": {
-   "vertices_any": 389,
-   "vertices_dominant": 286,
-   "vertices_alone": 171,
-   "shares_with": {
-    "RightUpperArm": 114,
-    "RightWrist": 104,
-    "RightHand": 2
-   },
+   "vertices_any": 420,
+   "vertices_dominant": 420,
+   "vertices_alone": 420,
+   "shares_with": {},
    "parent": "RightUpperArm",
    "children": [
     "RightWrist"
@@ -230,13 +233,10 @@
    "section": "R forearm"
   },
   "RightWrist": {
-   "vertices_any": 280,
-   "vertices_dominant": 169,
-   "vertices_alone": 62,
-   "shares_with": {
-    "RightLowerArm": 104,
-    "RightHand": 116
-   },
+   "vertices_any": 320,
+   "vertices_dominant": 320,
+   "vertices_alone": 320,
+   "shares_with": {},
    "parent": "RightLowerArm",
    "children": [
     "RightHand"
@@ -250,13 +250,10 @@
    "section": "R forearm"
   },
   "RightHand": {
-   "vertices_any": 283,
-   "vertices_dominant": 226,
-   "vertices_alone": 167,
-   "shares_with": {
-    "RightLowerArm": 2,
-    "RightWrist": 116
-   },
+   "vertices_any": 236,
+   "vertices_dominant": 236,
+   "vertices_alone": 236,
+   "shares_with": {},
    "parent": "RightWrist",
    "children": [],
    "head_studio": [
@@ -268,14 +265,13 @@
    "section": "R hand"
   },
   "LeftShoulder": {
-   "vertices_any": 357,
-   "vertices_dominant": 171,
-   "vertices_alone": 36,
+   "vertices_any": 277,
+   "vertices_dominant": 189,
+   "vertices_alone": 164,
    "shares_with": {
-    "Spine": 44,
-    "Chest": 255,
-    "Neck": 102,
-    "LeftUpperArm": 169
+    "Pelvis": 19,
+    "Spine": 19,
+    "Chest": 113
    },
    "parent": "Chest",
    "children": [
@@ -290,16 +286,10 @@
    "section": "L shoulder"
   },
   "LeftUpperArm": {
-   "vertices_any": 324,
-   "vertices_dominant": 174,
-   "vertices_alone": 68,
-   "shares_with": {
-    "Spine": 15,
-    "Chest": 103,
-    "Neck": 9,
-    "LeftShoulder": 169,
-    "LeftLowerArm": 87
-   },
+   "vertices_any": 452,
+   "vertices_dominant": 452,
+   "vertices_alone": 452,
+   "shares_with": {},
    "parent": "LeftShoulder",
    "children": [
     "LeftLowerArm"
@@ -313,14 +303,10 @@
    "section": "L upper arm"
   },
   "LeftLowerArm": {
-   "vertices_any": 202,
-   "vertices_dominant": 120,
-   "vertices_alone": 29,
-   "shares_with": {
-    "LeftUpperArm": 87,
-    "LeftWrist": 86,
-    "LeftHand": 20
-   },
+   "vertices_any": 272,
+   "vertices_dominant": 272,
+   "vertices_alone": 272,
+   "shares_with": {},
    "parent": "LeftUpperArm",
    "children": [
     "LeftWrist"
@@ -334,13 +320,10 @@
    "section": "L forearm"
   },
   "LeftWrist": {
-   "vertices_any": 139,
-   "vertices_dominant": 54,
-   "vertices_alone": 0,
-   "shares_with": {
-    "LeftLowerArm": 86,
-    "LeftHand": 73
-   },
+   "vertices_any": 218,
+   "vertices_dominant": 218,
+   "vertices_alone": 218,
+   "shares_with": {},
    "parent": "LeftLowerArm",
    "children": [
     "LeftHand"
@@ -354,13 +337,10 @@
    "section": "L forearm"
   },
   "LeftHand": {
-   "vertices_any": 129,
-   "vertices_dominant": 92,
-   "vertices_alone": 56,
-   "shares_with": {
-    "LeftLowerArm": 20,
-    "LeftWrist": 73
-   },
+   "vertices_any": 110,
+   "vertices_dominant": 110,
+   "vertices_alone": 110,
+   "shares_with": {},
    "parent": "LeftWrist",
    "children": [],
    "head_studio": [
@@ -372,15 +352,14 @@
    "section": "L hand"
   },
   "RightHip": {
-   "vertices_any": 325,
-   "vertices_dominant": 40,
+   "vertices_any": 308,
+   "vertices_dominant": 88,
    "vertices_alone": 0,
    "shares_with": {
-    "Pelvis": 311,
-    "Spine": 33,
-    "RightUpperLeg": 238,
-    "LeftHip": 13,
-    "LeftUpperLeg": 6
+    "Pelvis": 308,
+    "Spine": 6,
+    "Chest": 2,
+    "LeftHip": 42
    },
    "parent": "Pelvis",
    "children": [
@@ -395,17 +374,10 @@
    "section": "R hip"
   },
   "RightUpperLeg": {
-   "vertices_any": 446,
-   "vertices_dominant": 218,
-   "vertices_alone": 11,
-   "shares_with": {
-    "Pelvis": 256,
-    "Spine": 40,
-    "RightHip": 238,
-    "RightLowerLeg": 165,
-    "LeftHip": 6,
-    "LeftUpperLeg": 2
-   },
+   "vertices_any": 296,
+   "vertices_dominant": 296,
+   "vertices_alone": 296,
+   "shares_with": {},
    "parent": "RightHip",
    "children": [
     "RightLowerLeg"
@@ -419,14 +391,10 @@
    "section": "R upper leg"
   },
   "RightLowerLeg": {
-   "vertices_any": 443,
-   "vertices_dominant": 198,
-   "vertices_alone": 89,
-   "shares_with": {
-    "RightUpperLeg": 165,
-    "RightFoot": 189,
-    "RightToes": 10
-   },
+   "vertices_any": 324,
+   "vertices_dominant": 324,
+   "vertices_alone": 324,
+   "shares_with": {},
    "parent": "RightUpperLeg",
    "children": [
     "RightFoot"
@@ -440,13 +408,10 @@
    "section": "R lower leg"
   },
   "RightFoot": {
-   "vertices_any": 501,
-   "vertices_dominant": 250,
-   "vertices_alone": 79,
-   "shares_with": {
-    "RightLowerLeg": 189,
-    "RightToes": 243
-   },
+   "vertices_any": 304,
+   "vertices_dominant": 304,
+   "vertices_alone": 304,
+   "shares_with": {},
    "parent": "RightLowerLeg",
    "children": [
     "RightToes"
@@ -460,13 +425,10 @@
    "section": "R foot"
   },
   "RightToes": {
-   "vertices_any": 256,
-   "vertices_dominant": 201,
-   "vertices_alone": 13,
-   "shares_with": {
-    "RightLowerLeg": 10,
-    "RightFoot": 243
-   },
+   "vertices_any": 102,
+   "vertices_dominant": 102,
+   "vertices_alone": 102,
+   "shares_with": {},
    "parent": "RightFoot",
    "children": [],
    "head_studio": [
@@ -478,16 +440,12 @@
    "section": "R foot"
   },
   "LeftHip": {
-   "vertices_any": 354,
-   "vertices_dominant": 37,
+   "vertices_any": 326,
+   "vertices_dominant": 78,
    "vertices_alone": 0,
    "shares_with": {
-    "Pelvis": 323,
-    "Spine": 7,
-    "RightHip": 13,
-    "RightUpperLeg": 6,
-    "LeftUpperLeg": 272,
-    "LeftLowerLeg": 12
+    "Pelvis": 326,
+    "RightHip": 42
    },
    "parent": "Pelvis",
    "children": [
@@ -502,16 +460,10 @@
    "section": "L hip"
   },
   "LeftUpperLeg": {
-   "vertices_any": 418,
-   "vertices_dominant": 181,
-   "vertices_alone": 0,
-   "shares_with": {
-    "Pelvis": 241,
-    "RightHip": 6,
-    "RightUpperLeg": 2,
-    "LeftHip": 272,
-    "LeftLowerLeg": 158
-   },
+   "vertices_any": 268,
+   "vertices_dominant": 268,
+   "vertices_alone": 268,
+   "shares_with": {},
    "parent": "LeftHip",
    "children": [
     "LeftLowerLeg"
@@ -525,15 +477,10 @@
    "section": "L upper leg"
   },
   "LeftLowerLeg": {
-   "vertices_any": 453,
-   "vertices_dominant": 230,
-   "vertices_alone": 92,
-   "shares_with": {
-    "LeftHip": 12,
-    "LeftUpperLeg": 158,
-    "LeftFoot": 203,
-    "LeftToes": 47
-   },
+   "vertices_any": 324,
+   "vertices_dominant": 324,
+   "vertices_alone": 324,
+   "shares_with": {},
    "parent": "LeftUpperLeg",
    "children": [
     "LeftFoot"
@@ -547,13 +494,10 @@
    "section": "L lower leg"
   },
   "LeftFoot": {
-   "vertices_any": 460,
-   "vertices_dominant": 197,
-   "vertices_alone": 52,
-   "shares_with": {
-    "LeftLowerLeg": 203,
-    "LeftToes": 252
-   },
+   "vertices_any": 299,
+   "vertices_dominant": 299,
+   "vertices_alone": 299,
+   "shares_with": {},
    "parent": "LeftLowerLeg",
    "children": [
     "LeftToes"
@@ -567,13 +511,10 @@
    "section": "L foot"
   },
   "LeftToes": {
-   "vertices_any": 262,
-   "vertices_dominant": 186,
-   "vertices_alone": 10,
-   "shares_with": {
-    "LeftLowerLeg": 47,
-    "LeftFoot": 252
-   },
+   "vertices_any": 102,
+   "vertices_dominant": 102,
+   "vertices_alone": 102,
+   "shares_with": {},
    "parent": "LeftFoot",
    "children": [],
    "head_studio": [
@@ -672,8 +613,8 @@
    ],
    "parent_blend": {
     "section": "Pelvis",
-    "share": 0.219,
-    "max_cm": 5.5
+    "share": 0.301,
+    "max_cm": 9.5
    },
    "unrelated": []
   },
@@ -686,6 +627,7 @@
     "L shoulder",
     "L upper arm",
     "Neck",
+    "Pelvis",
     "R forearm",
     "R hand",
     "R shoulder",
@@ -711,15 +653,15 @@
     "share": 0.0,
     "max_cm": 0.0
    },
-   "unrelated": []
+   "unrelated": [
+    "Pelvis"
+   ]
   },
   "Neck": {
    "moves_sections": [
     "Head",
     "Jaw",
-    "L shoulder",
-    "Neck",
-    "Torso"
+    "Neck"
    ],
    "own_sections": [
     "Head",
@@ -728,18 +670,15 @@
    ],
    "parent_blend": {
     "section": "Torso",
-    "share": 0.269,
-    "max_cm": 5.8
+    "share": 0.0,
+    "max_cm": 0.0
    },
-   "unrelated": [
-    "L shoulder"
-   ]
+   "unrelated": []
   },
   "Head": {
    "moves_sections": [
     "Head",
-    "Jaw",
-    "Neck"
+    "Jaw"
    ],
    "own_sections": [
     "Head",
@@ -747,8 +686,8 @@
    ],
    "parent_blend": {
     "section": "Neck",
-    "share": 0.417,
-    "max_cm": 4.6
+    "share": 0.0,
+    "max_cm": 0.0
    },
    "unrelated": []
   },
@@ -762,14 +701,13 @@
    ],
    "parent_blend": {
     "section": "Head",
-    "share": 0.069,
+    "share": 0.07,
     "max_cm": 6.6
    },
    "unrelated": []
   },
   "RightShoulder": {
    "moves_sections": [
-    "Neck",
     "R forearm",
     "R hand",
     "R shoulder",
@@ -784,18 +722,15 @@
    ],
    "parent_blend": {
     "section": "Torso",
-    "share": 0.126,
-    "max_cm": 4.0
+    "share": 0.127,
+    "max_cm": 4.7
    },
-   "unrelated": [
-    "Neck"
-   ]
+   "unrelated": []
   },
   "RightUpperArm": {
    "moves_sections": [
     "R forearm",
     "R hand",
-    "R shoulder",
     "R upper arm"
    ],
    "own_sections": [
@@ -805,16 +740,15 @@
    ],
    "parent_blend": {
     "section": "R shoulder",
-    "share": 0.515,
-    "max_cm": 3.5
+    "share": 0.0,
+    "max_cm": 0.0
    },
    "unrelated": []
   },
   "RightLowerArm": {
    "moves_sections": [
     "R forearm",
-    "R hand",
-    "R upper arm"
+    "R hand"
    ],
    "own_sections": [
     "R forearm",
@@ -822,8 +756,8 @@
    ],
    "parent_blend": {
     "section": "R upper arm",
-    "share": 0.118,
-    "max_cm": 3.7
+    "share": 0.0,
+    "max_cm": 0.0
    },
    "unrelated": []
   },
@@ -845,7 +779,6 @@
   },
   "RightHand": {
    "moves_sections": [
-    "R forearm",
     "R hand"
    ],
    "own_sections": [
@@ -853,8 +786,8 @@
    ],
    "parent_blend": {
     "section": "R forearm",
-    "share": 0.123,
-    "max_cm": 4.7
+    "share": 0.0,
+    "max_cm": 0.0
    },
    "unrelated": []
   },
@@ -864,7 +797,6 @@
     "L hand",
     "L shoulder",
     "L upper arm",
-    "Neck",
     "Torso"
    ],
    "own_sections": [
@@ -875,20 +807,16 @@
    ],
    "parent_blend": {
     "section": "Torso",
-    "share": 0.144,
-    "max_cm": 6.4
+    "share": 0.115,
+    "max_cm": 6.0
    },
-   "unrelated": [
-    "Neck"
-   ]
+   "unrelated": []
   },
   "LeftUpperArm": {
    "moves_sections": [
     "L forearm",
     "L hand",
-    "L shoulder",
-    "L upper arm",
-    "Torso"
+    "L upper arm"
    ],
    "own_sections": [
     "L forearm",
@@ -897,18 +825,15 @@
    ],
    "parent_blend": {
     "section": "L shoulder",
-    "share": 0.421,
-    "max_cm": 3.9
+    "share": 0.0,
+    "max_cm": 0.0
    },
-   "unrelated": [
-    "Torso"
-   ]
+   "unrelated": []
   },
   "LeftLowerArm": {
    "moves_sections": [
     "L forearm",
-    "L hand",
-    "L upper arm"
+    "L hand"
    ],
    "own_sections": [
     "L forearm",
@@ -916,8 +841,8 @@
    ],
    "parent_blend": {
     "section": "L upper arm",
-    "share": 0.201,
-    "max_cm": 3.8
+    "share": 0.0,
+    "max_cm": 0.0
    },
    "unrelated": []
   },
@@ -939,7 +864,6 @@
   },
   "LeftHand": {
    "moves_sections": [
-    "L forearm",
     "L hand"
    ],
    "own_sections": [
@@ -947,8 +871,8 @@
    ],
    "parent_blend": {
     "section": "L forearm",
-    "share": 0.149,
-    "max_cm": 4.3
+    "share": 0.0,
+    "max_cm": 0.0
    },
    "unrelated": []
   },
@@ -968,16 +892,14 @@
    ],
    "parent_blend": {
     "section": "Pelvis",
-    "share": 0.321,
-    "max_cm": 9.7
+    "share": 0.211,
+    "max_cm": 7.5
    },
    "unrelated": []
   },
   "RightUpperLeg": {
    "moves_sections": [
-    "Pelvis",
     "R foot",
-    "R hip",
     "R lower leg",
     "R upper leg"
    ],
@@ -988,18 +910,15 @@
    ],
    "parent_blend": {
     "section": "R hip",
-    "share": 0.95,
-    "max_cm": 2.0
+    "share": 0.0,
+    "max_cm": 0.0
    },
-   "unrelated": [
-    "Pelvis"
-   ]
+   "unrelated": []
   },
   "RightLowerLeg": {
    "moves_sections": [
     "R foot",
-    "R lower leg",
-    "R upper leg"
+    "R lower leg"
    ],
    "own_sections": [
     "R foot",
@@ -1007,23 +926,22 @@
    ],
    "parent_blend": {
     "section": "R upper leg",
-    "share": 0.514,
-    "max_cm": 4.8
+    "share": 0.0,
+    "max_cm": 0.0
    },
    "unrelated": []
   },
   "RightFoot": {
    "moves_sections": [
-    "R foot",
-    "R lower leg"
+    "R foot"
    ],
    "own_sections": [
     "R foot"
    ],
    "parent_blend": {
     "section": "R lower leg",
-    "share": 0.303,
-    "max_cm": 2.7
+    "share": 0.0,
+    "max_cm": 0.0
    },
    "unrelated": []
   },
@@ -1057,18 +975,16 @@
    ],
    "parent_blend": {
     "section": "Pelvis",
-    "share": 0.331,
-    "max_cm": 9.8
+    "share": 0.242,
+    "max_cm": 7.5
    },
    "unrelated": []
   },
   "LeftUpperLeg": {
    "moves_sections": [
     "L foot",
-    "L hip",
     "L lower leg",
-    "L upper leg",
-    "Pelvis"
+    "L upper leg"
    ],
    "own_sections": [
     "L foot",
@@ -1077,18 +993,15 @@
    ],
    "parent_blend": {
     "section": "L hip",
-    "share": 0.892,
-    "max_cm": 2.5
+    "share": 0.0,
+    "max_cm": 0.0
    },
-   "unrelated": [
-    "Pelvis"
-   ]
+   "unrelated": []
   },
   "LeftLowerLeg": {
    "moves_sections": [
     "L foot",
-    "L lower leg",
-    "L upper leg"
+    "L lower leg"
    ],
    "own_sections": [
     "L foot",
@@ -1096,23 +1009,22 @@
    ],
    "parent_blend": {
     "section": "L upper leg",
-    "share": 0.525,
-    "max_cm": 3.7
+    "share": 0.0,
+    "max_cm": 0.0
    },
    "unrelated": []
   },
   "LeftFoot": {
    "moves_sections": [
-    "L foot",
-    "L lower leg"
+    "L foot"
    ],
    "own_sections": [
     "L foot"
    ],
    "parent_blend": {
     "section": "L lower leg",
-    "share": 0.357,
-    "max_cm": 3.2
+    "share": 0.0,
+    "max_cm": 0.0
    },
    "unrelated": []
   },
@@ -1134,121 +1046,121 @@
  "pivots": {
   "Pelvis": {
    "inside": true,
-   "depth_cm": 15.6
+   "depth_cm": 10.9
   },
   "Spine": {
    "inside": true,
-   "depth_cm": 21.2
+   "depth_cm": 17.8
   },
   "Chest": {
    "inside": true,
-   "depth_cm": 26.3
+   "depth_cm": 21.4
   },
   "Neck": {
    "inside": true,
-   "depth_cm": 20.5
+   "depth_cm": 5.3
   },
   "RightShoulder": {
    "inside": true,
-   "depth_cm": 16.4
+   "depth_cm": 1.6
   },
   "RightUpperArm": {
    "inside": true,
-   "depth_cm": 5.9
+   "depth_cm": 3.4
   },
   "RightLowerArm": {
    "inside": true,
-   "depth_cm": 9.3
+   "depth_cm": 0.0
   },
   "RightWrist": {
    "inside": true,
-   "depth_cm": 11.0
+   "depth_cm": 0.0
   },
   "RightHand": {
    "inside": true,
-   "depth_cm": 15.6
+   "depth_cm": 0.0
   },
   "LeftShoulder": {
    "inside": true,
-   "depth_cm": 16.4
+   "depth_cm": 1.0
   },
   "LeftUpperArm": {
    "inside": true,
-   "depth_cm": 12.8
+   "depth_cm": 0.0
   },
   "LeftLowerArm": {
    "inside": true,
-   "depth_cm": 12.0
+   "depth_cm": 0.0
   },
   "LeftWrist": {
    "inside": true,
-   "depth_cm": 13.7
+   "depth_cm": 0.0
   },
   "LeftHand": {
    "inside": true,
-   "depth_cm": 14.1
+   "depth_cm": 0.0
   },
   "RightHip": {
    "inside": true,
-   "depth_cm": 15.6
+   "depth_cm": 10.9
   },
   "RightUpperLeg": {
    "inside": true,
-   "depth_cm": 11.0
+   "depth_cm": 8.8
   },
   "RightLowerLeg": {
    "inside": true,
-   "depth_cm": 6.9
+   "depth_cm": 2.6
   },
   "RightFoot": {
    "inside": true,
-   "depth_cm": 4.4
+   "depth_cm": 1.1
   },
   "RightToes": {
    "inside": true,
-   "depth_cm": 2.3
+   "depth_cm": 1.9
   },
   "LeftHip": {
    "inside": true,
-   "depth_cm": 15.6
+   "depth_cm": 10.9
   },
   "LeftUpperLeg": {
    "inside": true,
-   "depth_cm": 12.4
+   "depth_cm": 2.9
   },
   "LeftLowerLeg": {
    "inside": true,
-   "depth_cm": 11.4
+   "depth_cm": 2.7
   },
   "LeftFoot": {
    "inside": true,
-   "depth_cm": 10.0
+   "depth_cm": 2.8
   },
   "LeftToes": {
    "inside": true,
-   "depth_cm": 1.8
+   "depth_cm": 1.5
   }
  },
  "seams": {
   "neck turn 45 + nod 30": {
-   "pairs": 11,
-   "max_opening_cm": 6.53
+   "pairs": 8,
+   "max_opening_cm": 7.57
   },
   "head turn 45": {
-   "pairs": 11,
-   "max_opening_cm": 14.1
+   "pairs": 8,
+   "max_opening_cm": 16.37
   },
   "head nod 40": {
-   "pairs": 11,
-   "max_opening_cm": 7.23
+   "pairs": 8,
+   "max_opening_cm": 10.56
   },
   "jaw open 25": {
-   "pairs": 11,
+   "pairs": 8,
    "max_opening_cm": 6.82
   },
   "jaw shut 30": {
-   "pairs": 11,
-   "max_opening_cm": 7.39
+   "pairs": 8,
+   "max_opening_cm": 7.16
   }
  },
  "ranges": [
@@ -1258,72 +1170,88 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 2.9,
-     "shrink": 0.34,
-     "folded_triangles": 25,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R upper arm",
      "angle": -120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.66,
-     "shrink": 0.44,
-     "folded_triangles": 20,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R upper arm",
      "angle": -90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.25,
-     "shrink": 0.13,
-     "folded_triangles": 12,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R upper arm",
      "angle": -60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.68,
-     "shrink": 0.4,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "R upper arm",
      "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.62,
-     "shrink": 0.29,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R forearm",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R forearm",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R hand",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "R upper arm",
-     "angle": 30,
-     "clean": true
-    },
-    {
-     "stretch": 2.16,
-     "shrink": 0.17,
-     "folded_triangles": 10,
-     "worst_section": "R upper arm",
-     "angle": 60,
-     "clean": false
-    },
-    {
-     "stretch": 2.55,
-     "shrink": 0.24,
-     "folded_triangles": 23,
-     "worst_section": "R upper arm",
-     "angle": 90,
-     "clean": false
-    },
-    {
-     "stretch": 2.77,
-     "shrink": 0.16,
-     "folded_triangles": 26,
-     "worst_section": "R upper arm",
      "angle": 120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 30,
-   "clean_to_minus": 30
+   "clean_to_plus": 120,
+   "clean_to_minus": 120
   },
   {
    "test": "R shoulder - swing out/in",
@@ -1331,56 +1259,68 @@
    "axis": "Z",
    "results": [
     {
-     "stretch": 2.02,
-     "shrink": 0.24,
-     "folded_triangles": 17,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R upper arm",
      "angle": -90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.79,
-     "shrink": 0.09,
-     "folded_triangles": 10,
-     "worst_section": "R upper arm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R forearm",
      "angle": -60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.44,
-     "shrink": 0.52,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "R upper arm",
      "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.42,
-     "shrink": 0.5,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "R upper arm",
      "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.75,
-     "shrink": 0.15,
-     "folded_triangles": 11,
-     "worst_section": "R upper arm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R forearm",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.99,
-     "shrink": 0.33,
-     "folded_triangles": 15,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R upper arm",
      "angle": 90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 30,
-   "clean_to_minus": 30
+   "clean_to_plus": 90,
+   "clean_to_minus": 90
   },
   {
    "test": "R elbow",
@@ -1388,72 +1328,88 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 2.6,
-     "shrink": 0.22,
-     "folded_triangles": 12,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R forearm",
      "angle": -120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.42,
-     "shrink": 0.06,
-     "folded_triangles": 9,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R forearm",
      "angle": -90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.08,
-     "shrink": 0.34,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "R forearm",
      "angle": -60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.59,
-     "shrink": 0.55,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "R forearm",
      "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.44,
-     "shrink": 0.36,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R hand",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "R forearm",
-     "angle": 30,
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.81,
-     "shrink": 0.08,
-     "folded_triangles": 15,
-     "worst_section": "R forearm",
-     "angle": 60,
-     "clean": false
-    },
-    {
-     "stretch": 2.09,
-     "shrink": 0.2,
-     "folded_triangles": 26,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R forearm",
      "angle": 90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.26,
-     "shrink": 0.3,
-     "folded_triangles": 27,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R forearm",
      "angle": 120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 30,
-   "clean_to_minus": 30
+   "clean_to_plus": 120,
+   "clean_to_minus": 120
   },
   {
    "test": "R forearm bend",
@@ -1461,56 +1417,68 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 2.7,
-     "shrink": 0.14,
-     "folded_triangles": 20,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R forearm",
      "angle": -90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.27,
-     "shrink": 0.28,
-     "folded_triangles": 7,
-     "worst_section": "R forearm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R hand",
      "angle": -60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.69,
-     "shrink": 0.3,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "R forearm",
      "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.69,
-     "shrink": 0.31,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "R forearm",
      "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 2.27,
-     "shrink": 0.29,
-     "folded_triangles": 21,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R forearm",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.69,
-     "shrink": 0.33,
-     "folded_triangles": 29,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R forearm",
      "angle": 90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 30,
-   "clean_to_minus": 30
+   "clean_to_plus": 90,
+   "clean_to_minus": 90
   },
   {
    "test": "R hand",
@@ -1518,56 +1486,68 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 2.57,
-     "shrink": 0.15,
-     "folded_triangles": 24,
-     "worst_section": "R forearm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R hand",
      "angle": -90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.17,
-     "shrink": 0.32,
-     "folded_triangles": 17,
-     "worst_section": "R forearm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R hand",
      "angle": -60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.63,
-     "shrink": 0.25,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "R forearm",
+     "worst_section": "R hand",
      "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.75,
-     "shrink": 0.4,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "R forearm",
+     "worst_section": "R hand",
      "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 2.39,
-     "shrink": 0.13,
-     "folded_triangles": 12,
-     "worst_section": "R forearm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R hand",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.88,
-     "shrink": 0.15,
-     "folded_triangles": 24,
-     "worst_section": "R forearm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R hand",
      "angle": 90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 30,
-   "clean_to_minus": 30
+   "clean_to_plus": 90,
+   "clean_to_minus": 90
   },
   {
    "test": "L shoulder - swing fore/aft",
@@ -1575,72 +1555,88 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 2.5,
-     "shrink": 0.29,
-     "folded_triangles": 30,
-     "worst_section": "L upper arm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L hand",
      "angle": -120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.28,
-     "shrink": 0.21,
-     "folded_triangles": 20,
-     "worst_section": "L shoulder",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L upper arm",
      "angle": -90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.96,
-     "shrink": 0.2,
-     "folded_triangles": 9,
-     "worst_section": "L shoulder",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L forearm",
      "angle": -60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.51,
-     "shrink": 0.48,
-     "folded_triangles": 1,
-     "worst_section": "L shoulder",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L hand",
      "angle": -30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.46,
-     "shrink": 0.55,
-     "folded_triangles": 2,
-     "worst_section": "L shoulder",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L forearm",
      "angle": 30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.82,
-     "shrink": 0.25,
-     "folded_triangles": 7,
-     "worst_section": "L shoulder",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L upper arm",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.06,
-     "shrink": 0.21,
-     "folded_triangles": 19,
-     "worst_section": "L shoulder",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L forearm",
      "angle": 90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.16,
-     "shrink": 0.2,
-     "folded_triangles": 26,
-     "worst_section": "L shoulder",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L forearm",
      "angle": 120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 0,
-   "clean_to_minus": 0
+   "clean_to_plus": 120,
+   "clean_to_minus": 120
   },
   {
    "test": "L shoulder - swing out/in",
@@ -1648,56 +1644,68 @@
    "axis": "Z",
    "results": [
     {
-     "stretch": 2.26,
-     "shrink": 0.27,
-     "folded_triangles": 21,
-     "worst_section": "L upper arm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L forearm",
      "angle": -90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.93,
-     "shrink": 0.19,
-     "folded_triangles": 8,
-     "worst_section": "L upper arm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L forearm",
      "angle": -60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.49,
-     "shrink": 0.59,
-     "folded_triangles": 2,
-     "worst_section": "L upper arm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L hand",
      "angle": -30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.36,
-     "shrink": 0.6,
-     "folded_triangles": 1,
-     "worst_section": "L shoulder",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L upper arm",
      "angle": 30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.65,
-     "shrink": 0.36,
-     "folded_triangles": 9,
-     "worst_section": "Torso",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L upper arm",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.92,
-     "shrink": 0.14,
-     "folded_triangles": 18,
-     "worst_section": "Torso",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L forearm",
      "angle": 90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 0,
-   "clean_to_minus": 0
+   "clean_to_plus": 90,
+   "clean_to_minus": 90
   },
   {
    "test": "L elbow",
@@ -1705,72 +1713,88 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 2.36,
-     "shrink": 0.09,
-     "folded_triangles": 23,
-     "worst_section": "L upper arm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L forearm",
      "angle": -120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.22,
-     "shrink": 0.18,
-     "folded_triangles": 18,
-     "worst_section": "L upper arm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L forearm",
      "angle": -90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.93,
-     "shrink": 0.32,
-     "folded_triangles": 8,
-     "worst_section": "L upper arm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L hand",
      "angle": -60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.51,
-     "shrink": 0.45,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "L upper arm",
+     "worst_section": "L forearm",
      "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.69,
-     "shrink": 0.43,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "L upper arm",
+     "worst_section": "L forearm",
      "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 2.3,
-     "shrink": 0.21,
-     "folded_triangles": 7,
-     "worst_section": "L upper arm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L forearm",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.77,
-     "shrink": 0.47,
-     "folded_triangles": 19,
-     "worst_section": "L upper arm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L forearm",
      "angle": 90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 3.05,
-     "shrink": 0.5,
-     "folded_triangles": 22,
-     "worst_section": "L upper arm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L hand",
      "angle": 120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 30,
-   "clean_to_minus": 30
+   "clean_to_plus": 120,
+   "clean_to_minus": 120
   },
   {
    "test": "L hand",
@@ -1778,56 +1802,68 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 2.62,
-     "shrink": 0.15,
-     "folded_triangles": 27,
-     "worst_section": "L forearm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L hand",
      "angle": -90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.22,
-     "shrink": 0.32,
-     "folded_triangles": 22,
-     "worst_section": "L forearm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L hand",
      "angle": -60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.66,
-     "shrink": 0.27,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "L forearm",
+     "worst_section": "L hand",
      "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.76,
-     "shrink": 0.28,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "L forearm",
+     "worst_section": "L hand",
      "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 2.41,
-     "shrink": 0.26,
-     "folded_triangles": 16,
-     "worst_section": "L forearm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L hand",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.89,
-     "shrink": 0.15,
-     "folded_triangles": 24,
-     "worst_section": "L forearm",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L hand",
      "angle": 90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 30,
-   "clean_to_minus": 30
+   "clean_to_plus": 90,
+   "clean_to_minus": 90
   },
   {
    "test": "R hip - swing fore/aft",
@@ -1835,72 +1871,88 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 2.32,
-     "shrink": 0.25,
-     "folded_triangles": 74,
-     "worst_section": "R upper leg",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R lower leg",
      "angle": -120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.88,
-     "shrink": 0.15,
-     "folded_triangles": 56,
-     "worst_section": "R upper leg",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R lower leg",
      "angle": -90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.53,
-     "shrink": 0.18,
-     "folded_triangles": 23,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R upper leg",
      "angle": -60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.28,
-     "shrink": 0.49,
-     "folded_triangles": 3,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R upper leg",
      "angle": -30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.48,
-     "shrink": 0.69,
-     "folded_triangles": 1,
-     "worst_section": "Pelvis",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R upper leg",
      "angle": 30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.0,
-     "shrink": 0.35,
-     "folded_triangles": 11,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R upper leg",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.46,
-     "shrink": 0.16,
-     "folded_triangles": 32,
-     "worst_section": "R upper leg",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R foot",
      "angle": 90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.78,
-     "shrink": 0.2,
-     "folded_triangles": 51,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R upper leg",
      "angle": 120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 0,
-   "clean_to_minus": 0
+   "clean_to_plus": 120,
+   "clean_to_minus": 120
   },
   {
    "test": "R hip - swing out/in",
@@ -1908,56 +1960,88 @@
    "axis": "Z",
    "results": [
     {
-     "stretch": 1.8,
-     "shrink": 0.36,
-     "folded_triangles": 11,
-     "worst_section": "Pelvis",
-     "angle": -60,
-     "clean": false
-    },
-    {
-     "stretch": 1.62,
-     "shrink": 0.52,
-     "folded_triangles": 5,
-     "worst_section": "Pelvis",
-     "angle": -45,
-     "clean": false
-    },
-    {
-     "stretch": 1.29,
-     "shrink": 0.77,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "Pelvis",
-     "angle": -20,
+     "worst_section": "R upper leg",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.24,
-     "shrink": 0.74,
-     "folded_triangles": 2,
-     "worst_section": "Pelvis",
-     "angle": 20,
-     "clean": false
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R upper leg",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.65,
-     "shrink": 0.41,
-     "folded_triangles": 9,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R upper leg",
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R upper leg",
+     "angle": -20,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R upper leg",
+     "angle": 20,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R upper leg",
      "angle": 45,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.9,
-     "shrink": 0.22,
-     "folded_triangles": 23,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R upper leg",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R foot",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 0,
-   "clean_to_minus": 20
+   "clean_to_plus": 90,
+   "clean_to_minus": 90
   },
   {
    "test": "R knee",
@@ -1965,72 +2049,88 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 2.55,
-     "shrink": 0.05,
-     "folded_triangles": 21,
-     "worst_section": "R lower leg",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R foot",
      "angle": -120,
-     "clean": false
-    },
-    {
-     "stretch": 2.36,
-     "shrink": 0.32,
-     "folded_triangles": 4,
-     "worst_section": "R lower leg",
-     "angle": -90,
-     "clean": false
-    },
-    {
-     "stretch": 2.02,
-     "shrink": 0.58,
-     "folded_triangles": 0,
-     "worst_section": "R lower leg",
-     "angle": -60,
-     "clean": false
-    },
-    {
-     "stretch": 1.56,
-     "shrink": 0.81,
-     "folded_triangles": 0,
-     "worst_section": "R lower leg",
-     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.15,
-     "shrink": 0.38,
-     "folded_triangles": 1,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R foot",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R foot",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R lower leg",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R foot",
      "angle": 30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.26,
-     "shrink": 0.07,
-     "folded_triangles": 20,
-     "worst_section": "R lower leg",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R foot",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.46,
-     "shrink": 0.37,
-     "folded_triangles": 33,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R lower leg",
      "angle": 90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.93,
-     "shrink": 0.29,
-     "folded_triangles": 44,
-     "worst_section": "R lower leg",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "R foot",
      "angle": 120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 0,
-   "clean_to_minus": 30
+   "clean_to_plus": 120,
+   "clean_to_minus": 120
   },
   {
    "test": "R ankle",
@@ -2038,56 +2138,68 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 1.4,
-     "shrink": 0.53,
-     "folded_triangles": 6,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R foot",
      "angle": -45,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.29,
-     "shrink": 0.69,
-     "folded_triangles": 5,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "R foot",
      "angle": -30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.15,
-     "shrink": 0.85,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "R foot",
      "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.14,
-     "shrink": 0.84,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "R lower leg",
+     "worst_section": "R foot",
      "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.27,
-     "shrink": 0.67,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "R lower leg",
+     "worst_section": "R foot",
      "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.38,
-     "shrink": 0.5,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "R lower leg",
+     "worst_section": "R foot",
      "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     }
    ],
    "clean_to_plus": 45,
-   "clean_to_minus": 15
+   "clean_to_minus": 45
   },
   {
    "test": "L hip - swing fore/aft",
@@ -2095,72 +2207,88 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 2.17,
-     "shrink": 0.21,
-     "folded_triangles": 55,
-     "worst_section": "L upper leg",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
      "angle": -120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.01,
-     "shrink": 0.25,
-     "folded_triangles": 25,
-     "worst_section": "L upper leg",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
      "angle": -90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.73,
-     "shrink": 0.43,
-     "folded_triangles": 12,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "L upper leg",
      "angle": -60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.38,
-     "shrink": 0.6,
-     "folded_triangles": 4,
-     "worst_section": "L upper leg",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
      "angle": -30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.44,
-     "shrink": 0.59,
-     "folded_triangles": 5,
-     "worst_section": "Pelvis",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
      "angle": 30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.81,
-     "shrink": 0.28,
-     "folded_triangles": 25,
-     "worst_section": "Pelvis",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L upper leg",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.07,
-     "shrink": 0.27,
-     "folded_triangles": 48,
-     "worst_section": "Pelvis",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
      "angle": 90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.21,
-     "shrink": 0.04,
-     "folded_triangles": 67,
-     "worst_section": "Pelvis",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L upper leg",
      "angle": 120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 0,
-   "clean_to_minus": 0
+   "clean_to_plus": 120,
+   "clean_to_minus": 120
   },
   {
    "test": "L hip - swing out/in",
@@ -2168,56 +2296,88 @@
    "axis": "Z",
    "results": [
     {
-     "stretch": 1.65,
-     "shrink": 0.14,
-     "folded_triangles": 19,
-     "worst_section": "L upper leg",
-     "angle": -60,
-     "clean": false
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L lower leg",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.51,
-     "shrink": 0.35,
-     "folded_triangles": 13,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "L upper leg",
      "angle": -45,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.24,
-     "shrink": 0.72,
-     "folded_triangles": 6,
-     "worst_section": "L upper leg",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
      "angle": -20,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.25,
-     "shrink": 0.77,
-     "folded_triangles": 1,
-     "worst_section": "L hip",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L upper leg",
      "angle": 20,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.51,
-     "shrink": 0.58,
-     "folded_triangles": 4,
-     "worst_section": "L hip",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
      "angle": 45,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.63,
-     "shrink": 0.51,
-     "folded_triangles": 10,
-     "worst_section": "L hip",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L upper leg",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 0,
-   "clean_to_minus": 0
+   "clean_to_plus": 90,
+   "clean_to_minus": 90
   },
   {
    "test": "L knee",
@@ -2225,72 +2385,88 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 1.8,
-     "shrink": 0.11,
-     "folded_triangles": 26,
-     "worst_section": "L upper leg",
-     "angle": -120,
-     "clean": false
-    },
-    {
-     "stretch": 1.76,
-     "shrink": 0.27,
-     "folded_triangles": 12,
-     "worst_section": "L upper leg",
-     "angle": -90,
-     "clean": false
-    },
-    {
-     "stretch": 1.6,
-     "shrink": 0.46,
-     "folded_triangles": 6,
-     "worst_section": "L upper leg",
-     "angle": -60,
-     "clean": false
-    },
-    {
-     "stretch": 1.34,
-     "shrink": 0.73,
-     "folded_triangles": 4,
-     "worst_section": "L upper leg",
-     "angle": -30,
-     "clean": false
-    },
-    {
-     "stretch": 1.25,
-     "shrink": 0.61,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "L lower leg",
-     "angle": 30,
+     "worst_section": "L foot",
+     "angle": -120,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.44,
-     "shrink": 0.23,
-     "folded_triangles": 1,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "L lower leg",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.54,
-     "shrink": 0.24,
-     "folded_triangles": 12,
-     "worst_section": "L lower leg",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
      "angle": 90,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.55,
-     "shrink": 0.1,
-     "folded_triangles": 37,
-     "worst_section": "L lower leg",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
      "angle": 120,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 30,
-   "clean_to_minus": 0
+   "clean_to_plus": 120,
+   "clean_to_minus": 120
   },
   {
    "test": "L ankle",
@@ -2298,56 +2474,68 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 1.39,
-     "shrink": 0.44,
-     "folded_triangles": 18,
-     "worst_section": "L lower leg",
-     "angle": -45,
-     "clean": false
-    },
-    {
-     "stretch": 1.28,
-     "shrink": 0.63,
-     "folded_triangles": 8,
-     "worst_section": "L lower leg",
-     "angle": -30,
-     "clean": false
-    },
-    {
-     "stretch": 1.14,
-     "shrink": 0.81,
-     "folded_triangles": 2,
-     "worst_section": "L lower leg",
-     "angle": -15,
-     "clean": false
-    },
-    {
-     "stretch": 1.19,
-     "shrink": 0.85,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "L lower leg",
-     "angle": 15,
+     "worst_section": "L foot",
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.36,
-     "shrink": 0.69,
-     "folded_triangles": 1,
-     "worst_section": "L lower leg",
-     "angle": 30,
-     "clean": false
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.52,
-     "shrink": 0.55,
-     "folded_triangles": 3,
-     "worst_section": "L lower leg",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
+     "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "L foot",
      "angle": 45,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 15,
-   "clean_to_minus": 0
+   "clean_to_plus": 45,
+   "clean_to_minus": 45
   },
   {
    "test": "Pelvis tilt",
@@ -2358,8 +2546,10 @@
      "stretch": 1.0,
      "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "Head",
+     "worst_section": "Torso",
      "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
@@ -2368,6 +2558,8 @@
      "folded_triangles": 0,
      "worst_section": "Head",
      "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
@@ -2376,6 +2568,8 @@
      "folded_triangles": 0,
      "worst_section": "Head",
      "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
@@ -2384,6 +2578,8 @@
      "folded_triangles": 0,
      "worst_section": "Head",
      "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     }
    ],
@@ -2396,56 +2592,68 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 1.78,
-     "shrink": 0.02,
-     "folded_triangles": 1,
+     "stretch": 1.46,
+     "shrink": 0.55,
+     "folded_triangles": 0,
      "worst_section": "Torso",
      "angle": -45,
-     "clean": false
-    },
-    {
-     "stretch": 1.54,
-     "shrink": 0.35,
-     "folded_triangles": 0,
-     "worst_section": "Torso",
-     "angle": -30,
-     "clean": true
-    },
-    {
-     "stretch": 1.28,
-     "shrink": 0.68,
-     "folded_triangles": 0,
-     "worst_section": "Torso",
-     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
      "stretch": 1.3,
-     "shrink": 0.72,
+     "shrink": 0.69,
+     "folded_triangles": 0,
+     "worst_section": "Torso",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.14,
+     "shrink": 0.85,
+     "folded_triangles": 0,
+     "worst_section": "Torso",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.15,
+     "shrink": 0.85,
      "folded_triangles": 0,
      "worst_section": "Torso",
      "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.58,
-     "shrink": 0.44,
+     "stretch": 1.3,
+     "shrink": 0.69,
      "folded_triangles": 0,
      "worst_section": "Torso",
      "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.84,
-     "shrink": 0.16,
+     "stretch": 1.46,
+     "shrink": 0.52,
      "folded_triangles": 0,
      "worst_section": "Torso",
      "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     }
    ],
    "clean_to_plus": 45,
-   "clean_to_minus": 30
+   "clean_to_minus": 45
   },
   {
    "test": "Spine twist",
@@ -2453,56 +2661,68 @@
    "axis": "Y",
    "results": [
     {
-     "stretch": 2.07,
-     "shrink": 0.35,
-     "folded_triangles": 2,
+     "stretch": 1.34,
+     "shrink": 0.71,
+     "folded_triangles": 0,
      "worst_section": "Pelvis",
      "angle": -45,
-     "clean": false
-    },
-    {
-     "stretch": 1.58,
-     "shrink": 0.56,
-     "folded_triangles": 2,
-     "worst_section": "Pelvis",
-     "angle": -30,
-     "clean": false
-    },
-    {
-     "stretch": 1.26,
-     "shrink": 0.76,
-     "folded_triangles": 0,
-     "worst_section": "Torso",
-     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.27,
-     "shrink": 0.79,
+     "stretch": 1.22,
+     "shrink": 0.8,
+     "folded_triangles": 0,
+     "worst_section": "Pelvis",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.11,
+     "shrink": 0.9,
+     "folded_triangles": 0,
+     "worst_section": "Pelvis",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.11,
+     "shrink": 0.9,
      "folded_triangles": 0,
      "worst_section": "Pelvis",
      "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.59,
-     "shrink": 0.65,
-     "folded_triangles": 2,
+     "stretch": 1.22,
+     "shrink": 0.82,
+     "folded_triangles": 0,
      "worst_section": "Pelvis",
      "angle": 30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.08,
-     "shrink": 0.52,
-     "folded_triangles": 5,
+     "stretch": 1.33,
+     "shrink": 0.75,
+     "folded_triangles": 0,
      "worst_section": "Pelvis",
      "angle": 45,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 15,
-   "clean_to_minus": 15
+   "clean_to_plus": 45,
+   "clean_to_minus": 45
   },
   {
    "test": "Chest bend",
@@ -2510,56 +2730,68 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 1.88,
-     "shrink": 0.05,
-     "folded_triangles": 21,
-     "worst_section": "Torso",
-     "angle": -45,
-     "clean": false
-    },
-    {
-     "stretch": 1.61,
-     "shrink": 0.24,
-     "folded_triangles": 6,
-     "worst_section": "Torso",
-     "angle": -30,
-     "clean": false
-    },
-    {
-     "stretch": 1.32,
-     "shrink": 0.62,
-     "folded_triangles": 5,
-     "worst_section": "Torso",
-     "angle": -15,
-     "clean": false
-    },
-    {
-     "stretch": 1.37,
-     "shrink": 0.67,
+     "stretch": 1.42,
+     "shrink": 0.42,
      "folded_triangles": 0,
      "worst_section": "Torso",
-     "angle": 15,
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.73,
-     "shrink": 0.34,
-     "folded_triangles": 2,
+     "stretch": 1.29,
+     "shrink": 0.62,
+     "folded_triangles": 0,
      "worst_section": "Torso",
-     "angle": 30,
-     "clean": false
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.07,
-     "shrink": 0.12,
-     "folded_triangles": 5,
+     "stretch": 1.15,
+     "shrink": 0.82,
+     "folded_triangles": 0,
+     "worst_section": "Torso",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.18,
+     "shrink": 0.83,
+     "folded_triangles": 0,
+     "worst_section": "Torso",
+     "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.36,
+     "shrink": 0.65,
+     "folded_triangles": 0,
+     "worst_section": "Torso",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.53,
+     "shrink": 0.47,
+     "folded_triangles": 0,
      "worst_section": "Torso",
      "angle": 45,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 15,
-   "clean_to_minus": 0
+   "clean_to_plus": 45,
+   "clean_to_minus": 45
   },
   {
    "test": "Neck nod",
@@ -2567,56 +2799,68 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 1.85,
-     "shrink": 0.18,
-     "folded_triangles": 19,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Jaw",
      "angle": -45,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.58,
-     "shrink": 0.46,
-     "folded_triangles": 6,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Head",
      "angle": -30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.3,
-     "shrink": 0.67,
-     "folded_triangles": 4,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Head",
      "angle": -15,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.39,
-     "shrink": 0.7,
-     "folded_triangles": 1,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Head",
      "angle": 15,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.81,
-     "shrink": 0.4,
-     "folded_triangles": 2,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Jaw",
      "angle": 30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.22,
-     "shrink": 0.16,
-     "folded_triangles": 9,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Head",
      "angle": 45,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 0,
-   "clean_to_minus": 0
+   "clean_to_plus": 45,
+   "clean_to_minus": 45
   },
   {
    "test": "Neck turn",
@@ -2624,72 +2868,88 @@
    "axis": "Z",
    "results": [
     {
-     "stretch": 2.4,
-     "shrink": 0.25,
-     "folded_triangles": 34,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Head",
      "angle": -60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.06,
-     "shrink": 0.21,
-     "folded_triangles": 10,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Jaw",
      "angle": -45,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.7,
-     "shrink": 0.45,
-     "folded_triangles": 2,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Jaw",
      "angle": -30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.34,
-     "shrink": 0.73,
-     "folded_triangles": 2,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Head",
      "angle": -15,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.32,
-     "shrink": 0.73,
-     "folded_triangles": 1,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Jaw",
      "angle": 15,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.67,
-     "shrink": 0.48,
-     "folded_triangles": 2,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Jaw",
      "angle": 30,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.01,
-     "shrink": 0.33,
-     "folded_triangles": 14,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Head",
      "angle": 45,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 2.34,
-     "shrink": 0.24,
-     "folded_triangles": 28,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Head",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 0,
-   "clean_to_minus": 0
+   "clean_to_plus": 60,
+   "clean_to_minus": 60
   },
   {
    "test": "Head nod",
@@ -2697,56 +2957,68 @@
    "axis": "X",
    "results": [
     {
-     "stretch": 1.9,
-     "shrink": 0.18,
-     "folded_triangles": 3,
-     "worst_section": "Neck",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Jaw",
      "angle": -45,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.62,
-     "shrink": 0.3,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "Neck",
+     "worst_section": "Head",
      "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.32,
-     "shrink": 0.65,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "Neck",
+     "worst_section": "Head",
      "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.35,
-     "shrink": 0.67,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "Head",
      "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.68,
-     "shrink": 0.38,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "Head",
      "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.99,
-     "shrink": 0.28,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "Head",
      "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     }
    ],
    "clean_to_plus": 45,
-   "clean_to_minus": 30
+   "clean_to_minus": 45
   },
   {
    "test": "Head turn",
@@ -2754,72 +3026,88 @@
    "axis": "Z",
    "results": [
     {
-     "stretch": 2.18,
-     "shrink": 0.25,
-     "folded_triangles": 13,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "Head",
      "angle": -60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.93,
-     "shrink": 0.29,
-     "folded_triangles": 1,
-     "worst_section": "Head",
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Jaw",
      "angle": -45,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     },
     {
-     "stretch": 1.64,
-     "shrink": 0.38,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "Head",
+     "worst_section": "Jaw",
      "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.33,
-     "shrink": 0.67,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "Head",
+     "worst_section": "Jaw",
      "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.33,
-     "shrink": 0.68,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
      "worst_section": "Head",
      "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.64,
-     "shrink": 0.38,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "Head",
+     "worst_section": "Jaw",
      "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 1.93,
-     "shrink": 0.28,
+     "stretch": 1.0,
+     "shrink": 1.0,
      "folded_triangles": 0,
-     "worst_section": "Head",
+     "worst_section": "Jaw",
      "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
-     "stretch": 2.18,
-     "shrink": 0.26,
-     "folded_triangles": 12,
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
      "worst_section": "Head",
      "angle": 60,
-     "clean": false
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
     }
    ],
-   "clean_to_plus": 45,
-   "clean_to_minus": 30
+   "clean_to_plus": 60,
+   "clean_to_minus": 60
   },
   {
    "test": "Jaw open / shut",
@@ -2832,6 +3120,8 @@
      "folded_triangles": 0,
      "worst_section": "Jaw",
      "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
@@ -2840,6 +3130,8 @@
      "folded_triangles": 0,
      "worst_section": "Jaw",
      "angle": -21,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
@@ -2848,6 +3140,8 @@
      "folded_triangles": 0,
      "worst_section": "Head",
      "angle": -10,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
@@ -2856,6 +3150,8 @@
      "folded_triangles": 0,
      "worst_section": "Jaw",
      "angle": 10,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
@@ -2864,6 +3160,8 @@
      "folded_triangles": 0,
      "worst_section": "Jaw",
      "angle": 16,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     },
     {
@@ -2872,6 +3170,8 @@
      "folded_triangles": 0,
      "worst_section": "Jaw",
      "angle": 25,
+     "pieces_apart": 0,
+     "joints_apart": [],
      "clean": true
     }
    ],

@@ -1,7 +1,8 @@
 """ASTRA R08 - Experimental Model 02: texture maps for the game meshes (stage 2 of the Roblox build).
 
     bvenv/bin/python experimental_02/src/game_bake.py [stage1.blend] [out.blend]
-    env: BAKE_RES (default 2048), BAKE_ONLY (Body / Head), BAKE_PASSES (comma list)
+    env: BAKE_RES (default 2048), BAKE_ONLY (Body / Head), BAKE_PASSES (comma list),
+         COMPOSE_ONLY=1 (no baking: put the maps together again from the raw passes of an earlier bake)
 
 Everything the high-detail model shows - every plate, crack, pit, wound and tooth groove - is
 projected onto the game meshes' UV maps by ray (Cycles "selected to active" with a cage that
@@ -41,6 +42,7 @@ TARGETS = {
                  sources2=["R08_head_teeth", "R08_head_gums"], regions2=(2, 3)),
 }
 PASSES = ["albedo", "roughness", "normal", "ao", "metal", "region"]
+JOINT_TEXELS = {}
 REGION_STEP = 16.0 / 255.0          # the region map stores region number x 16 as a grey level
 
 
@@ -191,6 +193,66 @@ def bake_target(key, passes):
     return out
 
 
+def joint_texels(ob):
+    """v2 body (armoured joints): the texels of the faces that lie inside a neighbouring piece at rest -
+    the rounded knuckles and end caps that a bending joint turns into view - and which piece each
+    texel belongs to.  Baked from inside another block, they caught the dark inner layers or nothing
+    at all, and an ambient shadow of almost zero.  Returns (buried texels, piece of every texel) or
+    None for a mesh without them."""
+    from PIL import ImageDraw
+    me = ob.data
+    if "buried" not in me.attributes or "piece" not in me.attributes:
+        return None
+    n = len(me.vertices)
+    bur, kn, pc = np.zeros(n), np.zeros(n), np.zeros(n, np.int32)
+    me.attributes["buried"].data.foreach_get("value", bur)
+    me.attributes["knuckle"].data.foreach_get("value", kn)
+    me.attributes["piece"].data.foreach_get("value", pc)
+    hidden = (bur > 0.5) | (kn > 0.5)
+    uv = me.uv_layers.active.data
+    imb, imv, imp = (Image.new(m, (RES, RES), 0) for m in ("L", "L", "I"))
+    db, dv, dp = ImageDraw.Draw(imb), ImageDraw.Draw(imv), ImageDraw.Draw(imp)
+    for p in me.polygons:
+        pts = [(uv[i].uv[0] * RES, (1.0 - uv[i].uv[1]) * RES) for i in p.loop_indices]
+        (db if hidden[list(p.vertices)].sum() >= 2 else dv).polygon(pts, fill=255)
+        dp.polygon(pts, fill=int(pc[p.vertices[0]]) + 1)
+    visible = np.asarray(imv) > 0
+    buried = (np.asarray(imb) > 0) & ~visible
+    piece = np.asarray(imp).astype(np.int32) - 1
+    return buried, visible, piece
+
+
+def refill_joints(maps, masks, margin):
+    """Buried texels (and the bake margin round them) take the colour, roughness and ambient shadow of
+    the nearest visible texel of the same piece, softened; their normal is flat - an exposed knuckle
+    reads as the smooth rounded end of the plate."""
+    from scipy import ndimage
+    buried, visible, piece = masks
+    near_b = ndimage.binary_dilation(buried, iterations=margin)
+    target = near_b & ~visible
+    # margin texels belong to the piece of the nearest drawn texel
+    drawn = piece >= 0
+    idx = ndimage.distance_transform_edt(~drawn, return_distances=False, return_indices=True)
+    pid = piece[idx[0], idx[1]]
+    filled = {k: v.copy() for k, v in maps.items()}
+    for k in np.unique(pid[target]):
+        src = visible & (piece == k)
+        tg = target & (pid == k)
+        if not src.any() or not tg.any():
+            continue
+        j = ndimage.distance_transform_edt(~src, return_distances=False, return_indices=True)
+        for ps in ("albedo", "ao", "roughness"):
+            filled[ps][tg] = maps[ps][j[0][tg], j[1][tg]]
+    for ps in ("albedo", "ao", "roughness"):
+        a = filled[ps].astype(np.float32)
+        sig = (2.0, 2.0, 0) if a.ndim == 3 else 2.0
+        b = ndimage.gaussian_filter(a, sigma=sig)
+        a[target] = b[target]
+        filled[ps] = (a + 0.5).clip(0, 255).astype(np.uint8)
+    filled["normal"][target] = (128, 128, 255)
+    return filled, int(target.sum())
+
+
 def compose(key):
     """Masters -> the Roblox set: colour = albedo x part of the ambient shadow; 1024 px; 8-bit."""
     T = TARGETS[key]
@@ -216,6 +278,12 @@ def compose(key):
             for ps in maps:
                 maps[ps][hole] = maps[ps][idx[0][hole], idx[1][hole]]
         log(f"   {key}: {int(hole.sum())} empty tooth texels filled")
+    # v2 body: the knuckles and end caps buried in a neighbouring piece at rest
+    masks = joint_texels(bpy.data.objects[T["object"]])
+    JOINT_TEXELS[key] = 0
+    if masks is not None:
+        maps, JOINT_TEXELS[key] = refill_joints(maps, masks, max(4, RES // 128))
+        log(f"   {key}: {JOINT_TEXELS[key]} texels of buried knuckles and end caps refilled from their own piece")
     load_ = load
     load = lambda ps, mode: Image.fromarray(maps[ps], mode) if ps in maps else load_(ps, mode)
     alb = maps["albedo"].astype(np.float32) / 255.0
@@ -290,6 +358,8 @@ def main(stage1=STAGE1, out=STAGE2):
     only = os.environ.get("BAKE_ONLY")
     passes = os.environ.get("BAKE_PASSES", ",".join(PASSES)).split(",")
     keys = [k for k in TARGETS if not only or k == only]
+    if os.environ.get("COMPOSE_ONLY"):
+        keys = []                     # the raw passes of an earlier bake are used as they are
     need = sorted({n for k in keys for n in TARGETS[k]["sources"]})
     with bpy.data.libraries.load(HIGH, link=False) as (src, dst):
         dst.objects = [n for n in src.objects if n in need]
@@ -328,7 +398,8 @@ def main(stage1=STAGE1, out=STAGE2):
     for m_ in list(bpy.data.materials):
         if m_.users == 0:
             bpy.data.materials.remove(m_)
-    json.dump(dict(master_px=RES, game_px=GAME_RES, ao_mix=AO_MIX, maps=report), open(os.path.join(ROOT, "analysis", "game_textures.json"), "w"), indent=1)
+    json.dump(dict(master_px=RES, game_px=GAME_RES, ao_mix=AO_MIX, maps=report, buried_joint_texels_refilled=JOINT_TEXELS),
+              open(os.path.join(ROOT, "analysis", "game_textures.json"), "w"), indent=1)
     bpy.ops.wm.save_as_mainfile(filepath=out, compress=True, relative_remap=True)
     log(f"saved {out}  ({time.time() - t0:.1f} s)")
 

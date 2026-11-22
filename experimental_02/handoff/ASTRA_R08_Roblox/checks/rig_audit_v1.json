@@ -1,0 +1,3272 @@
+{
+ "model": "model/astra_r08_exp02_game_v1.blend",
+ "body_pieces": 2,
+ "interlocking_joints": [],
+ "saved": false,
+ "vertices": {
+  "ASTRA_R08_Body": 4930,
+  "ASTRA_R08_Head": 5733,
+  "ASTRA_R08_Eyes": 12
+ },
+ "bones": {
+  "Root": {
+   "vertices_any": 0,
+   "vertices_dominant": 0,
+   "vertices_alone": 0,
+   "shares_with": {},
+   "parent": null,
+   "children": [
+    "Pelvis"
+   ],
+   "head_studio": [
+    -0.0,
+    0.0,
+    0.0
+   ],
+   "length_studs": 1.071,
+   "section": "Root"
+  },
+  "Pelvis": {
+   "vertices_any": 987,
+   "vertices_dominant": 638,
+   "vertices_alone": 99,
+   "shares_with": {
+    "Spine": 293,
+    "Chest": 29,
+    "RightHip": 311,
+    "RightUpperLeg": 256,
+    "LeftHip": 323,
+    "LeftUpperLeg": 241
+   },
+   "parent": "Root",
+   "children": [
+    "Spine",
+    "RightHip",
+    "LeftHip"
+   ],
+   "head_studio": [
+    -0.134,
+    4.946,
+    -0.062
+   ],
+   "length_studs": 1.247,
+   "section": "Pelvis"
+  },
+  "Spine": {
+   "vertices_any": 565,
+   "vertices_dominant": 246,
+   "vertices_alone": 1,
+   "shares_with": {
+    "Pelvis": 293,
+    "Chest": 300,
+    "Neck": 27,
+    "RightShoulder": 27,
+    "LeftShoulder": 44,
+    "LeftUpperArm": 15,
+    "RightHip": 33,
+    "RightUpperLeg": 40,
+    "LeftHip": 7
+   },
+   "parent": "Pelvis",
+   "children": [
+    "Chest"
+   ],
+   "head_studio": [
+    -0.018,
+    6.0,
+    -0.72
+   ],
+   "length_studs": 1.172,
+   "section": "Torso"
+  },
+  "Chest": {
+   "vertices_any": 762,
+   "vertices_dominant": 415,
+   "vertices_alone": 52,
+   "shares_with": {
+    "Pelvis": 29,
+    "Spine": 300,
+    "Neck": 302,
+    "Head": 15,
+    "RightShoulder": 107,
+    "LeftShoulder": 255,
+    "LeftUpperArm": 103
+   },
+   "parent": "Spine",
+   "children": [
+    "Neck",
+    "RightShoulder",
+    "LeftShoulder"
+   ],
+   "head_studio": [
+    -0.018,
+    6.911,
+    -1.457
+   ],
+   "length_studs": 1.241,
+   "section": "Torso"
+  },
+  "Neck": {
+   "vertices_any": 430,
+   "vertices_dominant": 144,
+   "vertices_alone": 6,
+   "shares_with": {
+    "Spine": 27,
+    "Chest": 302,
+    "Head": 137,
+    "RightShoulder": 62,
+    "LeftShoulder": 102,
+    "LeftUpperArm": 9
+   },
+   "parent": "Chest",
+   "children": [
+    "Head"
+   ],
+   "head_studio": [
+    -0.018,
+    7.499,
+    -2.21
+   ],
+   "length_studs": 2.036,
+   "section": "Neck"
+  },
+  "Head": {
+   "vertices_any": 4208,
+   "vertices_dominant": 3805,
+   "vertices_alone": 3408,
+   "shares_with": {
+    "Chest": 15,
+    "Neck": 137,
+    "Jaw": 663
+   },
+   "parent": "Neck",
+   "children": [
+    "Jaw"
+   ],
+   "head_studio": [
+    0.036,
+    8.548,
+    -3.954
+   ],
+   "length_studs": 2.352,
+   "section": "Head"
+  },
+  "Jaw": {
+   "vertices_any": 2337,
+   "vertices_dominant": 2010,
+   "vertices_alone": 1674,
+   "shares_with": {
+    "Head": 663
+   },
+   "parent": "Head",
+   "children": [],
+   "head_studio": [
+    0.032,
+    8.38,
+    -4.657
+   ],
+   "length_studs": 2.202,
+   "section": "Jaw"
+  },
+  "RightShoulder": {
+   "vertices_any": 225,
+   "vertices_dominant": 66,
+   "vertices_alone": 17,
+   "shares_with": {
+    "Spine": 27,
+    "Chest": 107,
+    "Neck": 62,
+    "RightUpperArm": 101
+   },
+   "parent": "Chest",
+   "children": [
+    "RightUpperArm"
+   ],
+   "head_studio": [
+    0.696,
+    7.76,
+    -2.053
+   ],
+   "length_studs": 1.422,
+   "section": "R shoulder"
+  },
+  "RightUpperArm": {
+   "vertices_any": 433,
+   "vertices_dominant": 321,
+   "vertices_alone": 218,
+   "shares_with": {
+    "RightShoulder": 101,
+    "RightLowerArm": 114
+   },
+   "parent": "RightShoulder",
+   "children": [
+    "RightLowerArm"
+   ],
+   "head_studio": [
+    2.071,
+    8.036,
+    -2.286
+   ],
+   "length_studs": 3.144,
+   "section": "R upper arm"
+  },
+  "RightLowerArm": {
+   "vertices_any": 389,
+   "vertices_dominant": 286,
+   "vertices_alone": 171,
+   "shares_with": {
+    "RightUpperArm": 114,
+    "RightWrist": 104,
+    "RightHand": 2
+   },
+   "parent": "RightUpperArm",
+   "children": [
+    "RightWrist"
+   ],
+   "head_studio": [
+    3.5,
+    5.268,
+    -2.714
+   ],
+   "length_studs": 2.546,
+   "section": "R forearm"
+  },
+  "RightWrist": {
+   "vertices_any": 280,
+   "vertices_dominant": 169,
+   "vertices_alone": 62,
+   "shares_with": {
+    "RightLowerArm": 104,
+    "RightHand": 116
+   },
+   "parent": "RightLowerArm",
+   "children": [
+    "RightHand"
+   ],
+   "head_studio": [
+    3.768,
+    2.982,
+    -3.804
+   ],
+   "length_studs": 1.536,
+   "section": "R forearm"
+  },
+  "RightHand": {
+   "vertices_any": 283,
+   "vertices_dominant": 226,
+   "vertices_alone": 167,
+   "shares_with": {
+    "RightLowerArm": 2,
+    "RightWrist": 116
+   },
+   "parent": "RightWrist",
+   "children": [],
+   "head_studio": [
+    3.74,
+    1.668,
+    -4.599
+   ],
+   "length_studs": 1.429,
+   "section": "R hand"
+  },
+  "LeftShoulder": {
+   "vertices_any": 357,
+   "vertices_dominant": 171,
+   "vertices_alone": 36,
+   "shares_with": {
+    "Spine": 44,
+    "Chest": 255,
+    "Neck": 102,
+    "LeftUpperArm": 169
+   },
+   "parent": "Chest",
+   "children": [
+    "LeftUpperArm"
+   ],
+   "head_studio": [
+    -0.732,
+    7.76,
+    -2.053
+   ],
+   "length_studs": 1.254,
+   "section": "L shoulder"
+  },
+  "LeftUpperArm": {
+   "vertices_any": 324,
+   "vertices_dominant": 174,
+   "vertices_alone": 68,
+   "shares_with": {
+    "Spine": 15,
+    "Chest": 103,
+    "Neck": 9,
+    "LeftShoulder": 169,
+    "LeftLowerArm": 87
+   },
+   "parent": "LeftShoulder",
+   "children": [
+    "LeftLowerArm"
+   ],
+   "head_studio": [
+    -1.768,
+    7.643,
+    -2.75
+   ],
+   "length_studs": 2.017,
+   "section": "L upper arm"
+  },
+  "LeftLowerArm": {
+   "vertices_any": 202,
+   "vertices_dominant": 120,
+   "vertices_alone": 29,
+   "shares_with": {
+    "LeftUpperArm": 87,
+    "LeftWrist": 86,
+    "LeftHand": 20
+   },
+   "parent": "LeftUpperArm",
+   "children": [
+    "LeftWrist"
+   ],
+   "head_studio": [
+    -2.268,
+    5.964,
+    -1.75
+   ],
+   "length_studs": 1.316,
+   "section": "L forearm"
+  },
+  "LeftWrist": {
+   "vertices_any": 139,
+   "vertices_dominant": 54,
+   "vertices_alone": 0,
+   "shares_with": {
+    "LeftLowerArm": 86,
+    "LeftHand": 73
+   },
+   "parent": "LeftLowerArm",
+   "children": [
+    "LeftHand"
+   ],
+   "head_studio": [
+    -2.482,
+    4.732,
+    -1.339
+   ],
+   "length_studs": 0.722,
+   "section": "L forearm"
+  },
+  "LeftHand": {
+   "vertices_any": 129,
+   "vertices_dominant": 92,
+   "vertices_alone": 56,
+   "shares_with": {
+    "LeftLowerArm": 20,
+    "LeftWrist": 73
+   },
+   "parent": "LeftWrist",
+   "children": [],
+   "head_studio": [
+    -2.536,
+    4.027,
+    -1.482
+   ],
+   "length_studs": 0.722,
+   "section": "L hand"
+  },
+  "RightHip": {
+   "vertices_any": 325,
+   "vertices_dominant": 40,
+   "vertices_alone": 0,
+   "shares_with": {
+    "Pelvis": 311,
+    "Spine": 33,
+    "RightUpperLeg": 238,
+    "LeftHip": 13,
+    "LeftUpperLeg": 6
+   },
+   "parent": "Pelvis",
+   "children": [
+    "RightUpperLeg"
+   ],
+   "head_studio": [
+    -0.134,
+    4.946,
+    -0.062
+   ],
+   "length_studs": 0.796,
+   "section": "R hip"
+  },
+  "RightUpperLeg": {
+   "vertices_any": 446,
+   "vertices_dominant": 218,
+   "vertices_alone": 11,
+   "shares_with": {
+    "Pelvis": 256,
+    "Spine": 40,
+    "RightHip": 238,
+    "RightLowerLeg": 165,
+    "LeftHip": 6,
+    "LeftUpperLeg": 2
+   },
+   "parent": "RightHip",
+   "children": [
+    "RightLowerLeg"
+   ],
+   "head_studio": [
+    0.607,
+    4.786,
+    -0.304
+   ],
+   "length_studs": 2.199,
+   "section": "R upper leg"
+  },
+  "RightLowerLeg": {
+   "vertices_any": 443,
+   "vertices_dominant": 198,
+   "vertices_alone": 89,
+   "shares_with": {
+    "RightUpperLeg": 165,
+    "RightFoot": 189,
+    "RightToes": 10
+   },
+   "parent": "RightUpperLeg",
+   "children": [
+    "RightFoot"
+   ],
+   "head_studio": [
+    0.804,
+    3.125,
+    -1.732
+   ],
+   "length_studs": 2.542,
+   "section": "R lower leg"
+  },
+  "RightFoot": {
+   "vertices_any": 501,
+   "vertices_dominant": 250,
+   "vertices_alone": 79,
+   "shares_with": {
+    "RightLowerLeg": 189,
+    "RightToes": 243
+   },
+   "parent": "RightLowerLeg",
+   "children": [
+    "RightToes"
+   ],
+   "head_studio": [
+    0.857,
+    1.036,
+    -0.286
+   ],
+   "length_studs": 1.457,
+   "section": "R foot"
+  },
+  "RightToes": {
+   "vertices_any": 256,
+   "vertices_dominant": 201,
+   "vertices_alone": 13,
+   "shares_with": {
+    "RightLowerLeg": 10,
+    "RightFoot": 243
+   },
+   "parent": "RightFoot",
+   "children": [],
+   "head_studio": [
+    0.928,
+    0.179,
+    -1.462
+   ],
+   "length_studs": 0.608,
+   "section": "R foot"
+  },
+  "LeftHip": {
+   "vertices_any": 354,
+   "vertices_dominant": 37,
+   "vertices_alone": 0,
+   "shares_with": {
+    "Pelvis": 323,
+    "Spine": 7,
+    "RightHip": 13,
+    "RightUpperLeg": 6,
+    "LeftUpperLeg": 272,
+    "LeftLowerLeg": 12
+   },
+   "parent": "Pelvis",
+   "children": [
+    "LeftUpperLeg"
+   ],
+   "head_studio": [
+    -0.134,
+    4.946,
+    -0.062
+   ],
+   "length_studs": 0.796,
+   "section": "L hip"
+  },
+  "LeftUpperLeg": {
+   "vertices_any": 418,
+   "vertices_dominant": 181,
+   "vertices_alone": 0,
+   "shares_with": {
+    "Pelvis": 241,
+    "RightHip": 6,
+    "RightUpperLeg": 2,
+    "LeftHip": 272,
+    "LeftLowerLeg": 158
+   },
+   "parent": "LeftHip",
+   "children": [
+    "LeftLowerLeg"
+   ],
+   "head_studio": [
+    -0.875,
+    4.786,
+    0.179
+   ],
+   "length_studs": 1.57,
+   "section": "L upper leg"
+  },
+  "LeftLowerLeg": {
+   "vertices_any": 453,
+   "vertices_dominant": 230,
+   "vertices_alone": 92,
+   "shares_with": {
+    "LeftHip": 12,
+    "LeftUpperLeg": 158,
+    "LeftFoot": 203,
+    "LeftToes": 47
+   },
+   "parent": "LeftUpperLeg",
+   "children": [
+    "LeftFoot"
+   ],
+   "head_studio": [
+    -1.214,
+    3.268,
+    0.393
+   ],
+   "length_studs": 2.677,
+   "section": "L lower leg"
+  },
+  "LeftFoot": {
+   "vertices_any": 460,
+   "vertices_dominant": 197,
+   "vertices_alone": 52,
+   "shares_with": {
+    "LeftLowerLeg": 203,
+    "LeftToes": 252
+   },
+   "parent": "LeftLowerLeg",
+   "children": [
+    "LeftToes"
+   ],
+   "head_studio": [
+    -1.625,
+    0.946,
+    1.661
+   ],
+   "length_studs": 1.099,
+   "section": "L foot"
+  },
+  "LeftToes": {
+   "vertices_any": 262,
+   "vertices_dominant": 186,
+   "vertices_alone": 10,
+   "shares_with": {
+    "LeftLowerLeg": 47,
+    "LeftFoot": 252
+   },
+   "parent": "LeftFoot",
+   "children": [],
+   "head_studio": [
+    -1.703,
+    0.179,
+    0.879
+   ],
+   "length_studs": 0.608,
+   "section": "L foot"
+  }
+ },
+ "independence": {
+  "Pelvis": {
+   "moves_sections": [
+    "Head",
+    "Jaw",
+    "L foot",
+    "L forearm",
+    "L hand",
+    "L hip",
+    "L lower leg",
+    "L shoulder",
+    "L upper arm",
+    "L upper leg",
+    "Neck",
+    "Pelvis",
+    "R foot",
+    "R forearm",
+    "R hand",
+    "R hip",
+    "R lower leg",
+    "R shoulder",
+    "R upper arm",
+    "R upper leg",
+    "Torso"
+   ],
+   "own_sections": [
+    "Head",
+    "Jaw",
+    "L foot",
+    "L forearm",
+    "L hand",
+    "L hip",
+    "L lower leg",
+    "L shoulder",
+    "L upper arm",
+    "L upper leg",
+    "Neck",
+    "Pelvis",
+    "R foot",
+    "R forearm",
+    "R hand",
+    "R hip",
+    "R lower leg",
+    "R shoulder",
+    "R upper arm",
+    "R upper leg",
+    "Torso"
+   ],
+   "parent_blend": {
+    "section": null,
+    "share": 0.0,
+    "max_cm": 0.0
+   },
+   "unrelated": []
+  },
+  "Spine": {
+   "moves_sections": [
+    "Head",
+    "Jaw",
+    "L forearm",
+    "L hand",
+    "L shoulder",
+    "L upper arm",
+    "Neck",
+    "Pelvis",
+    "R forearm",
+    "R hand",
+    "R shoulder",
+    "R upper arm",
+    "Torso"
+   ],
+   "own_sections": [
+    "Head",
+    "Jaw",
+    "L forearm",
+    "L hand",
+    "L shoulder",
+    "L upper arm",
+    "Neck",
+    "R forearm",
+    "R hand",
+    "R shoulder",
+    "R upper arm",
+    "Torso"
+   ],
+   "parent_blend": {
+    "section": "Pelvis",
+    "share": 0.219,
+    "max_cm": 5.5
+   },
+   "unrelated": []
+  },
+  "Chest": {
+   "moves_sections": [
+    "Head",
+    "Jaw",
+    "L forearm",
+    "L hand",
+    "L shoulder",
+    "L upper arm",
+    "Neck",
+    "R forearm",
+    "R hand",
+    "R shoulder",
+    "R upper arm",
+    "Torso"
+   ],
+   "own_sections": [
+    "Head",
+    "Jaw",
+    "L forearm",
+    "L hand",
+    "L shoulder",
+    "L upper arm",
+    "Neck",
+    "R forearm",
+    "R hand",
+    "R shoulder",
+    "R upper arm",
+    "Torso"
+   ],
+   "parent_blend": {
+    "section": "Torso",
+    "share": 0.0,
+    "max_cm": 0.0
+   },
+   "unrelated": []
+  },
+  "Neck": {
+   "moves_sections": [
+    "Head",
+    "Jaw",
+    "L shoulder",
+    "Neck",
+    "Torso"
+   ],
+   "own_sections": [
+    "Head",
+    "Jaw",
+    "Neck"
+   ],
+   "parent_blend": {
+    "section": "Torso",
+    "share": 0.269,
+    "max_cm": 5.8
+   },
+   "unrelated": [
+    "L shoulder"
+   ]
+  },
+  "Head": {
+   "moves_sections": [
+    "Head",
+    "Jaw",
+    "Neck"
+   ],
+   "own_sections": [
+    "Head",
+    "Jaw"
+   ],
+   "parent_blend": {
+    "section": "Neck",
+    "share": 0.417,
+    "max_cm": 4.6
+   },
+   "unrelated": []
+  },
+  "Jaw": {
+   "moves_sections": [
+    "Head",
+    "Jaw"
+   ],
+   "own_sections": [
+    "Jaw"
+   ],
+   "parent_blend": {
+    "section": "Head",
+    "share": 0.069,
+    "max_cm": 6.6
+   },
+   "unrelated": []
+  },
+  "RightShoulder": {
+   "moves_sections": [
+    "Neck",
+    "R forearm",
+    "R hand",
+    "R shoulder",
+    "R upper arm",
+    "Torso"
+   ],
+   "own_sections": [
+    "R forearm",
+    "R hand",
+    "R shoulder",
+    "R upper arm"
+   ],
+   "parent_blend": {
+    "section": "Torso",
+    "share": 0.126,
+    "max_cm": 4.0
+   },
+   "unrelated": [
+    "Neck"
+   ]
+  },
+  "RightUpperArm": {
+   "moves_sections": [
+    "R forearm",
+    "R hand",
+    "R shoulder",
+    "R upper arm"
+   ],
+   "own_sections": [
+    "R forearm",
+    "R hand",
+    "R upper arm"
+   ],
+   "parent_blend": {
+    "section": "R shoulder",
+    "share": 0.515,
+    "max_cm": 3.5
+   },
+   "unrelated": []
+  },
+  "RightLowerArm": {
+   "moves_sections": [
+    "R forearm",
+    "R hand",
+    "R upper arm"
+   ],
+   "own_sections": [
+    "R forearm",
+    "R hand"
+   ],
+   "parent_blend": {
+    "section": "R upper arm",
+    "share": 0.118,
+    "max_cm": 3.7
+   },
+   "unrelated": []
+  },
+  "RightWrist": {
+   "moves_sections": [
+    "R forearm",
+    "R hand"
+   ],
+   "own_sections": [
+    "R forearm",
+    "R hand"
+   ],
+   "parent_blend": {
+    "section": "R forearm",
+    "share": 0.0,
+    "max_cm": 0.0
+   },
+   "unrelated": []
+  },
+  "RightHand": {
+   "moves_sections": [
+    "R forearm",
+    "R hand"
+   ],
+   "own_sections": [
+    "R hand"
+   ],
+   "parent_blend": {
+    "section": "R forearm",
+    "share": 0.123,
+    "max_cm": 4.7
+   },
+   "unrelated": []
+  },
+  "LeftShoulder": {
+   "moves_sections": [
+    "L forearm",
+    "L hand",
+    "L shoulder",
+    "L upper arm",
+    "Neck",
+    "Torso"
+   ],
+   "own_sections": [
+    "L forearm",
+    "L hand",
+    "L shoulder",
+    "L upper arm"
+   ],
+   "parent_blend": {
+    "section": "Torso",
+    "share": 0.144,
+    "max_cm": 6.4
+   },
+   "unrelated": [
+    "Neck"
+   ]
+  },
+  "LeftUpperArm": {
+   "moves_sections": [
+    "L forearm",
+    "L hand",
+    "L shoulder",
+    "L upper arm",
+    "Torso"
+   ],
+   "own_sections": [
+    "L forearm",
+    "L hand",
+    "L upper arm"
+   ],
+   "parent_blend": {
+    "section": "L shoulder",
+    "share": 0.421,
+    "max_cm": 3.9
+   },
+   "unrelated": [
+    "Torso"
+   ]
+  },
+  "LeftLowerArm": {
+   "moves_sections": [
+    "L forearm",
+    "L hand",
+    "L upper arm"
+   ],
+   "own_sections": [
+    "L forearm",
+    "L hand"
+   ],
+   "parent_blend": {
+    "section": "L upper arm",
+    "share": 0.201,
+    "max_cm": 3.8
+   },
+   "unrelated": []
+  },
+  "LeftWrist": {
+   "moves_sections": [
+    "L forearm",
+    "L hand"
+   ],
+   "own_sections": [
+    "L forearm",
+    "L hand"
+   ],
+   "parent_blend": {
+    "section": "L forearm",
+    "share": 0.0,
+    "max_cm": 0.0
+   },
+   "unrelated": []
+  },
+  "LeftHand": {
+   "moves_sections": [
+    "L forearm",
+    "L hand"
+   ],
+   "own_sections": [
+    "L hand"
+   ],
+   "parent_blend": {
+    "section": "L forearm",
+    "share": 0.149,
+    "max_cm": 4.3
+   },
+   "unrelated": []
+  },
+  "RightHip": {
+   "moves_sections": [
+    "Pelvis",
+    "R foot",
+    "R hip",
+    "R lower leg",
+    "R upper leg"
+   ],
+   "own_sections": [
+    "R foot",
+    "R hip",
+    "R lower leg",
+    "R upper leg"
+   ],
+   "parent_blend": {
+    "section": "Pelvis",
+    "share": 0.321,
+    "max_cm": 9.7
+   },
+   "unrelated": []
+  },
+  "RightUpperLeg": {
+   "moves_sections": [
+    "Pelvis",
+    "R foot",
+    "R hip",
+    "R lower leg",
+    "R upper leg"
+   ],
+   "own_sections": [
+    "R foot",
+    "R lower leg",
+    "R upper leg"
+   ],
+   "parent_blend": {
+    "section": "R hip",
+    "share": 0.95,
+    "max_cm": 2.0
+   },
+   "unrelated": [
+    "Pelvis"
+   ]
+  },
+  "RightLowerLeg": {
+   "moves_sections": [
+    "R foot",
+    "R lower leg",
+    "R upper leg"
+   ],
+   "own_sections": [
+    "R foot",
+    "R lower leg"
+   ],
+   "parent_blend": {
+    "section": "R upper leg",
+    "share": 0.514,
+    "max_cm": 4.8
+   },
+   "unrelated": []
+  },
+  "RightFoot": {
+   "moves_sections": [
+    "R foot",
+    "R lower leg"
+   ],
+   "own_sections": [
+    "R foot"
+   ],
+   "parent_blend": {
+    "section": "R lower leg",
+    "share": 0.303,
+    "max_cm": 2.7
+   },
+   "unrelated": []
+  },
+  "RightToes": {
+   "moves_sections": [
+    "R foot"
+   ],
+   "own_sections": [
+    "R foot"
+   ],
+   "parent_blend": {
+    "section": "R foot",
+    "share": 0.0,
+    "max_cm": 0.0
+   },
+   "unrelated": []
+  },
+  "LeftHip": {
+   "moves_sections": [
+    "L foot",
+    "L hip",
+    "L lower leg",
+    "L upper leg",
+    "Pelvis"
+   ],
+   "own_sections": [
+    "L foot",
+    "L hip",
+    "L lower leg",
+    "L upper leg"
+   ],
+   "parent_blend": {
+    "section": "Pelvis",
+    "share": 0.331,
+    "max_cm": 9.8
+   },
+   "unrelated": []
+  },
+  "LeftUpperLeg": {
+   "moves_sections": [
+    "L foot",
+    "L hip",
+    "L lower leg",
+    "L upper leg",
+    "Pelvis"
+   ],
+   "own_sections": [
+    "L foot",
+    "L lower leg",
+    "L upper leg"
+   ],
+   "parent_blend": {
+    "section": "L hip",
+    "share": 0.892,
+    "max_cm": 2.5
+   },
+   "unrelated": [
+    "Pelvis"
+   ]
+  },
+  "LeftLowerLeg": {
+   "moves_sections": [
+    "L foot",
+    "L lower leg",
+    "L upper leg"
+   ],
+   "own_sections": [
+    "L foot",
+    "L lower leg"
+   ],
+   "parent_blend": {
+    "section": "L upper leg",
+    "share": 0.525,
+    "max_cm": 3.7
+   },
+   "unrelated": []
+  },
+  "LeftFoot": {
+   "moves_sections": [
+    "L foot",
+    "L lower leg"
+   ],
+   "own_sections": [
+    "L foot"
+   ],
+   "parent_blend": {
+    "section": "L lower leg",
+    "share": 0.357,
+    "max_cm": 3.2
+   },
+   "unrelated": []
+  },
+  "LeftToes": {
+   "moves_sections": [
+    "L foot"
+   ],
+   "own_sections": [
+    "L foot"
+   ],
+   "parent_blend": {
+    "section": "L foot",
+    "share": 0.0,
+    "max_cm": 0.0
+   },
+   "unrelated": []
+  }
+ },
+ "pivots": {
+  "Pelvis": {
+   "inside": true,
+   "depth_cm": 15.6
+  },
+  "Spine": {
+   "inside": true,
+   "depth_cm": 21.2
+  },
+  "Chest": {
+   "inside": true,
+   "depth_cm": 26.3
+  },
+  "Neck": {
+   "inside": true,
+   "depth_cm": 20.5
+  },
+  "RightShoulder": {
+   "inside": true,
+   "depth_cm": 16.4
+  },
+  "RightUpperArm": {
+   "inside": true,
+   "depth_cm": 5.9
+  },
+  "RightLowerArm": {
+   "inside": true,
+   "depth_cm": 9.3
+  },
+  "RightWrist": {
+   "inside": true,
+   "depth_cm": 11.0
+  },
+  "RightHand": {
+   "inside": true,
+   "depth_cm": 15.6
+  },
+  "LeftShoulder": {
+   "inside": true,
+   "depth_cm": 16.4
+  },
+  "LeftUpperArm": {
+   "inside": true,
+   "depth_cm": 12.8
+  },
+  "LeftLowerArm": {
+   "inside": true,
+   "depth_cm": 12.0
+  },
+  "LeftWrist": {
+   "inside": true,
+   "depth_cm": 13.7
+  },
+  "LeftHand": {
+   "inside": true,
+   "depth_cm": 14.1
+  },
+  "RightHip": {
+   "inside": true,
+   "depth_cm": 15.6
+  },
+  "RightUpperLeg": {
+   "inside": true,
+   "depth_cm": 11.0
+  },
+  "RightLowerLeg": {
+   "inside": true,
+   "depth_cm": 6.9
+  },
+  "RightFoot": {
+   "inside": true,
+   "depth_cm": 4.4
+  },
+  "RightToes": {
+   "inside": true,
+   "depth_cm": 2.3
+  },
+  "LeftHip": {
+   "inside": true,
+   "depth_cm": 15.6
+  },
+  "LeftUpperLeg": {
+   "inside": true,
+   "depth_cm": 12.4
+  },
+  "LeftLowerLeg": {
+   "inside": true,
+   "depth_cm": 11.4
+  },
+  "LeftFoot": {
+   "inside": true,
+   "depth_cm": 10.0
+  },
+  "LeftToes": {
+   "inside": true,
+   "depth_cm": 1.8
+  }
+ },
+ "seams": {
+  "neck turn 45 + nod 30": {
+   "pairs": 11,
+   "max_opening_cm": 6.53
+  },
+  "head turn 45": {
+   "pairs": 11,
+   "max_opening_cm": 14.1
+  },
+  "head nod 40": {
+   "pairs": 11,
+   "max_opening_cm": 7.23
+  },
+  "jaw open 25": {
+   "pairs": 11,
+   "max_opening_cm": 6.82
+  },
+  "jaw shut 30": {
+   "pairs": 11,
+   "max_opening_cm": 7.39
+  }
+ },
+ "ranges": [
+  {
+   "test": "R shoulder - swing fore/aft",
+   "bone": "RightUpperArm",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 2.9,
+     "shrink": 0.34,
+     "folded_triangles": 25,
+     "worst_section": "R upper arm",
+     "angle": -120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.66,
+     "shrink": 0.44,
+     "folded_triangles": 20,
+     "worst_section": "R upper arm",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.25,
+     "shrink": 0.13,
+     "folded_triangles": 12,
+     "worst_section": "R upper arm",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.68,
+     "shrink": 0.4,
+     "folded_triangles": 0,
+     "worst_section": "R upper arm",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.62,
+     "shrink": 0.29,
+     "folded_triangles": 0,
+     "worst_section": "R upper arm",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 2.16,
+     "shrink": 0.17,
+     "folded_triangles": 10,
+     "worst_section": "R upper arm",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.55,
+     "shrink": 0.24,
+     "folded_triangles": 23,
+     "worst_section": "R upper arm",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.77,
+     "shrink": 0.16,
+     "folded_triangles": 26,
+     "worst_section": "R upper arm",
+     "angle": 120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 30,
+   "clean_to_minus": 30
+  },
+  {
+   "test": "R shoulder - swing out/in",
+   "bone": "RightUpperArm",
+   "axis": "Z",
+   "results": [
+    {
+     "stretch": 2.02,
+     "shrink": 0.24,
+     "folded_triangles": 17,
+     "worst_section": "R upper arm",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.79,
+     "shrink": 0.09,
+     "folded_triangles": 10,
+     "worst_section": "R upper arm",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.44,
+     "shrink": 0.52,
+     "folded_triangles": 0,
+     "worst_section": "R upper arm",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.42,
+     "shrink": 0.5,
+     "folded_triangles": 0,
+     "worst_section": "R upper arm",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.75,
+     "shrink": 0.15,
+     "folded_triangles": 11,
+     "worst_section": "R upper arm",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.99,
+     "shrink": 0.33,
+     "folded_triangles": 15,
+     "worst_section": "R upper arm",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 30,
+   "clean_to_minus": 30
+  },
+  {
+   "test": "R elbow",
+   "bone": "RightLowerArm",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 2.6,
+     "shrink": 0.22,
+     "folded_triangles": 12,
+     "worst_section": "R forearm",
+     "angle": -120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.42,
+     "shrink": 0.06,
+     "folded_triangles": 9,
+     "worst_section": "R forearm",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.08,
+     "shrink": 0.34,
+     "folded_triangles": 0,
+     "worst_section": "R forearm",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.59,
+     "shrink": 0.55,
+     "folded_triangles": 0,
+     "worst_section": "R forearm",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.44,
+     "shrink": 0.36,
+     "folded_triangles": 0,
+     "worst_section": "R forearm",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.81,
+     "shrink": 0.08,
+     "folded_triangles": 15,
+     "worst_section": "R forearm",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.09,
+     "shrink": 0.2,
+     "folded_triangles": 26,
+     "worst_section": "R forearm",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.26,
+     "shrink": 0.3,
+     "folded_triangles": 27,
+     "worst_section": "R forearm",
+     "angle": 120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 30,
+   "clean_to_minus": 30
+  },
+  {
+   "test": "R forearm bend",
+   "bone": "RightWrist",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 2.7,
+     "shrink": 0.14,
+     "folded_triangles": 20,
+     "worst_section": "R forearm",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.27,
+     "shrink": 0.28,
+     "folded_triangles": 7,
+     "worst_section": "R forearm",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.69,
+     "shrink": 0.3,
+     "folded_triangles": 0,
+     "worst_section": "R forearm",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.69,
+     "shrink": 0.31,
+     "folded_triangles": 0,
+     "worst_section": "R forearm",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 2.27,
+     "shrink": 0.29,
+     "folded_triangles": 21,
+     "worst_section": "R forearm",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.69,
+     "shrink": 0.33,
+     "folded_triangles": 29,
+     "worst_section": "R forearm",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 30,
+   "clean_to_minus": 30
+  },
+  {
+   "test": "R hand",
+   "bone": "RightHand",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 2.57,
+     "shrink": 0.15,
+     "folded_triangles": 24,
+     "worst_section": "R forearm",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.17,
+     "shrink": 0.32,
+     "folded_triangles": 17,
+     "worst_section": "R forearm",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.63,
+     "shrink": 0.25,
+     "folded_triangles": 0,
+     "worst_section": "R forearm",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.75,
+     "shrink": 0.4,
+     "folded_triangles": 0,
+     "worst_section": "R forearm",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 2.39,
+     "shrink": 0.13,
+     "folded_triangles": 12,
+     "worst_section": "R forearm",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.88,
+     "shrink": 0.15,
+     "folded_triangles": 24,
+     "worst_section": "R forearm",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 30,
+   "clean_to_minus": 30
+  },
+  {
+   "test": "L shoulder - swing fore/aft",
+   "bone": "LeftUpperArm",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 2.5,
+     "shrink": 0.29,
+     "folded_triangles": 30,
+     "worst_section": "L upper arm",
+     "angle": -120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.28,
+     "shrink": 0.21,
+     "folded_triangles": 20,
+     "worst_section": "L shoulder",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.96,
+     "shrink": 0.2,
+     "folded_triangles": 9,
+     "worst_section": "L shoulder",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.51,
+     "shrink": 0.48,
+     "folded_triangles": 1,
+     "worst_section": "L shoulder",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.46,
+     "shrink": 0.55,
+     "folded_triangles": 2,
+     "worst_section": "L shoulder",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.82,
+     "shrink": 0.25,
+     "folded_triangles": 7,
+     "worst_section": "L shoulder",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.06,
+     "shrink": 0.21,
+     "folded_triangles": 19,
+     "worst_section": "L shoulder",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.16,
+     "shrink": 0.2,
+     "folded_triangles": 26,
+     "worst_section": "L shoulder",
+     "angle": 120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 0,
+   "clean_to_minus": 0
+  },
+  {
+   "test": "L shoulder - swing out/in",
+   "bone": "LeftUpperArm",
+   "axis": "Z",
+   "results": [
+    {
+     "stretch": 2.26,
+     "shrink": 0.27,
+     "folded_triangles": 21,
+     "worst_section": "L upper arm",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.93,
+     "shrink": 0.19,
+     "folded_triangles": 8,
+     "worst_section": "L upper arm",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.49,
+     "shrink": 0.59,
+     "folded_triangles": 2,
+     "worst_section": "L upper arm",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.36,
+     "shrink": 0.6,
+     "folded_triangles": 1,
+     "worst_section": "L shoulder",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.65,
+     "shrink": 0.36,
+     "folded_triangles": 9,
+     "worst_section": "Torso",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.92,
+     "shrink": 0.14,
+     "folded_triangles": 18,
+     "worst_section": "Torso",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 0,
+   "clean_to_minus": 0
+  },
+  {
+   "test": "L elbow",
+   "bone": "LeftLowerArm",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 2.36,
+     "shrink": 0.09,
+     "folded_triangles": 23,
+     "worst_section": "L upper arm",
+     "angle": -120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.22,
+     "shrink": 0.18,
+     "folded_triangles": 18,
+     "worst_section": "L upper arm",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.93,
+     "shrink": 0.32,
+     "folded_triangles": 8,
+     "worst_section": "L upper arm",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.51,
+     "shrink": 0.45,
+     "folded_triangles": 0,
+     "worst_section": "L upper arm",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.69,
+     "shrink": 0.43,
+     "folded_triangles": 0,
+     "worst_section": "L upper arm",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 2.3,
+     "shrink": 0.21,
+     "folded_triangles": 7,
+     "worst_section": "L upper arm",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.77,
+     "shrink": 0.47,
+     "folded_triangles": 19,
+     "worst_section": "L upper arm",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 3.05,
+     "shrink": 0.5,
+     "folded_triangles": 22,
+     "worst_section": "L upper arm",
+     "angle": 120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 30,
+   "clean_to_minus": 30
+  },
+  {
+   "test": "L hand",
+   "bone": "LeftHand",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 2.62,
+     "shrink": 0.15,
+     "folded_triangles": 27,
+     "worst_section": "L forearm",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.22,
+     "shrink": 0.32,
+     "folded_triangles": 22,
+     "worst_section": "L forearm",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.66,
+     "shrink": 0.27,
+     "folded_triangles": 0,
+     "worst_section": "L forearm",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.76,
+     "shrink": 0.28,
+     "folded_triangles": 0,
+     "worst_section": "L forearm",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 2.41,
+     "shrink": 0.26,
+     "folded_triangles": 16,
+     "worst_section": "L forearm",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.89,
+     "shrink": 0.15,
+     "folded_triangles": 24,
+     "worst_section": "L forearm",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 30,
+   "clean_to_minus": 30
+  },
+  {
+   "test": "R hip - swing fore/aft",
+   "bone": "RightUpperLeg",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 2.32,
+     "shrink": 0.25,
+     "folded_triangles": 74,
+     "worst_section": "R upper leg",
+     "angle": -120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.88,
+     "shrink": 0.15,
+     "folded_triangles": 56,
+     "worst_section": "R upper leg",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.53,
+     "shrink": 0.18,
+     "folded_triangles": 23,
+     "worst_section": "R upper leg",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.28,
+     "shrink": 0.49,
+     "folded_triangles": 3,
+     "worst_section": "R upper leg",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.48,
+     "shrink": 0.69,
+     "folded_triangles": 1,
+     "worst_section": "Pelvis",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.0,
+     "shrink": 0.35,
+     "folded_triangles": 11,
+     "worst_section": "R upper leg",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.46,
+     "shrink": 0.16,
+     "folded_triangles": 32,
+     "worst_section": "R upper leg",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.78,
+     "shrink": 0.2,
+     "folded_triangles": 51,
+     "worst_section": "R upper leg",
+     "angle": 120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 0,
+   "clean_to_minus": 0
+  },
+  {
+   "test": "R hip - swing out/in",
+   "bone": "RightUpperLeg",
+   "axis": "Z",
+   "results": [
+    {
+     "stretch": 2.08,
+     "shrink": 0.16,
+     "folded_triangles": 36,
+     "worst_section": "Pelvis",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.8,
+     "shrink": 0.36,
+     "folded_triangles": 11,
+     "worst_section": "Pelvis",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.62,
+     "shrink": 0.52,
+     "folded_triangles": 5,
+     "worst_section": "Pelvis",
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.29,
+     "shrink": 0.77,
+     "folded_triangles": 0,
+     "worst_section": "Pelvis",
+     "angle": -20,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.24,
+     "shrink": 0.74,
+     "folded_triangles": 2,
+     "worst_section": "Pelvis",
+     "angle": 20,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.65,
+     "shrink": 0.41,
+     "folded_triangles": 9,
+     "worst_section": "R upper leg",
+     "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.9,
+     "shrink": 0.22,
+     "folded_triangles": 23,
+     "worst_section": "R upper leg",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.36,
+     "shrink": 0.05,
+     "folded_triangles": 49,
+     "worst_section": "R upper leg",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 0,
+   "clean_to_minus": 20
+  },
+  {
+   "test": "R knee",
+   "bone": "RightLowerLeg",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 2.55,
+     "shrink": 0.05,
+     "folded_triangles": 21,
+     "worst_section": "R lower leg",
+     "angle": -120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.36,
+     "shrink": 0.32,
+     "folded_triangles": 4,
+     "worst_section": "R lower leg",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.02,
+     "shrink": 0.58,
+     "folded_triangles": 0,
+     "worst_section": "R lower leg",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.56,
+     "shrink": 0.81,
+     "folded_triangles": 0,
+     "worst_section": "R lower leg",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.15,
+     "shrink": 0.38,
+     "folded_triangles": 1,
+     "worst_section": "R lower leg",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.26,
+     "shrink": 0.07,
+     "folded_triangles": 20,
+     "worst_section": "R lower leg",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.46,
+     "shrink": 0.37,
+     "folded_triangles": 33,
+     "worst_section": "R lower leg",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.93,
+     "shrink": 0.29,
+     "folded_triangles": 44,
+     "worst_section": "R lower leg",
+     "angle": 120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 0,
+   "clean_to_minus": 30
+  },
+  {
+   "test": "R ankle",
+   "bone": "RightFoot",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 1.4,
+     "shrink": 0.53,
+     "folded_triangles": 6,
+     "worst_section": "R foot",
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.29,
+     "shrink": 0.69,
+     "folded_triangles": 5,
+     "worst_section": "R foot",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.15,
+     "shrink": 0.85,
+     "folded_triangles": 0,
+     "worst_section": "R foot",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.14,
+     "shrink": 0.84,
+     "folded_triangles": 0,
+     "worst_section": "R lower leg",
+     "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.27,
+     "shrink": 0.67,
+     "folded_triangles": 0,
+     "worst_section": "R lower leg",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.38,
+     "shrink": 0.5,
+     "folded_triangles": 0,
+     "worst_section": "R lower leg",
+     "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    }
+   ],
+   "clean_to_plus": 45,
+   "clean_to_minus": 15
+  },
+  {
+   "test": "L hip - swing fore/aft",
+   "bone": "LeftUpperLeg",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 2.17,
+     "shrink": 0.21,
+     "folded_triangles": 55,
+     "worst_section": "L upper leg",
+     "angle": -120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.01,
+     "shrink": 0.25,
+     "folded_triangles": 25,
+     "worst_section": "L upper leg",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.73,
+     "shrink": 0.43,
+     "folded_triangles": 12,
+     "worst_section": "L upper leg",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.38,
+     "shrink": 0.6,
+     "folded_triangles": 4,
+     "worst_section": "L upper leg",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.44,
+     "shrink": 0.59,
+     "folded_triangles": 5,
+     "worst_section": "Pelvis",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.81,
+     "shrink": 0.28,
+     "folded_triangles": 25,
+     "worst_section": "Pelvis",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.07,
+     "shrink": 0.27,
+     "folded_triangles": 48,
+     "worst_section": "Pelvis",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.21,
+     "shrink": 0.04,
+     "folded_triangles": 67,
+     "worst_section": "Pelvis",
+     "angle": 120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 0,
+   "clean_to_minus": 0
+  },
+  {
+   "test": "L hip - swing out/in",
+   "bone": "LeftUpperLeg",
+   "axis": "Z",
+   "results": [
+    {
+     "stretch": 1.86,
+     "shrink": 0.29,
+     "folded_triangles": 45,
+     "worst_section": "L upper leg",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.65,
+     "shrink": 0.14,
+     "folded_triangles": 19,
+     "worst_section": "L upper leg",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.51,
+     "shrink": 0.35,
+     "folded_triangles": 13,
+     "worst_section": "L upper leg",
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.24,
+     "shrink": 0.72,
+     "folded_triangles": 6,
+     "worst_section": "L upper leg",
+     "angle": -20,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.25,
+     "shrink": 0.77,
+     "folded_triangles": 1,
+     "worst_section": "L hip",
+     "angle": 20,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.51,
+     "shrink": 0.58,
+     "folded_triangles": 4,
+     "worst_section": "L hip",
+     "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.63,
+     "shrink": 0.51,
+     "folded_triangles": 10,
+     "worst_section": "L hip",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.79,
+     "shrink": 0.47,
+     "folded_triangles": 30,
+     "worst_section": "L hip",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 0,
+   "clean_to_minus": 0
+  },
+  {
+   "test": "L knee",
+   "bone": "LeftLowerLeg",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 1.8,
+     "shrink": 0.11,
+     "folded_triangles": 26,
+     "worst_section": "L upper leg",
+     "angle": -120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.76,
+     "shrink": 0.27,
+     "folded_triangles": 12,
+     "worst_section": "L upper leg",
+     "angle": -90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.6,
+     "shrink": 0.46,
+     "folded_triangles": 6,
+     "worst_section": "L upper leg",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.34,
+     "shrink": 0.73,
+     "folded_triangles": 4,
+     "worst_section": "L upper leg",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.25,
+     "shrink": 0.61,
+     "folded_triangles": 0,
+     "worst_section": "L lower leg",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.44,
+     "shrink": 0.23,
+     "folded_triangles": 1,
+     "worst_section": "L lower leg",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.54,
+     "shrink": 0.24,
+     "folded_triangles": 12,
+     "worst_section": "L lower leg",
+     "angle": 90,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.55,
+     "shrink": 0.1,
+     "folded_triangles": 37,
+     "worst_section": "L lower leg",
+     "angle": 120,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 30,
+   "clean_to_minus": 0
+  },
+  {
+   "test": "L ankle",
+   "bone": "LeftFoot",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 1.39,
+     "shrink": 0.44,
+     "folded_triangles": 18,
+     "worst_section": "L lower leg",
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.28,
+     "shrink": 0.63,
+     "folded_triangles": 8,
+     "worst_section": "L lower leg",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.14,
+     "shrink": 0.81,
+     "folded_triangles": 2,
+     "worst_section": "L lower leg",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.19,
+     "shrink": 0.85,
+     "folded_triangles": 0,
+     "worst_section": "L lower leg",
+     "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.36,
+     "shrink": 0.69,
+     "folded_triangles": 1,
+     "worst_section": "L lower leg",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.52,
+     "shrink": 0.55,
+     "folded_triangles": 3,
+     "worst_section": "L lower leg",
+     "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 15,
+   "clean_to_minus": 0
+  },
+  {
+   "test": "Pelvis tilt",
+   "bone": "Pelvis",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Head",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Head",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Head",
+     "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.0,
+     "shrink": 1.0,
+     "folded_triangles": 0,
+     "worst_section": "Head",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    }
+   ],
+   "clean_to_plus": 30,
+   "clean_to_minus": 30
+  },
+  {
+   "test": "Spine bend",
+   "bone": "Spine",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 1.78,
+     "shrink": 0.02,
+     "folded_triangles": 1,
+     "worst_section": "Torso",
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.54,
+     "shrink": 0.35,
+     "folded_triangles": 0,
+     "worst_section": "Torso",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.28,
+     "shrink": 0.68,
+     "folded_triangles": 0,
+     "worst_section": "Torso",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.3,
+     "shrink": 0.72,
+     "folded_triangles": 0,
+     "worst_section": "Torso",
+     "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.58,
+     "shrink": 0.44,
+     "folded_triangles": 0,
+     "worst_section": "Torso",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.84,
+     "shrink": 0.16,
+     "folded_triangles": 0,
+     "worst_section": "Torso",
+     "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    }
+   ],
+   "clean_to_plus": 45,
+   "clean_to_minus": 30
+  },
+  {
+   "test": "Spine twist",
+   "bone": "Spine",
+   "axis": "Y",
+   "results": [
+    {
+     "stretch": 2.07,
+     "shrink": 0.35,
+     "folded_triangles": 2,
+     "worst_section": "Pelvis",
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.58,
+     "shrink": 0.56,
+     "folded_triangles": 2,
+     "worst_section": "Pelvis",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.26,
+     "shrink": 0.76,
+     "folded_triangles": 0,
+     "worst_section": "Torso",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.27,
+     "shrink": 0.79,
+     "folded_triangles": 0,
+     "worst_section": "Pelvis",
+     "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.59,
+     "shrink": 0.65,
+     "folded_triangles": 2,
+     "worst_section": "Pelvis",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.08,
+     "shrink": 0.52,
+     "folded_triangles": 5,
+     "worst_section": "Pelvis",
+     "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 15,
+   "clean_to_minus": 15
+  },
+  {
+   "test": "Chest bend",
+   "bone": "Chest",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 1.88,
+     "shrink": 0.05,
+     "folded_triangles": 21,
+     "worst_section": "Torso",
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.61,
+     "shrink": 0.24,
+     "folded_triangles": 6,
+     "worst_section": "Torso",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.32,
+     "shrink": 0.62,
+     "folded_triangles": 5,
+     "worst_section": "Torso",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.37,
+     "shrink": 0.67,
+     "folded_triangles": 0,
+     "worst_section": "Torso",
+     "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.73,
+     "shrink": 0.34,
+     "folded_triangles": 2,
+     "worst_section": "Torso",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.07,
+     "shrink": 0.12,
+     "folded_triangles": 5,
+     "worst_section": "Torso",
+     "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 15,
+   "clean_to_minus": 0
+  },
+  {
+   "test": "Neck nod",
+   "bone": "Neck",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 1.85,
+     "shrink": 0.18,
+     "folded_triangles": 19,
+     "worst_section": "Neck",
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.58,
+     "shrink": 0.46,
+     "folded_triangles": 6,
+     "worst_section": "Neck",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.3,
+     "shrink": 0.67,
+     "folded_triangles": 4,
+     "worst_section": "Neck",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.39,
+     "shrink": 0.7,
+     "folded_triangles": 1,
+     "worst_section": "Neck",
+     "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.81,
+     "shrink": 0.4,
+     "folded_triangles": 2,
+     "worst_section": "Neck",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.22,
+     "shrink": 0.16,
+     "folded_triangles": 9,
+     "worst_section": "Neck",
+     "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 0,
+   "clean_to_minus": 0
+  },
+  {
+   "test": "Neck turn",
+   "bone": "Neck",
+   "axis": "Z",
+   "results": [
+    {
+     "stretch": 2.4,
+     "shrink": 0.25,
+     "folded_triangles": 34,
+     "worst_section": "Neck",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.06,
+     "shrink": 0.21,
+     "folded_triangles": 10,
+     "worst_section": "Neck",
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.7,
+     "shrink": 0.45,
+     "folded_triangles": 2,
+     "worst_section": "Neck",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.34,
+     "shrink": 0.73,
+     "folded_triangles": 2,
+     "worst_section": "Neck",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.32,
+     "shrink": 0.73,
+     "folded_triangles": 1,
+     "worst_section": "Neck",
+     "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.67,
+     "shrink": 0.48,
+     "folded_triangles": 2,
+     "worst_section": "Neck",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.01,
+     "shrink": 0.33,
+     "folded_triangles": 14,
+     "worst_section": "Neck",
+     "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 2.34,
+     "shrink": 0.24,
+     "folded_triangles": 28,
+     "worst_section": "Neck",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 0,
+   "clean_to_minus": 0
+  },
+  {
+   "test": "Head nod",
+   "bone": "Head",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 1.9,
+     "shrink": 0.18,
+     "folded_triangles": 3,
+     "worst_section": "Neck",
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.62,
+     "shrink": 0.3,
+     "folded_triangles": 0,
+     "worst_section": "Neck",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.32,
+     "shrink": 0.65,
+     "folded_triangles": 0,
+     "worst_section": "Neck",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.35,
+     "shrink": 0.67,
+     "folded_triangles": 0,
+     "worst_section": "Head",
+     "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.68,
+     "shrink": 0.38,
+     "folded_triangles": 0,
+     "worst_section": "Head",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.99,
+     "shrink": 0.28,
+     "folded_triangles": 0,
+     "worst_section": "Head",
+     "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    }
+   ],
+   "clean_to_plus": 45,
+   "clean_to_minus": 30
+  },
+  {
+   "test": "Head turn",
+   "bone": "Head",
+   "axis": "Z",
+   "results": [
+    {
+     "stretch": 2.18,
+     "shrink": 0.25,
+     "folded_triangles": 13,
+     "worst_section": "Head",
+     "angle": -60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.93,
+     "shrink": 0.29,
+     "folded_triangles": 1,
+     "worst_section": "Head",
+     "angle": -45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    },
+    {
+     "stretch": 1.64,
+     "shrink": 0.38,
+     "folded_triangles": 0,
+     "worst_section": "Head",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.33,
+     "shrink": 0.67,
+     "folded_triangles": 0,
+     "worst_section": "Head",
+     "angle": -15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.33,
+     "shrink": 0.68,
+     "folded_triangles": 0,
+     "worst_section": "Head",
+     "angle": 15,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.64,
+     "shrink": 0.38,
+     "folded_triangles": 0,
+     "worst_section": "Head",
+     "angle": 30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.93,
+     "shrink": 0.28,
+     "folded_triangles": 0,
+     "worst_section": "Head",
+     "angle": 45,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 2.18,
+     "shrink": 0.26,
+     "folded_triangles": 12,
+     "worst_section": "Head",
+     "angle": 60,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": false
+    }
+   ],
+   "clean_to_plus": 45,
+   "clean_to_minus": 30
+  },
+  {
+   "test": "Jaw open / shut",
+   "bone": "Jaw",
+   "axis": "X",
+   "results": [
+    {
+     "stretch": 1.4,
+     "shrink": 0.59,
+     "folded_triangles": 0,
+     "worst_section": "Jaw",
+     "angle": -30,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.29,
+     "shrink": 0.71,
+     "folded_triangles": 0,
+     "worst_section": "Jaw",
+     "angle": -21,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.14,
+     "shrink": 0.87,
+     "folded_triangles": 0,
+     "worst_section": "Head",
+     "angle": -10,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.13,
+     "shrink": 0.85,
+     "folded_triangles": 0,
+     "worst_section": "Jaw",
+     "angle": 10,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.2,
+     "shrink": 0.76,
+     "folded_triangles": 0,
+     "worst_section": "Jaw",
+     "angle": 16,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    },
+    {
+     "stretch": 1.32,
+     "shrink": 0.62,
+     "folded_triangles": 0,
+     "worst_section": "Jaw",
+     "angle": 25,
+     "pieces_apart": 0,
+     "joints_apart": [],
+     "clean": true
+    }
+   ],
+   "clean_to_plus": 25,
+   "clean_to_minus": 30
+  }
+ ]
+}

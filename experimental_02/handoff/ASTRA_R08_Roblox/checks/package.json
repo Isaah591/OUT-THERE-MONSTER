@@ -1,10 +1,10 @@
 {
  "package": "handoff/ASTRA_R08_Roblox",
- "files": 51,
+ "files": 57,
  "zip": "handoff/ASTRA_R08_Roblox.zip",
- "zip_files": 40,
- "zip_mb": 31.0,
- "folder_mb": 75.6,
+ "zip_files": 46,
+ "zip_mb": 34.7,
+ "folder_mb": 75.8,
  "blend": {
   "file": "ASTRA_R08_game.blend",
   "images": [

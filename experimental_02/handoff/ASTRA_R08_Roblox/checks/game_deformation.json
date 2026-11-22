@@ -2,89 +2,89 @@
  "edge_min_studs": 0.107,
  "clips": {
   "Idle": {
-   "max_edge_stretch": 1.1,
-   "max_edge_shrink": 0.9,
+   "max_edge_stretch": 1.07,
+   "max_edge_shrink": 0.91,
    "worst_at": {
-    "frame": 56,
-    "mesh": "ASTRA_R08_Body",
-    "bone": "Head"
+    "frame": 32,
+    "mesh": "ASTRA_R08_Head",
+    "bone": "Jaw"
    },
    "lowest_point_m": -0.019,
    "rigid_skull_and_jaw_error_mm": 0.001
   },
   "Walk": {
-   "max_edge_stretch": 1.78,
-   "max_edge_shrink": 0.34,
+   "max_edge_stretch": 1.09,
+   "max_edge_shrink": 0.9,
    "worst_at": {
-    "frame": 12,
+    "frame": 0,
     "mesh": "ASTRA_R08_Body",
-    "bone": "LeftUpperLeg"
+    "bone": "Pelvis"
    },
    "lowest_point_m": -0.045,
    "rigid_skull_and_jaw_error_mm": 0.001
   },
   "Run": {
-   "max_edge_stretch": 2.02,
-   "max_edge_shrink": 0.19,
+   "max_edge_stretch": 1.18,
+   "max_edge_shrink": 0.79,
    "worst_at": {
-    "frame": 6,
+    "frame": 0,
     "mesh": "ASTRA_R08_Body",
-    "bone": "LeftUpperLeg"
+    "bone": "Chest"
    },
    "lowest_point_m": -0.06,
    "rigid_skull_and_jaw_error_mm": 0.001
   },
   "Chase": {
-   "max_edge_stretch": 2.11,
-   "max_edge_shrink": 0.09,
+   "max_edge_stretch": 1.28,
+   "max_edge_shrink": 0.69,
    "worst_at": {
-    "frame": 6,
-    "mesh": "ASTRA_R08_Body",
-    "bone": "LeftUpperLeg"
+    "frame": 2,
+    "mesh": "ASTRA_R08_Head",
+    "bone": "Jaw"
    },
    "lowest_point_m": -0.06,
    "rigid_skull_and_jaw_error_mm": 0.001
   },
   "Attack": {
-   "max_edge_stretch": 2.39,
-   "max_edge_shrink": 0.07,
+   "max_edge_stretch": 1.57,
+   "max_edge_shrink": 0.59,
    "worst_at": {
-    "frame": 16,
+    "frame": 20,
     "mesh": "ASTRA_R08_Body",
-    "bone": "RightUpperArm"
+    "bone": "Chest"
    },
    "lowest_point_m": -0.019,
    "rigid_skull_and_jaw_error_mm": 0.001
   },
   "Lunge": {
-   "max_edge_stretch": 1.58,
-   "max_edge_shrink": 0.32,
+   "max_edge_stretch": 1.29,
+   "max_edge_shrink": 0.76,
    "worst_at": {
-    "frame": 16,
-    "mesh": "ASTRA_R08_Body",
-    "bone": "RightUpperArm"
+    "frame": 19,
+    "mesh": "ASTRA_R08_Head",
+    "bone": "Jaw"
    },
    "lowest_point_m": -0.036,
    "rigid_skull_and_jaw_error_mm": 0.001
   },
   "HitReact": {
-   "max_edge_stretch": 1.4,
-   "max_edge_shrink": 0.57,
+   "max_edge_stretch": 1.21,
+   "max_edge_shrink": 0.76,
    "worst_at": {
     "frame": 4,
     "mesh": "ASTRA_R08_Body",
-    "bone": "Neck"
+    "bone": "Chest"
    },
    "lowest_point_m": -0.038,
    "rigid_skull_and_jaw_error_mm": 0.001
   },
   "Death": {
-   "max_edge_stretch": 2.04,
-   "max_edge_shrink": 0.01,
+   "max_edge_stretch": 1.56,
+   "max_edge_shrink": 0.57,
    "worst_at": {
     "frame": 60,
     "mesh": "ASTRA_R08_Body",
-    "bone": "RightUpperArm"
+    "bone": "Chest"
    },
    "lowest_point_m": -0.047,
    "rigid_skull_and_jaw_error_mm": 0.001
@@ -112,11 +112,11 @@
    "rigid_skull_and_jaw_error_mm": 0.001
   },
   "HeadTrack": {
-   "max_edge_stretch": 1.64,
-   "max_edge_shrink": 0.37,
+   "max_edge_stretch": 1.0,
+   "max_edge_shrink": 1.0,
    "worst_at": {
-    "frame": 14,
-    "mesh": "ASTRA_R08_Body",
+    "frame": 78,
+    "mesh": "ASTRA_R08_Head",
     "bone": "Head"
    },
    "lowest_point_m": -0.0,

@@ -47,33 +47,33 @@ any weight on the bone.
 
 | Bone | Parent | Head position (studs) | Length (studs) | Vertices | Carries |
 |---|---|---|---|---|---|
-| Root | - | (-0.00, 0.00, 0.00) | 1.07 | 0 | nothing (no skin weight, as Roblox requires); the top of the hierarchy, on the floor at the origin |
-| Pelvis | Root | (-0.13, 4.95, -0.06) | 1.25 | 987 | the bottom of the torso, the pelvis block, the groin block |
-| Spine | Pelvis | (-0.02, 6.00, -0.72) | 1.17 | 565 | the middle of the torso |
-| Chest | Spine | (-0.02, 6.91, -1.46) | 1.24 | 762 | the hunched upper torso (its top corners shared with the shoulders), the rods in the back and flank |
-| Neck | Chest | (-0.02, 7.50, -2.21) | 2.04 | 430 | the neck block (shared with Chest at its base and Head at its top) |
-| Head | Neck | (0.04, 8.55, -3.95) | 2.35 | 4,196 | the whole skull with its armour slabs, sockets, hinge and occiput blocks, the 32 upper teeth, the upper gum, the pupils |
-| Jaw | Head | (0.03, 8.38, -4.66) | 2.20 | 2,337 | the lower jaw block, its 35 teeth and the gum band - rigidly; the cheek sinews, mouth-corner webs and throat stretch between Jaw and Head |
-| RightShoulder | Chest | (0.70, 7.76, -2.05) | 1.42 | 225 | the right top corner of the chest and the start of the long arm |
-| RightUpperArm | RightShoulder | (2.07, 8.04, -2.29) | 3.14 | 433 | the long arm from the shoulder to the elbow |
-| RightLowerArm | RightUpperArm | (3.50, 5.27, -2.71) | 2.55 | 389 | the long arm from the elbow to the forearm bend |
-| RightWrist | RightLowerArm | (3.77, 2.98, -3.80) | 1.54 | 280 | the thick forearm |
-| RightHand | RightWrist | (3.74, 1.67, -4.60) | 1.43 | 283 | the blunt, hollow-looking end that rests on the floor; the rods near it |
-| LeftShoulder | Chest | (-0.73, 7.76, -2.05) | 1.25 | 357 | the left top corner of the chest and the start of the short arm |
-| LeftUpperArm | LeftShoulder | (-1.77, 7.64, -2.75) | 2.02 | 324 | the short arm from the shoulder to the elbow |
-| LeftLowerArm | LeftUpperArm | (-2.27, 5.96, -1.75) | 1.32 | 202 | the short forearm |
-| LeftWrist | LeftLowerArm | (-2.48, 4.73, -1.34) | 0.72 | 139 | the end of the short forearm |
-| LeftHand | LeftWrist | (-2.54, 4.03, -1.48) | 0.72 | 129 | the blunt end of the short arm |
-| RightHip | Pelvis | (-0.13, 4.95, -0.06) | 0.80 | 325 | the right hip block under the right half of the pelvis (its underside shared with the thigh) |
-| RightUpperLeg | RightHip | (0.61, 4.79, -0.30) | 2.20 | 446 | the right thigh |
-| RightLowerLeg | RightUpperLeg | (0.80, 3.12, -1.73) | 2.54 | 443 | the right shin, its knee and the ankle block |
-| RightFoot | RightLowerLeg | (0.86, 1.04, -0.29) | 1.46 | 501 | the right foot block |
-| RightToes | RightFoot | (0.93, 0.18, -1.46) | 0.61 | 256 | the four right toe blocks and the front of the foot |
-| LeftHip | Pelvis | (-0.13, 4.95, -0.06) | 0.80 | 354 | the left hip block under the left half of the pelvis |
-| LeftUpperLeg | LeftHip | (-0.88, 4.79, 0.18) | 1.57 | 418 | the left thigh |
-| LeftLowerLeg | LeftUpperLeg | (-1.21, 3.27, 0.39) | 2.68 | 453 | the left shin, its knee and the ankle block |
-| LeftFoot | LeftLowerLeg | (-1.62, 0.95, 1.66) | 1.10 | 460 | the left foot block |
-| LeftToes | LeftFoot | (-1.70, 0.18, 0.88) | 0.61 | 262 | the four left toe blocks and the front of the foot |
+| Root | - | (-0.00, 0.00, 0.00) | 1.07 | 0 | nothing (no skin weight, as Roblox requires); top of the hierarchy, on the ground at the origin |
+| Pelvis | Root | (-0.13, 4.95, -0.06) | 1.25 | 1,309 | pelvis block, groin block and the torso skin up to the waist |
+| Spine | Pelvis | (-0.02, 6.00, -0.72) | 1.17 | 542 | the torso skin between waist and chest, shared with Pelvis below and Chest above |
+| Chest | Spine | (-0.02, 6.91, -1.46) | 1.24 | 912 | hunched upper torso (top corners shared with the shoulders), the spikes in the back and flank |
+| Neck | Chest | (-0.02, 7.50, -2.21) | 2.04 | 393 | neck block - one rigid armour segment, its base seated in the chest, its top inside the skull |
+| Head | Neck | (0.04, 8.55, -3.95) | 2.35 | 4,071 | skull with its armour slabs, sockets and hinge blocks; the 32 upper teeth; upper gum; eyes |
+| Jaw | Head | (0.03, 8.38, -4.66) | 2.20 | 2,337 | lower jaw, its 35 teeth and the gum band (rigidly); shares the cheek sinews, mouth webs and throat with Head |
+| RightShoulder | Chest | (0.70, 7.76, -2.05) | 1.42 | 94 | part of the chest's right top corner; the long arm hangs from it (no shoulder plate on this side: the arm turns on its own rounded top) |
+| RightUpperArm | RightShoulder | (2.07, 8.04, -2.29) | 3.14 | 450 | long arm, shoulder to elbow - rigid segment; its rounded top is seated in the chest's corner |
+| RightLowerArm | RightUpperArm | (3.50, 5.27, -2.71) | 2.55 | 420 | long arm, elbow to forearm bend - rigid segment |
+| RightWrist | RightLowerArm | (3.77, 2.98, -3.80) | 1.54 | 320 | thick forearm - rigid segment |
+| RightHand | RightWrist | (3.74, 1.67, -4.60) | 1.43 | 236 | blunt hollow end resting on the floor - rigid |
+| LeftShoulder | Chest | (-0.73, 7.76, -2.05) | 1.25 | 277 | left shoulder plate (rigid; the short arm's socket) and part of the chest's left top corner |
+| LeftUpperArm | LeftShoulder | (-1.77, 7.64, -2.75) | 2.02 | 452 | short arm, shoulder to elbow - rigid segment; its rounded top turns inside the shoulder plate |
+| LeftLowerArm | LeftUpperArm | (-2.27, 5.96, -1.75) | 1.32 | 272 | short forearm - rigid segment |
+| LeftWrist | LeftLowerArm | (-2.48, 4.73, -1.34) | 0.72 | 218 | end of the short forearm - rigid segment |
+| LeftHand | LeftWrist | (-2.54, 4.03, -1.48) | 0.72 | 110 | blunt end of the short arm - rigid |
+| RightHip | Pelvis | (-0.13, 4.95, -0.06) | 0.80 | 308 | right hip block under the right half of the pelvis (part of the torso skin, on this bone alone) |
+| RightUpperLeg | RightHip | (0.61, 4.79, -0.30) | 2.20 | 296 | right thigh - rigid segment; its rounded top turns inside the hip block |
+| RightLowerLeg | RightUpperLeg | (0.80, 3.12, -1.73) | 2.54 | 324 | right shin with the knee and ankle blocks - rigid segment |
+| RightFoot | RightLowerLeg | (0.86, 1.04, -0.29) | 1.46 | 304 | right foot block - rigid |
+| RightToes | RightFoot | (0.93, 0.18, -1.46) | 0.61 | 102 | four right toe blocks - rigid |
+| LeftHip | Pelvis | (-0.13, 4.95, -0.06) | 0.80 | 326 | left hip block under the left half of the pelvis (part of the torso skin, on this bone alone) |
+| LeftUpperLeg | LeftHip | (-0.88, 4.79, 0.18) | 1.57 | 268 | left thigh - rigid segment; its rounded top turns inside the hip block |
+| LeftLowerLeg | LeftUpperLeg | (-1.21, 3.27, 0.39) | 2.68 | 324 | left shin with the knee and ankle blocks - rigid segment |
+| LeftFoot | LeftLowerLeg | (-1.62, 0.95, 1.66) | 1.10 | 299 | left foot block - rigid |
+| LeftToes | LeftFoot | (-1.70, 0.18, 0.88) | 0.61 | 102 | four left toe blocks - rigid |
 
 ## Conventions
 
@@ -97,19 +97,22 @@ any weight on the bone.
 
 ## Skin weights
 
-Computed, not painted (`src/game_rig.py`):
+Computed, not painted (`src/game_rig.py`, `body_weights_v2`).  The body is v2, armoured joints
+(`src/game_body_v2.py`; the audit and the before / after numbers are in `RIG_AUDIT.md`):
 
-- each block of the body belongs to a chain of bones (torso: Pelvis > Spine > Chest; long arm:
-  RightShoulder > RightUpperArm > RightLowerArm > RightWrist > RightHand; ...), and a vertex is
-  shared between two neighbouring bones of its chain across a zone centred on their joint, as
-  wide as the joint (smoothstep);
-- where two blocks were united (thigh into hip block, neck into chest, arm into shoulder) the
-  weights are averaged across the seam over a few rings of vertices, so no edge joins two
-  vertices that follow different bones outright;
-- the rods move rigidly with the block they are driven into;
-- at most 4 bones per vertex (body: mean 1.94; head: mean 1.12), every vertex weighted, weights
+- every limb segment is a closed rigid piece on one bone, weight 1: the left shoulder plate
+  (LeftShoulder), each upper arm, forearm, second forearm and hand, each thigh, shin, foot and toe,
+  and the neck.  At each joint one segment ends in a rounded knuckle seated inside its neighbour, so
+  the pieces turn against each other like plates; nothing in a limb stretches or folds;
+- the torso skin (torso, pelvis, hip blocks, groin) is blended: Pelvis > Spine > Chest over the
+  torso's whole free height, from the top of the pelvis block to below the shoulder plates and neck
+  (half linear, half smoothstep ramps along the torso axis); the chest's top corners follow the
+  Shoulder bones part of the way; each hip block is on its Hip bone alone;
+- the spikes move rigidly with the piece they are driven into (those in the torso with the torso
+  skin where they enter it);
+- at most 4 bones per vertex (body: mean 1.28; head: mean 1.12), every vertex weighted, weights
   sum to 1, nothing on Root;
-- head mesh: 3,396 vertices on Head alone, 1,674 on Jaw alone, 663 shared (the sinews, webs and
+- head mesh (unchanged from v1): 3,396 vertices on Head alone, 1,674 on Jaw alone, 663 shared (the sinews, webs and
   throat that must stretch when the mouth moves); eyes on Head alone.
 
 ## Animations
@@ -129,7 +132,8 @@ Computed, not painted (`src/game_rig.py`):
 | HeadTrack | 103 | no | Neck, Head | `export/animations/ASTRA_R08_HeadTrack.fbx` |
 
 All in place (no root motion), keyed every second frame in Blender and baked to every frame in
-the FBX.  The feet are planted by a two-bone solver in Walk, Run and Chase, and arms (and in Lunge
+the FBX.  The v2 body plays the v1 clips unchanged (copied key for key by `src/game_clips_v2.py`; the
+skeleton is the same).  The feet are planted by a two-bone solver in Walk, Run and Chase, and arms (and in Lunge
 and Death the head) are laid on the floor rather than through it.  JawSnap and JawChatter key the
 Jaw bone only and HeadTrack only Neck and Head, so in Roblox they play over any full-body clip and
 move just those bones.  Every clip file carries the same 27 bones with the character's bind pose

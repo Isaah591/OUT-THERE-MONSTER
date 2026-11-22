@@ -231,6 +231,79 @@ def body_weights(ob, J, bones):
     return P, W, isrod
 
 
+# v2 torso skin: the Spine and Chest bones bend it over the whole free height between the top of the
+# pelvis block and the shoulder plates / neck (everything below is pure Pelvis, everything above pure
+# Chest, so the hip blocks, thighs, plates and neck that interlock with the skin there move with it).
+# Spread that wide, a 45-degree bend or twist neither folds nor stretches far.  Metres along the
+# torso axis from the spine joint.
+V2_SPINE_BAND = (-0.115, 0.52)
+V2_CHEST_BAND = (-0.40, 0.52)          # starts below the skin: Chest shares the whole height with Spine
+
+
+def ramp(e0, e1, x):
+    """0 -> 1 between e0 and e1: half linear, half smoothstep (a lower peak slope than smoothstep,
+    no hard kink at the ends)."""
+    t = np.clip((np.asarray(x, float) - e0) / (e1 - e0), 0.0, 1.0)
+    return 0.5 * t + 0.5 * t * t * (3 - 2 * t)
+
+
+def body_weights_v2(ob, J, bones):
+    """v2 body (armoured joints): every limb piece follows its own bone alone; the torso skin keeps
+    blended weights (Pelvis / Spine / Chest, the shoulder corners toward the Shoulder bones, each hip
+    block on its Hip bone); rods move with whatever their base is in."""
+    me = ob.data
+    n = len(me.vertices)
+    P = np.zeros(n * 3)
+    me.vertices.foreach_get("co", P)
+    P = P.reshape(-1, 3)
+    part = np.zeros(n, np.int32)
+    me.attributes["part"].data.foreach_get("value", part)
+    rb = np.zeros(n, np.int32)
+    me.attributes["rigid_bone"].data.foreach_get("value", rb)
+    names = json.loads(ob["parts"])
+    L = {k: np.asarray(v, float) for k, v in J.items() if isinstance(v, list) and len(v) == 3 and not isinstance(v[0], list)}
+    bi = {b[0]: i for i, b in enumerate(bones)}
+    W = np.zeros((n, len(bones)))
+    rigid = rb >= 0
+    W[np.nonzero(rigid)[0], rb[rigid]] = 1.0
+    tax = unit(L["torso_axis"])
+    rules = {"pelvis": (["Pelvis"], []), "groin": (["Pelvis"], []),
+             "hip_R": (["RightHip"], []), "hip_L": (["LeftHip"], [])}
+
+    def weights_of(pname, Q):
+        if pname == "torso":
+            s = (Q - L["spine"]) @ tax
+            a = ramp(*V2_SPINE_BAND, s)                # turned by Spine (and so by Chest, its child)
+            c = a * ramp(*V2_CHEST_BAND, s)            # turned by Chest
+            w = {"Pelvis": 1.0 - a, "Spine": a - c, "Chest": c}
+        else:
+            chain, joints = rules[pname]
+            w = chain_weights(Q, chain, joints)
+        if pname == "torso":                       # the top corners of the chest follow the shoulders part of the way
+            for S, s in (("Right", "R"), ("Left", "L")):
+                f = 0.65 * sstep(0.40, 0.14, np.linalg.norm(Q - L[f"shoulder_{s}"], axis=1))
+                w[f"{S}Shoulder"] = w["Chest"] * f
+                w["Chest"] = w["Chest"] * (1 - f)
+        return w
+    isrod = np.zeros(n, bool)
+    rods = J["rods"]
+    for i, nm in enumerate(names):
+        mask = (~rigid) & (part == i)
+        if not mask.any():
+            continue
+        if nm.startswith("rod_body_"):
+            rd = rods[int(nm.split("_")[-1])]
+            base = np.asarray(rd["base"], float) + np.asarray(rd["dir"], float) * 0.03
+            w = weights_of(rd["host"], base[None])
+            for b, a in w.items():
+                W[mask, bi[b]] = float(a[0])
+            isrod |= mask
+            continue
+        for b, a in weights_of(nm, P[mask]).items():
+            W[np.nonzero(mask)[0], bi[b]] += a
+    return P, W, isrod | rigid
+
+
 def relax(me, W, seam, rounds=9, k=0.6, rings=4, fixed=None):
     """Average the weights with their neighbours' round the seams of the union (and a little
     everywhere), so no edge joins two vertices that follow different bones outright."""
@@ -322,7 +395,8 @@ def main(src=STAGE2, out=OUT):
     co[:, 2] = np.maximum(co[:, 2], 0.0)
     body.data.vertices.foreach_set("co", co.reshape(-1))
     body.data.update()
-    P, W, isrod = body_weights(body, J, B)
+    v2 = body.get("body_version") == "v2"
+    P, W, isrod = (body_weights_v2 if v2 else body_weights)(body, J, B)
     seam = np.zeros(len(P))
     body.data.attributes["on_seam"].data.foreach_get("value", seam)
     W = limit(relax(body.data, W, seam > 0.5, fixed=isrod))

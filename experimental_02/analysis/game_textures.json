@@ -15,5 +15,9 @@
    "Roughness": "textures/ASTRA_R08_Head_Roughness.png",
    "Metalness": "textures/ASTRA_R08_Head_Metalness.png"
   }
+ },
+ "buried_joint_texels_refilled": {
+  "Body": 1167581,
+  "Head": 0
  }
 }

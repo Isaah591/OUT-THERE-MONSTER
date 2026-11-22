@@ -1,8 +1,246 @@
 {
- "body_relief": {
-  "height_mean": 0.010770567475391225,
-  "height_min": -0.029200000000000004,
-  "height_max": 0.046
+ "body_v2": {
+  "buried_vertices": 2515,
+  "pieces": [
+   {
+    "name": "torso",
+    "bone": null,
+    "vertices": 1623,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "RightUpperArm",
+    "bone": "RightUpperArm",
+    "vertices": 450,
+    "knuckle_vertices": 203
+   },
+   {
+    "name": "RightLowerArm",
+    "bone": "RightLowerArm",
+    "vertices": 402,
+    "knuckle_vertices": 146
+   },
+   {
+    "name": "RightWrist",
+    "bone": "RightWrist",
+    "vertices": 302,
+    "knuckle_vertices": 151
+   },
+   {
+    "name": "RightHand",
+    "bone": "RightHand",
+    "vertices": 200,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "LeftShoulderPlate",
+    "bone": "LeftShoulder",
+    "vertices": 164,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "LeftUpperArm",
+    "bone": "LeftUpperArm",
+    "vertices": 434,
+    "knuckle_vertices": 257
+   },
+   {
+    "name": "LeftLowerArm",
+    "bone": "LeftLowerArm",
+    "vertices": 272,
+    "knuckle_vertices": 121
+   },
+   {
+    "name": "LeftWrist",
+    "bone": "LeftWrist",
+    "vertices": 218,
+    "knuckle_vertices": 129
+   },
+   {
+    "name": "LeftHand",
+    "bone": "LeftHand",
+    "vertices": 110,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "RightUpperLeg",
+    "bone": "RightUpperLeg",
+    "vertices": 296,
+    "knuckle_vertices": 170
+   },
+   {
+    "name": "RightLowerLeg",
+    "bone": "RightLowerLeg",
+    "vertices": 306,
+    "knuckle_vertices": 105
+   },
+   {
+    "name": "RightFoot",
+    "bone": "RightFoot",
+    "vertices": 304,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "RightToe0",
+    "bone": "RightToes",
+    "vertices": 24,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "RightToe1",
+    "bone": "RightToes",
+    "vertices": 24,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "RightToe2",
+    "bone": "RightToes",
+    "vertices": 30,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "RightToe3",
+    "bone": "RightToes",
+    "vertices": 24,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "LeftUpperLeg",
+    "bone": "LeftUpperLeg",
+    "vertices": 268,
+    "knuckle_vertices": 182
+   },
+   {
+    "name": "LeftLowerLeg",
+    "bone": "LeftLowerLeg",
+    "vertices": 306,
+    "knuckle_vertices": 103
+   },
+   {
+    "name": "LeftFoot",
+    "bone": "LeftFoot",
+    "vertices": 299,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "LeftToe0",
+    "bone": "LeftToes",
+    "vertices": 24,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "LeftToe1",
+    "bone": "LeftToes",
+    "vertices": 30,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "LeftToe2",
+    "bone": "LeftToes",
+    "vertices": 24,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "LeftToe3",
+    "bone": "LeftToes",
+    "vertices": 24,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "Neck",
+    "bone": "Neck",
+    "vertices": 393,
+    "knuckle_vertices": 139
+   },
+   {
+    "name": "rod_body_5",
+    "bone": "RightLowerArm",
+    "vertices": 18,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "rod_body_6",
+    "bone": "RightWrist",
+    "vertices": 18,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "rod_body_7",
+    "bone": "RightHand",
+    "vertices": 18,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "rod_body_8",
+    "bone": "RightHand",
+    "vertices": 18,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "rod_body_9",
+    "bone": "LeftUpperArm",
+    "vertices": 18,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "rod_body_10",
+    "bone": "LeftLowerLeg",
+    "vertices": 18,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "rod_body_11",
+    "bone": "RightLowerLeg",
+    "vertices": 18,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "rod_body_0",
+    "bone": null,
+    "vertices": 18,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "rod_body_1",
+    "bone": null,
+    "vertices": 18,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "rod_body_2",
+    "bone": null,
+    "vertices": 18,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "rod_body_3",
+    "bone": null,
+    "vertices": 18,
+    "knuckle_vertices": 0
+   },
+   {
+    "name": "rod_body_4",
+    "bone": null,
+    "vertices": 18,
+    "knuckle_vertices": 0
+   }
+  ],
+  "fins_removed": 0,
+  "relief_mean": 0.006310183162833353,
+  "shoulder_plates": {
+   "Right": {
+    "clear_of_chest_m": 0.05,
+    "plate": "none: the upper arm's rounded top takes its place",
+    "top_knuckle_depth_m": 0.035,
+    "top_knuckle_width": 1.0
+   },
+   "Left": {
+    "clear_of_chest_m": 0.335,
+    "plate": "a piece of its own on the Shoulder bone",
+    "top_knuckle_depth_m": 0.034,
+    "top_knuckle_width": 0.43
+   }
+  }
  },
  "head_relief": {
   "height_mean": 0.008947354168885861,
@@ -14,20 +252,23 @@
   "height_min": -0.024626994560658935,
   "height_max": 0.043012177182734014
  },
+ "ASTRA_R08_Body_fins_removed": 0,
  "ASTRA_R08_Body": {
-  "triangles": 9870,
-  "vertices": 4939,
-  "uv_coverage": 0.629,
+  "triangles": 13386,
+  "vertices": 6767,
+  "uv_coverage": 0.638,
   "uv_outside_0_1": 0,
-  "uv_zero_area_faces": 1
+  "uv_zero_area_faces": 0
  },
+ "ASTRA_R08_Head_fins_removed": 2,
  "ASTRA_R08_Head": {
-  "triangles": 11084,
-  "vertices": 5734,
+  "triangles": 11082,
+  "vertices": 5733,
   "uv_coverage": 0.653,
   "uv_outside_0_1": 0,
   "uv_zero_area_faces": 0
  },
+ "ASTRA_R08_Eyes_fins_removed": 0,
  "ASTRA_R08_Eyes": {
   "triangles": 16,
   "vertices": 12,
@@ -36,9 +277,16 @@
   "uv_zero_area_faces": 0
  },
  "cells_m": {
-  "body": 0.068,
+  "body": {
+   "torso": 0.06,
+   "limbs": 0.072,
+   "foot": 0.06,
+   "toes": 0.05,
+   "neck": 0.072
+  },
   "head": 0.046
  },
+ "body_version": "v2",
  "regions": [
   "solid",
   "jaw",

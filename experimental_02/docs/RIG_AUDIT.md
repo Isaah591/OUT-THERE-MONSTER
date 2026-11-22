@@ -1,5 +1,11 @@
 # ASTRA R08 - rig articulation audit
 
+> **Update - option A has been built (v2).**  Sections 1-7 are the audit of v1 as it was written,
+> before anything changed; section 8 has the result, measured with the same script.  v1 is kept:
+> `handoff/ASTRA_R08_Roblox_v1/` (+ `.zip`) and `model/astra_r08_exp02_game_v1.blend`.  The v1
+> numbers are now `analysis/rig_audit_v1.json` (re-measured with the extended script, same values for
+> everything sections 1-7 report) and the v1 pictures `renders/audit_v1/`.
+
 **Audit only - nothing was changed.**  The game model was opened read-only by
 `src/rig_audit.py`; every pose was set on an in-memory copy and never saved.  SHA-256 before and
 after the audit (identical):
@@ -10,7 +16,7 @@ after the audit (identical):
 | `model/astra_r08_exp02_highdetail.blend` | `d9c9f9e51cfa888a295a5ff06bde301af956450568c3969e4735989e20bbee4b` |
 | `handoff/ASTRA_R08_Roblox/ASTRA_R08.fbx` | `0a4fa2fd0affddf25f2c691f9bec7e7f4d01ed11a8d8839a406ca3bec5c78f99` |
 
-Numbers: `analysis/rig_audit.json`.  Pictures: `renders/audit/`.
+Numbers: `analysis/rig_audit_v1.json`.  Pictures: `renders/audit_v1/`.
 
 ## 1. Short answer
 
@@ -103,7 +109,7 @@ underside of the pelvis block.
 
 "Slivers" are one to five tiny triangles left where the body's blocks were united; they flip early
 but are not visible at normal distance.  Visible creasing starts around 60 degrees at the elbows,
-knees, shoulders and hips (`renders/audit/ASTRA_R08_deep_bends.png`).
+knees, shoulders and hips (`renders/audit_v1/ASTRA_R08_deep_bends.png`).
 
 ### Head and neck
 
@@ -169,8 +175,128 @@ silhouette of the blocks, and need all eleven clips re-made as Motor6D animation
 - **A + B** - also split the body into per-section MeshParts for customisation; or
 - **none** - keep the rig as it is and pose within the clean ranges above.
 
-## Pictures
+## Pictures (v1)
 
-- `renders/audit/ASTRA_R08_bone_influence_map.png` - colour = the bone that moves each part.
-- `renders/audit/ASTRA_R08_isolated_joints.png` - each joint bent on its own.
-- `renders/audit/ASTRA_R08_deep_bends.png` - elbows, knees, shoulders and hips bent deep, beside rest.
+- `renders/audit_v1/ASTRA_R08_bone_influence_map.png` - colour = the bone that moves each part.
+- `renders/audit_v1/ASTRA_R08_isolated_joints.png` - each joint bent on its own.
+- `renders/audit_v1/ASTRA_R08_deep_bends.png` - elbows, knees, shoulders and hips bent deep, beside rest.
+
+## 8. Result: option A built (v2)
+
+Decision: **A** ("go with option a, keep the backups and proceed").
+
+**Backups, made before any change** (commit `7ef3a75`), unchanged since:
+
+| File | SHA-256 |
+|---|---|
+| `model/astra_r08_exp02_game_v1.blend` (the v1 game file) | `f76e772e9fe58445f9275ad238597b52bd4b8e185a62b13d73d956dc45893329` |
+| `handoff/ASTRA_R08_Roblox_v1/ASTRA_R08.fbx` (in the v1 package as delivered) | `0a4fa2fd0affddf25f2c691f9bec7e7f4d01ed11a8d8839a406ca3bec5c78f99` |
+| `handoff/ASTRA_R08_Roblox_v1.zip` | `81bc601e89bb0fa0c3bad1a1a5ce0333f7c0163fef6dec34042b27c2bce8697c` |
+| `model/astra_r08_exp02_highdetail.blend` (high-detail source - not touched) | `d9c9f9e51cfa888a295a5ff06bde301af956450568c3969e4735989e20bbee4b` |
+
+v2 is the current build: `model/astra_r08_exp02_game.blend`, `export/`, `handoff/ASTRA_R08_Roblox/` (+ `.zip`).
+
+### What changed - the game Body mesh only (`src/game_body_v2.py`)
+
+- **Limbs are rigid armour segments.**  Each arm and leg is cut at every joint pivot from the same
+  loft as before: upper arm, forearm, second forearm, hand; thigh, shin (with knee and ankle blocks),
+  foot, four toes; and the neck.  Each segment is a closed piece that follows its own bone alone
+  (weight 1), so a limb can no longer stretch, crease or go rubbery.
+- **Rounded knuckles.**  At each joint one segment ends in a rounded knuckle centred on the pivot,
+  seated inside its neighbour and fitted so it stays hidden at rest - the outline at rest is
+  unchanged.  When the joint bends the segments turn against each other like plates.
+- **Shoulders.**  The short left arm keeps its shoulder block as a plate on `LeftShoulder`, a socket the
+  upper arm turns in.  On the long right arm only a 5 cm collar stood between the chest and the
+  joint: left on `RightShoulder` it stood out as a blade when the arm swung, so it is gone, and the
+  arm's own rounded top takes its place.
+- **The torso skin** (torso, pelvis, hip blocks, groin) is still one blended skin.  Each hip block is
+  on its Hip bone alone.  Pelvis / Spine / Chest are now spread over the torso's whole free height,
+  between the top of the pelvis block and the shoulder plates and neck (v1: two 28 cm bands).  The
+  spikes driven into it are separate pieces that move with the skin where they enter it.
+- **Surface.**  No armour relief on faces buried inside a neighbour at rest, faded near other pieces.
+  The texture of the buried knuckles and end caps that a bend turns into view is refilled from the
+  visible armour of the same piece, where the bake had caught the dark inside of the high-detail blocks.
+- **Unchanged:** the skeleton (27 bones, names, hierarchy, rest and bind pose - checked equal), the
+  eleven clips (copied from v1, not re-keyed: 928 curves, 18,784 keys, every one identical -
+  `src/game_clips_v2.py`, `analysis/game_clips_v2.json`), the jaw bone and jaw clips, the Head and Eyes
+  meshes (identical vertices and UVs) and their textures (byte-identical), the high-detail source.
+- Triangles: Body 13,386 (v1 9,852), Head 11,082, Eyes 16 - each under 20,000.
+
+### Measured - the same script, v1 against v2
+
+`analysis/rig_audit_v1.json` and `analysis/rig_audit.json`.  The script gained one test for v2
+(section 6 of its header).  It checks every joint between two pieces that interlock at rest (23 of
+them), and passes if they still interlock at the angle tested.  A pair that came apart would be a gap you could see
+through.  Hip side-swing is now tested to 90.  *Clean* = no folded triangle, no edge stretched more than
+x2, no joint apart.
+
+| Joint | Bone | v1 clean to | v1 worst (stretch / folded) | v2 clean to | v2 worst stretch | v2 folded | v2 pieces apart |
+|---|---|---|---|---|---|---|---|
+| Right shoulder, fore / aft | `RightUpperArm` | +-30 | 2.90 / 26 | **+-120** | 1.00 | 0 | none |
+| Right shoulder, out / in | `RightUpperArm` | +-30 | 2.02 / 17 | **+-90** | 1.00 | 0 | none |
+| Right elbow | `RightLowerArm` | +-30 | 2.60 / 27 | **+-120** | 1.00 | 0 | none |
+| Right forearm bend | `RightWrist` | +-30 | 2.70 / 29 | **+-90** | 1.00 | 0 | none |
+| Right hand | `RightHand` | +-30 | 2.88 / 24 | **+-90** | 1.00 | 0 | none |
+| Left shoulder, fore / aft | `LeftUpperArm` | 0 (slivers) | 2.50 / 30 | **+-120** | 1.00 | 0 | none |
+| Left shoulder, out / in | `LeftUpperArm` | 0 (slivers) | 2.26 / 21 | **+-90** | 1.00 | 0 | none |
+| Left elbow | `LeftLowerArm` | +-30 | 3.05 / 23 | **+-120** | 1.00 | 0 | none |
+| Left hand | `LeftHand` | +-30 | 2.89 / 27 | **+-90** | 1.00 | 0 | none |
+| Right hip, fore / aft | `RightUpperLeg` | 0 (slivers) | 2.78 / 74 | **+-120** | 1.00 | 0 | none |
+| Right hip, out / in | `RightUpperLeg` | +0 / -20 | 2.36 / 49 | **+-90** | 1.00 | 0 | none |
+| Right knee | `RightLowerLeg` | +0 / -30 | 2.55 / 44 | **+-120** | 1.00 | 0 | none |
+| Right ankle | `RightFoot` | +45 / -15 | 1.40 / 6 | **+-45** | 1.00 | 0 | none |
+| Left hip, fore / aft | `LeftUpperLeg` | 0 (slivers) | 2.21 / 67 | **+-120** | 1.00 | 0 | none |
+| Left hip, out / in | `LeftUpperLeg` | 0 (slivers) | 1.86 / 45 | **+-90** | 1.00 | 0 | none |
+| Left knee | `LeftLowerLeg` | +30 / -0 | 1.80 / 37 | **+-120** | 1.00 | 0 | none |
+| Left ankle | `LeftFoot` | +15 / -0 | 1.52 / 18 | **+-45** | 1.00 | 0 | none |
+| Spine bend | `Spine` | +45 / -30 | 1.84 / 1 | **+-45** | 1.46 | 0 | none |
+| Spine twist | `Spine` | +-15 | 2.08 / 5 | **+-45** | 1.34 | 0 | none |
+| Chest bend | `Chest` | +15 / -0 | 2.07 / 21 | **+-45** | 1.53 | 0 | none |
+| Neck nod | `Neck` | 0 (slivers) | 2.22 / 19 | **+-45** | 1.00 | 0 | none |
+| Neck turn | `Neck` | 0 (slivers) | 2.40 / 34 | **+-60** | 1.00 | 0 | none |
+| Head nod | `Head` | +45 / -30 | 1.99 / 3 | **+-45** | 1.00 | 0 | none |
+| Head turn | `Head` | +45 / -30 | 2.18 / 13 | **+-60** | 1.00 | 0 | none |
+| Jaw open / shut | `Jaw` | +25 / -30 | 1.40 / 0 | **+25 / -30** | 1.40 | 0 | none |
+
+Every v2 range is clean to the largest angle tested (the jaw's test range is its useful range).
+
+| Target set before building | v2 |
+|---|---|
+| Elbows and knees fold-free to 120 degrees | all four clean to +-120: no fold, no stretch (rigid segments), no gap |
+| Shoulders and hips to 90 | fore / aft clean to +-120, out / in to +-90 |
+| Neck +-45, spine +-45 | neck nod +-45, turn +-60; spine bend and twist +-45; chest bend +-45 |
+| Stretch at most 1.6 | joints: worst 1.53 (chest bent 45); limbs 1.00.  Clips (largest edge stretch over every frame): Idle 1.07, Walk 1.09, Run 1.18, Chase 1.28, Attack 1.57, Lunge 1.29, HitReact 1.21, Death 1.56, JawSnap 1.32, JawChatter 1.16, HeadTrack 1.00 (v1: up to 2.39 in Attack) |
+| No gaps | all 23 joints between pieces stay interlocked at every tested angle; Head and Body stay joined (the neck's top is seated in the skull; buried surfaces slide by up to 16 cm, out of sight) |
+| Each mesh under 20,000 triangles | Body 13,386, Head 11,082, Eyes 16 |
+| Full FBX verification re-run | 116 of 116 checks pass (`docs/FBX_VERIFICATION.md`) |
+| Deformation sheet and clip re-rendered | `renders/game/ASTRA_R08_game_poses.png`, `renders/game/ASTRA_R08_deformation_test.mp4`; deep bends v1 above v2: `renders/game/ASTRA_R08_deep_bends_v1_v2.png` |
+
+**Independence.**  The four over-wide blend zones of v1 are gone:
+
+- Neck no longer moves the top of the left shoulder.
+- The Shoulder bones no longer move the base of the neck.
+- LeftUpperArm no longer moves the side of the chest.
+- The UpperLeg bones no longer move the underside of the pelvis.
+
+Every limb bone now moves its own segments and nothing else.  One wide zone is deliberate: the torso
+skin is shared by Pelvis, Spine and Chest over its whole height, so a 45-degree bend spreads
+instead of folding.  Colouring by the bone that carries the most labels the lower half of that skin
+"Pelvis", and turning Chest 25 degrees moves that skin too (up to 5.7 cm, median 1.6 cm).  Narrower
+chest bands that keep it still were tried and measured: they push the chest bend at 45 degrees to a
+1.66-1.88 stretch, and one folds.
+
+**Things to know:**
+
+- Pieces that interlock pass through each other at the extremes of a pose rather than open a gap,
+  the way real armour plates would collide: a thigh swung 90 degrees inward would pass through the
+  other leg.  Keep poses to what the creature could physically do.
+- Where a limb turns through its shoulder plate or hip block at a large angle, the line where the two
+  surfaces cross is jagged (faceted, low-poly surfaces).  The left shoulder plate's lower edge shows
+  as a seam at rest.
+- A rounded knuckle or end cap that a bend turns into view is smooth, with the colour of its piece but
+  without the plate detail.
+- The torso is still linear-blend skinned (the only skinning Roblox has): clean to 45 degrees, it will
+  start to fold well beyond.
+
+Pictures (v2): `renders/audit/ASTRA_R08_bone_influence_map.png`, `renders/audit/ASTRA_R08_isolated_joints.png`,
+`renders/game/ASTRA_R08_deep_bends_v1_v2.png`.

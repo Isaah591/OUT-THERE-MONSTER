@@ -2,8 +2,10 @@
 
     bvenv/bin/python experimental_02/src/handoff.py
 
-Run after game_export.py (which writes and verifies the FBX files).  Builds
-experimental_02/handoff/ASTRA_R08_Roblox/ and experimental_02/handoff/ASTRA_R08_Roblox.zip:
+Run after game_export.py (which writes and verifies the FBX files) and rig_audit.py (articulation,
+before and after the joint rebuild).  Builds experimental_02/handoff/ASTRA_R08_Roblox/ and
+experimental_02/handoff/ASTRA_R08_Roblox.zip - version 2 (armoured joints); version 1 is kept as it was
+delivered in handoff/ASTRA_R08_Roblox_v1/ and handoff/ASTRA_R08_Roblox_v1.zip:
 
     README.md                      how to bring the monster and its clips into Roblox Studio
     ASTRA_R08.fbx                  the character: meshes + skeleton + skin, textures embedded
@@ -12,8 +14,8 @@ experimental_02/handoff/ASTRA_R08_Roblox/ and experimental_02/handoff/ASTRA_R08_
     textures/                      the 1024 maps (+ uv/ layouts, + source_2048/ masters - folder only)
     rig/                           BONES.md, bones.csv, rig picture
     roblox/                        AstraR08 controller, test script, both in ASTRA_R08_Scripts.rbxmx
-    checks/                        the verification report and its data
-    previews/                      pose sheet, deformation clip, comparison pictures
+    checks/                        the verification report and its data, the articulation audit (v1 and v2)
+    previews/                      pose sheet, deformation clip, comparison pictures, deep bends v1 / v2
     MANIFEST.txt                   every file with its size and SHA-256
 
 The high-detail source model is not touched (it is not part of the package; see the README).
@@ -30,33 +32,65 @@ STUD = 0.28
 
 CARRIES = {
     "Root": "nothing (no skin weight, as Roblox requires); top of the hierarchy, on the ground at the origin",
-    "Pelvis": "bottom of the torso, pelvis block, groin block",
-    "Spine": "middle of the torso",
-    "Chest": "hunched upper torso (top corners shared with the shoulders), rods in the back and flank",
-    "Neck": "neck block (shared with Chest at its base, Head at its top)",
+    "Pelvis": "pelvis block, groin block and the torso skin up to the waist",
+    "Spine": "the torso skin between waist and chest, shared with Pelvis below and Chest above",
+    "Chest": "hunched upper torso (top corners shared with the shoulders), the spikes in the back and flank",
+    "Neck": "neck block - one rigid armour segment, its base seated in the chest, its top inside the skull",
     "Head": "skull with its armour slabs, sockets and hinge blocks; the 32 upper teeth; upper gum; eyes",
     "Jaw": "lower jaw, its 35 teeth and the gum band (rigidly); shares the cheek sinews, mouth webs and throat with Head",
-    "RightShoulder": "right top corner of the chest, start of the long arm",
-    "RightUpperArm": "long arm, shoulder to elbow",
-    "RightLowerArm": "long arm, elbow to forearm bend",
-    "RightWrist": "thick forearm",
-    "RightHand": "blunt hollow end resting on the floor",
-    "LeftShoulder": "left top corner of the chest, start of the short arm",
-    "LeftUpperArm": "short arm, shoulder to elbow",
-    "LeftLowerArm": "short forearm",
-    "LeftWrist": "end of the short forearm",
-    "LeftHand": "blunt end of the short arm",
-    "RightHip": "right hip block under the right half of the pelvis",
-    "RightUpperLeg": "right thigh",
-    "RightLowerLeg": "right shin, knee and ankle block",
-    "RightFoot": "right foot block",
-    "RightToes": "four right toe blocks",
-    "LeftHip": "left hip block under the left half of the pelvis",
-    "LeftUpperLeg": "left thigh",
-    "LeftLowerLeg": "left shin, knee and ankle block",
-    "LeftFoot": "left foot block",
-    "LeftToes": "four left toe blocks",
+    "RightShoulder": "part of the chest's right top corner; the long arm hangs from it (no shoulder plate on this side: the arm turns on its own rounded top)",
+    "RightUpperArm": "long arm, shoulder to elbow - rigid segment; its rounded top is seated in the chest's corner",
+    "RightLowerArm": "long arm, elbow to forearm bend - rigid segment",
+    "RightWrist": "thick forearm - rigid segment",
+    "RightHand": "blunt hollow end resting on the floor - rigid",
+    "LeftShoulder": "left shoulder plate (rigid; the short arm's socket) and part of the chest's left top corner",
+    "LeftUpperArm": "short arm, shoulder to elbow - rigid segment; its rounded top turns inside the shoulder plate",
+    "LeftLowerArm": "short forearm - rigid segment",
+    "LeftWrist": "end of the short forearm - rigid segment",
+    "LeftHand": "blunt end of the short arm - rigid",
+    "RightHip": "right hip block under the right half of the pelvis (part of the torso skin, on this bone alone)",
+    "RightUpperLeg": "right thigh - rigid segment; its rounded top turns inside the hip block",
+    "RightLowerLeg": "right shin with the knee and ankle blocks - rigid segment",
+    "RightFoot": "right foot block - rigid",
+    "RightToes": "four right toe blocks - rigid",
+    "LeftHip": "left hip block under the left half of the pelvis (part of the torso skin, on this bone alone)",
+    "LeftUpperLeg": "left thigh - rigid segment; its rounded top turns inside the hip block",
+    "LeftLowerLeg": "left shin with the knee and ankle blocks - rigid segment",
+    "LeftFoot": "left foot block - rigid",
+    "LeftToes": "four left toe blocks - rigid",
 }
+# joint-range tests of the articulation audit shown in the README (label in rig_audit.py -> README name)
+JOINT_ROWS = [("R shoulder - swing fore/aft", "Right shoulder, swing fore / aft"), ("R shoulder - swing out/in", "Right shoulder, swing out / in"),
+              ("R elbow", "Right elbow"), ("R forearm bend", "Right forearm bend (RightWrist)"), ("R hand", "Right hand"),
+              ("L shoulder - swing fore/aft", "Left shoulder, swing fore / aft"), ("L shoulder - swing out/in", "Left shoulder, swing out / in"),
+              ("L elbow", "Left elbow"), ("L hand", "Left hand"),
+              ("R hip - swing fore/aft", "Right hip, swing fore / aft"), ("R hip - swing out/in", "Right hip, swing out / in"),
+              ("R knee", "Right knee"), ("R ankle", "Right ankle"),
+              ("L hip - swing fore/aft", "Left hip, swing fore / aft"), ("L hip - swing out/in", "Left hip, swing out / in"),
+              ("L knee", "Left knee"), ("L ankle", "Left ankle"),
+              ("Spine bend", "Spine bend"), ("Spine twist", "Spine twist"), ("Chest bend", "Chest bend"),
+              ("Neck nod", "Neck nod"), ("Neck turn", "Neck turn"), ("Head nod", "Head nod"), ("Head turn", "Head turn"),
+              ("Jaw open / shut", "Jaw open / shut")]
+
+
+def articulation(a1, a2):
+    """README table: the largest clean angle of every joint, v1 against v2 (same audit script)."""
+    r1 = {r["test"]: r for r in a1["ranges"]}
+    r2 = {r["test"]: r for r in a2["ranges"]}
+
+    def rng(r):
+        p, m = r["clean_to_plus"], r["clean_to_minus"]
+        tested = max(abs(x["angle"]) for x in r["results"])
+        s = ("0" if p == 0 else f"+-{p}") if p == m else f"+{p} / -{m}"
+        return s + (" (all tested)" if p == m == tested else "")
+    rows = []
+    for key, name in JOINT_ROWS:
+        a, b = r1[key], r2[key]
+        st = max(x["stretch"] for x in b["results"])
+        fo = max(x["folded_triangles"] for x in b["results"])
+        ap = sorted({j for x in b["results"] for j in x.get("joints_apart", [])})
+        rows.append(f"| {name} | `{b['bone']}` | {rng(a)} | **{rng(b)}** | {st:.2f} | {fo} | {', '.join(ap) if ap else 'none'} |")
+    return "\n".join(rows)
 PRIORITY = {"Idle": "Idle", "Walk": "Movement", "Run": "Movement", "Chase": "Movement", "Attack": "Action",
             "Lunge": "Action", "HitReact": "Action2", "Death": "Action4", "JawSnap": "Action3", "JawChatter": "Action3",
             "HeadTrack": "Action2"}
@@ -177,6 +211,11 @@ The same table as CSV: `bones.csv`.
 
 ## Notes for animating
 
+- **v2 armoured joints**: every limb segment, the shoulder plates and the neck are rigid pieces, each on
+  its one bone, seated inside the next piece at the joint - bend the limb joints as far as the pose
+  needs (elbows, knees, shoulders and hips were tested clean to 90-120 degrees, wrists and hands to 90,
+  ankles to 45; see the README).  The torso skin bends between Pelvis, Spine and Chest (clean to 45
+  degrees each way, bend and twist).
 - **Root** sits on the ground at the origin and carries no weight.  The clips key it but never move it
   (in place, no root motion): move the model itself in the game.
 - **Jaw** is a bone of its own at the hinge (head at the middle of the hinge line, tail at the chin); the
@@ -224,7 +263,7 @@ def rbxmx(module_src, test_src):
 
 # ------------------------------------------------------------------------------- README
 
-def readme(V, anims, weights, blend, rig):
+def readme(V, anims, weights, blend, rig, audit_v1, audit_v2, carried):
     b = V["structure"]["base"]
     meshes = b["meshes"]
     clips = V["structure"]["clips"]
@@ -249,12 +288,49 @@ def readme(V, anims, weights, blend, rig):
     def num(v):
         return "0" if abs(v) < 1e-12 else f"{v:.0e}"
     infl = {k: v["max_influences"] for k, v in meshes.items()}
-    return f"""# ASTRA R08 - Roblox Studio handoff
+    sea = audit_v2["seams"]
+    return f"""# ASTRA R08 - Roblox Studio handoff (v2: armoured joints)
 
 Everything needed to bring the ASTRA R08 monster into Roblox Studio as an animated enemy: the
 game-ready mesh, its 27-bone skeleton and skinning, textures, eleven animation clips (each in its own
 FBX, all on the same skeleton and bind pose), an independently animated jaw, the bone list, a
 controller script and a test script.
+
+## What is new in v2
+
+v1 (kept unchanged beside this package: `ASTRA_R08_Roblox_v1/` and `ASTRA_R08_Roblox_v1.zip`) covered
+the body in one blended skin, which folded and went rubbery when a joint bent past about 30 degrees.
+In v2 the joints of the game Body mesh are rebuilt the way ASTRA's armour is built:
+
+- every limb segment - upper arm, forearm, second forearm, hand, thigh, shin, foot, toes, the left
+  shoulder plate and the neck - is a **rigid closed piece that follows its own bone alone**;
+- at each joint one segment ends in a rounded knuckle seated inside its neighbour, so when the joint
+  bends the segments turn against each other like plates, with no crease, no stretch and no gap (the
+  long right arm turns on its own rounded top, seated in the chest);
+- only the torso skin bends (Pelvis / Spine / Chest), spread over its whole height between the hip
+  blocks and the shoulder plates;
+- the spikes ride with the piece they are driven into.
+
+**Unchanged:** the skeleton (the same {len(rig['bones'])} bones, names, hierarchy, rest and bind pose), the eleven
+clips (copied from v1 key for key - {sum(c['keys'] for c in carried['clips']):,} keys, none different), the jaw
+system, the Head and Eyes meshes (identical vertices and UVs), the silhouette at rest, and the
+high-detail source.  Nothing in Studio is set up differently from v1.
+
+Measured by the same audit script on both versions (`checks/rig_audit_v1.json`, `checks/rig_audit.json`):
+each joint bent on its own; *clean* = no triangle turned inside out, no edge stretched more than x2,
+and (v2) every pair of interlocking pieces still interlocked.
+
+| Joint | Bone | v1 clean to (degrees) | v2 clean to (degrees) | v2 worst stretch | v2 folded triangles | v2 pieces apart |
+|---|---|---|---|---|---|---|
+{articulation(audit_v1, audit_v2)}
+
+Rotating a limb bone on its own moves only its own segments and the ones below it in the hierarchy
+(measured for every bone); Pelvis, Spine and Chest share the torso skin, so Spine and Chest bend it
+smoothly from the waist up.  The Head and Body meshes stay joined when the head and jaw move (the
+neck's top is seated inside the skull; buried surfaces slide past each other by up to
+{max(v['max_opening_cm'] for v in sea.values()):.0f} cm, out of sight).  Interlocking pieces pass
+through each other at the extremes of a pose rather than open a gap - as real armour plates would
+collide, keep poses within what the creature could physically do.
 
 **Status:** every file was exported from Blender with the settings in Roblox's Blender guide and
 verified in Blender ({n_pass} of {n_all} checks passed - below and in `checks/VERIFICATION.md`).  The
@@ -272,8 +348,8 @@ everything arrived.
 | `textures/` | `ASTRA_R08_<Body or Head>_<Color, Normal, Roughness, Metalness>.png`, 1024 x 1024 (Color / Normal 24-bit RGB, normal map OpenGL tangent space; Roughness / Metalness 8-bit grey); `uv/` UV layouts; `source_2048/` 2048 masters + albedo and ambient occlusion (folder only, not in the zip) |
 | `rig/` | `BONES.md` (every bone, its parent and what it moves), `bones.csv`, `ASTRA_R08_rig_reference.png` |
 | `roblox/` | `AstraR08.lua` (ModuleScript: plays the clips, layers jaw / head clips, procedural jaw and look-at), `AstraR08_Test.server.lua` (Script: plays every clip in turn), both together in `ASTRA_R08_Scripts.rbxmx` |
-| `checks/` | `VERIFICATION.md` (all {n_all} checks with their numbers), the data behind it, deformation numbers |
-| `previews/` | Pose sheet and deformation clip (MP4) of every clip, the game model beside the high-detail model |
+| `checks/` | `VERIFICATION.md` (all {n_all} checks with their numbers), the data behind it, deformation numbers, the articulation audit of v1 and v2 (`rig_audit_v1.json`, `rig_audit.json`), the clip carry-over check (`game_clips_v2.json`) |
+| `previews/` | Pose sheet and deformation clip (MP4) of every clip, the game model beside the high-detail model, deep joint bends v1 against v2, the bone-influence map and isolated joint bends of v2 |
 | `MANIFEST.txt` | Every file with its size and SHA-256 |
 
 The high-detail source model (1.13 million triangles) the maps were baked from is not part of the
@@ -317,6 +393,27 @@ package and was not changed: `experimental_02/model/astra_r08_exp02_highdetail.b
 6. **Animation holder.**  If the import did not create one, insert an `AnimationController` into the
    Model and an `Animator` into the AnimationController (a non-humanoid rig plays animations through
    these; the Animation Editor also needs one to open the rig).
+
+## Posing it in the Animation Editor
+
+Every section has its own bone - each upper arm, forearm, hand, thigh, shin and foot, the pelvis,
+the torso, the head and the jaw - and the Animation Editor poses bones directly ("for bones, you
+can rotate them to pose the rig" - Roblox Creator docs).
+
+1. Select the ASTRA_R08 model and open the **Animation Editor** (Avatar tab).
+2. Bones show while the Animation Editor is open (or with **View > Show Constraint Details**).  Click
+   a bone's joint in the viewport, or select the `Bone` in the Explorer (inside the model's MeshPart:
+   Root > Pelvis > Spine > Chest > ...).
+3. Rotate it (rotate tool).  A track for that bone appears in the track list.
+4. R15 equivalents: Pelvis ~ LowerTorso (root joint), Spine / Chest ~ UpperTorso (waist),
+   RightUpperArm ~ shoulder, RightLowerArm ~ elbow, RightHand ~ wrist, RightUpperLeg ~ hip,
+   RightLowerLeg ~ knee, RightFoot ~ ankle.  ASTRA adds RightWrist (a second forearm joint for the
+   long arm), the Shoulder and Hip bones (the chest's top corners and the left shoulder plate / the hip
+   blocks), Toes, Neck and Jaw.
+5. Rotating **Pelvis** moves the whole body; to tilt the hips with the feet planted, counter-rotate the
+   UpperLeg bones.  **RightHip / LeftHip** swing the whole leg about the pelvis centre; use **UpperLeg**
+   for normal hip bending.  Forward posing (bone by bone) is the documented way; Roblox does not say
+   whether its IK works on bone rigs.
 
 ## 2. Import the animations
 
@@ -414,6 +511,11 @@ def main():
     anims = json.load(open(os.path.join(AN, "game_animations.json")))
     weights = json.load(open(os.path.join(AN, "game_weights.json")))
     rig = json.load(open(os.path.join(AN, "game_rig.json")))
+    audit_v2 = json.load(open(os.path.join(AN, "rig_audit.json")))
+    audit_v1 = json.load(open(os.path.join(AN, "rig_audit_v1.json")))
+    carried = json.load(open(os.path.join(AN, "game_clips_v2.json")))
+    assert audit_v2.get("body_pieces", 1) > 1 and audit_v2["model"].endswith("astra_r08_exp02_game.blend"), "rig_audit.json is not the v2 audit"
+    assert all(c["max_key_difference"] == 0 for c in carried["clips"]) and len(carried["clips"]) == len(anims["clips"])
     # FBX files
     copy(os.path.join(ROOT, "export", "ASTRA_R08.fbx"), os.path.join(PKG, "ASTRA_R08.fbx"))
     for c in anims["clips"]:
@@ -457,13 +559,15 @@ def main():
     open(os.path.join(PKG, "roblox", "ASTRA_R08_Scripts.rbxmx"), "w").write(x)
     # checks and previews
     copy(os.path.join(ROOT, "docs", "FBX_VERIFICATION.md"), os.path.join(PKG, "checks", "VERIFICATION.md"))
-    for f in ("fbx_verification.json", "game_deformation.json", "game_weights.json", "game_animations.json", "game_rig.json"):
+    for f in ("fbx_verification.json", "game_deformation.json", "game_weights.json", "game_animations.json", "game_rig.json",
+              "rig_audit.json", "rig_audit_v1.json", "game_clips_v2.json"):
         copy(os.path.join(AN, f), os.path.join(PKG, "checks", f))
     for src in ("renders/game/ASTRA_R08_game_poses.png", "renders/game/ASTRA_R08_deformation_test.mp4",
-                "renders/game/ASTRA_R08_game_vs_highdetail.png"):
+                "renders/game/ASTRA_R08_game_vs_highdetail.png", "renders/game/ASTRA_R08_deep_bends_v1_v2.png",
+                "renders/audit/ASTRA_R08_bone_influence_map.png", "renders/audit/ASTRA_R08_isolated_joints.png"):
         copy(os.path.join(ROOT, src), os.path.join(PKG, "previews", os.path.basename(src)))
     # README
-    open(os.path.join(PKG, "README.md"), "w").write(readme(V, anims, weights, blend, rig))
+    open(os.path.join(PKG, "README.md"), "w").write(readme(V, anims, weights, blend, rig, audit_v1, audit_v2, carried))
     # manifest
     files = []
     for d, _, fs in os.walk(PKG):
@@ -471,7 +575,7 @@ def main():
             p = os.path.join(d, f)
             files.append((os.path.relpath(p, PKG), os.path.getsize(p), sha256(p)))
     files.sort()
-    lines = ["ASTRA R08 - Roblox Studio handoff package: files, sizes, SHA-256", ""]
+    lines = ["ASTRA R08 - Roblox Studio handoff package, v2 (armoured joints): files, sizes, SHA-256", ""]
     lines += [f"{s:>11,}  {h}  {r}" for r, s, h in files]
     open(os.path.join(PKG, "MANIFEST.txt"), "w").write("\n".join(lines) + "\n")
     # zip (without the 2048 masters, which stay in the folder)

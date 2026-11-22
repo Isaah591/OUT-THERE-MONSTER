@@ -8,12 +8,18 @@ and turns the creature into a rigged, animatable Roblox enemy:
    the right half of the pelvis instead of out of the groin.
 2. **Head geometry** — the skull is rebuilt as a curved, organic form instead of a flat mask on
    a block.
-3. **Roblox rigging** — a 21k-triangle game model with UV maps and baked textures, a 27-bone
-   skeleton with an independent jaw, eleven clips, and FBX files checked against Roblox's
-   import requirements.
+3. **Roblox rigging** — a game model (every mesh under Roblox's 20,000-triangle limit) with UV
+   maps and baked textures, a 27-bone skeleton with an independent jaw, eleven clips, and FBX files
+   checked against Roblox's import requirements.
 4. **Roblox handoff package** — [`handoff/ASTRA_R08_Roblox/`](handoff/ASTRA_R08_Roblox/README.md)
    (and `handoff/ASTRA_R08_Roblox.zip`): everything for Roblox Studio in one place, with exact import
    steps, the bone list, a controller and a test script.
+5. **Armoured joints (v2)** — after an articulation audit ([docs/RIG_AUDIT.md](docs/RIG_AUDIT.md)), the
+   game body's joints were rebuilt as rigid armour segments with rounded knuckles, so every limb
+   poses cleanly in Studio's Animation Editor: elbows and knees to 120 degrees, shoulders and hips to
+   90-120, spine, chest and neck to 45 - with the same skeleton and the same eleven clips.  The v1
+   package and game file are kept: `handoff/ASTRA_R08_Roblox_v1/` (+ `.zip`),
+   `model/astra_r08_exp02_game_v1.blend`.
 
 ![Model 02 sheet](renders/ASTRA_R08_EXP02_sheet.png)
 
@@ -25,14 +31,15 @@ and turns the creature into a rigged, animatable Roblox enemy:
 | 2. Roblox-compatible FBX | `export/ASTRA_R08.fbx` (meshes + skeleton, textures embedded) and `export/animations/ASTRA_R08_<Clip>.fbx` (one clip per file).  Import steps: [docs/ROBLOX_IMPORT.md](docs/ROBLOX_IMPORT.md). |
 | 3. UV maps | One UV set per mesh, inside 0–1, islands packed apart (only 0.1 % of the body's texels and 0.01 % of the head's are shared, at slivers left where blocks were united), in the .blend and the FBX.  Layouts: `textures/uv/ASTRA_R08_<Body or Head>_UV_layout.png` and `_UV_over_color.png`. |
 | 4. Texture maps and materials | `textures/ASTRA_R08_<Body or Head>_<Color, Normal, Roughness, Metalness>.png` (1024 × 1024, the Roblox set); `textures/source/*_2048.png` (2048 masters, plus albedo and ambient-occlusion maps); one material per mesh. |
-| 5. Optimised game geometry | Body 9,852 + Head 11,082 + Eyes 16 = **20,950 triangles** (each mesh under Roblox's 20,000), from 1,130,370 in the high-detail model. |
+| 5. Optimised game geometry | Body 13,386 + Head 11,082 + Eyes 16 = **24,484 triangles** (each mesh under Roblox's 20,000 per-mesh limit), from 1,130,370 in the high-detail model.  (v1's body, one blended skin: 9,852.) |
 | 6. High-detail source retained | `model/astra_r08_exp02_highdetail.blend` (1,130,370 triangles, every rust plate modelled) — the bake source. |
 | 7. Rig hierarchy reference | [docs/RIG_HIERARCHY.md](docs/RIG_HIERARCHY.md), [docs/ASTRA_R08_rig_reference.png](docs/ASTRA_R08_rig_reference.png), `analysis/game_rig.json`. |
 | 8. Deformation test | `renders/game/ASTRA_R08_game_poses.png` (14 poses × 2 views + close-ups), `renders/game/ASTRA_R08_deformation_test.mp4` (all clips in sequence), `analysis/game_deformation.json` (measured). |
+| Articulation audit (v1 → v2) | [docs/RIG_AUDIT.md](docs/RIG_AUDIT.md) — every joint bent on its own, v1 and v2 measured with the same script (`analysis/rig_audit_v1.json`, `analysis/rig_audit.json`); deep bends v1 above v2: `renders/game/ASTRA_R08_deep_bends_v1_v2.png`; bone-influence map and isolated bends: `renders/audit/` (v2), `renders/audit_v1/` (v1). |
 | Before / after | `renders/ASTRA_R08_EXP02_vs_EXP01.png` (hips and skull, Model 01 beside Model 02). |
 | Against the approved sheet | `renders/ASTRA_R08_EXP02_vs_approved.png`, `renders/silhouette_check.png`; game model beside the high-detail model: `renders/game/ASTRA_R08_game_vs_highdetail.png`. |
 | FBX checks | [docs/FBX_VERIFICATION.md](docs/FBX_VERIFICATION.md), `analysis/fbx_verification.json` — 116 of 116 checks passed. |
-| Roblox handoff package | [handoff/ASTRA_R08_Roblox/README.md](handoff/ASTRA_R08_Roblox/README.md) — FBX, clips, textures, .blend, bone list (`rig/BONES.md`, `rig/bones.csv`), Roblox scripts (`roblox/`), checks, previews, manifest; zipped as `handoff/ASTRA_R08_Roblox.zip`. |
+| Roblox handoff package | [handoff/ASTRA_R08_Roblox/README.md](handoff/ASTRA_R08_Roblox/README.md) — v2: FBX, clips, textures, .blend, bone list (`rig/BONES.md`, `rig/bones.csv`), Roblox scripts (`roblox/`), checks, previews, manifest; zipped as `handoff/ASTRA_R08_Roblox.zip`.  v1 as delivered: `handoff/ASTRA_R08_Roblox_v1/` and `handoff/ASTRA_R08_Roblox_v1.zip`. |
 
 ## Priority 1 — right leg
 
@@ -80,25 +87,32 @@ largest unbroken dark patch 30 % (sheet 28 %); no tooth passes through another.
 
 Built in five scripted stages from the same blocks as the high-detail model (`src/game_*.py`):
 
-1. **Geometry** (`game_mesh.py`).  Not a decimation of the plates: each block is cut into a
-   regular quad grid (6.8 cm on the body, 4.6 cm on the head, rings round every limb), the body's
-   blocks and the skull's are united into two watertight skins, and each vertex is moved to the
-   height of the armour standing on it in the high-detail model, so the outline keeps the broken,
-   stepped look.  The lower jaw is its own closed piece; every one of the 67 teeth is its own
+1. **Geometry** (`game_mesh.py`, body: `game_body_v2.py`).  Not a decimation of the plates: each
+   block is cut into a regular grid (rings round every limb), and each vertex is moved to the height
+   of the armour standing on it in the high-detail model, so the outline keeps the broken, stepped
+   look.  The skull's blocks are united into one watertight skin (4.6 cm grid).  The body (v2) is
+   built as armour: the torso, pelvis, hip blocks and groin are one skin (6 cm grid); every limb is
+   cut at each joint pivot into closed rigid segments (upper arm, forearm, second forearm, hand;
+   thigh, shin, foot, toes; neck), one segment's end rounded into a knuckle seated in its neighbour,
+   hidden at rest.  The lower jaw is its own closed piece; every one of the 67 teeth is its own
    closed spike, thinned from the high-detail tooth; gum cords, cheek sinews, mouth-corner webs
    and the throat are closed tubes and slabs.  UVs are unwrapped on the flat skins (no
    stretching), the teeth and cords unrolled, all packed into 0–1 per mesh.
 2. **Textures** (`game_bake.py`).  Colour, tangent-space normal (OpenGL), roughness and ambient
    occlusion are projected from the high-detail model at 2048 px (the teeth a second time from
    the teeth alone, so the black throat cannot bleed into them); the Roblox maps are 1024 px with
-   part of the ambient shadow in the colour map.
+   part of the ambient shadow in the colour map.  The knuckles and end caps hidden inside a
+   neighbouring piece at rest, which a bend turns into view, take the colour of their own piece's
+   visible armour (baked from inside a high-detail block they would come out nearly black).
 3. **Skeleton and weights** (`game_rig.py`).  27 bones (Root, Pelvis, Spine, Chest, Neck, Head,
    **Jaw**; Shoulder, UpperArm, LowerArm, Wrist, Hand per arm — five bones for the very long
-   arms; Hip, UpperLeg, LowerLeg, Foot, Toes per leg).  Weights are computed per block and blended
-   across each joint; at most 4 bones per vertex, nothing on Root; the skull is carried by Head
-   alone and the lower jaw with its teeth and gum by Jaw alone, so the mouth opens without
-   bending the skull.  Units converted to studs.
-4. **Clips** (`game_anim.py`).  Idle, Walk, Run, Chase, Attack, Lunge, HitReact, Death (full
+   arms; Hip, UpperLeg, LowerLeg, Foot, Toes per leg).  Every limb segment follows its own bone
+   alone; the torso skin is blended over its whole height (Pelvis / Spine / Chest), each hip block on
+   its Hip bone; at most 4 bones per vertex, nothing on Root; the skull is carried by Head alone and
+   the lower jaw with its teeth and gum by Jaw alone, so the mouth opens without bending the skull.
+   Units converted to studs.
+4. **Clips** (`game_anim.py`; for v2 `game_clips_v2.py` copies them unchanged from the v1 game file
+   and checks every key).  Idle, Walk, Run, Chase, Attack, Lunge, HitReact, Death (full
    body), JawSnap and JawChatter (Jaw bone only) and HeadTrack (Neck and Head only) — in place,
    30 fps, feet planted by a two-bone solver, limbs kept out of the floor.  The partial clips layer
    over the full-body ones in Roblox.  They prove the rig; they are not finished animation.
@@ -115,10 +129,11 @@ Built in five scripted stages from the same blocks as the high-detail model (`sr
 | Game model | |
 |---|---|
 | Height | 10.30 studs (2.885 m), soles on the ground plane, facing -Z |
-| Triangles | Body 9,852 · Head 11,082 · Eyes 16 |
-| Bones | 27; ≤ 4 per vertex (mean 1.94 body, 1.12 head) |
+| Triangles | Body 13,386 · Head 11,082 · Eyes 16 |
+| Bones | 27; ≤ 4 per vertex (mean 1.28 body, 1.12 head) |
 | Textures | 4 maps × 2 meshes, 1024 px, embedded in the FBX |
-| Deformation (largest edge stretch in each clip) | Idle 1.10 · Walk 1.78 · Run 2.02 · Chase 2.11 · Attack 2.39 (right armpit, top of the swing) · Lunge 1.58 · HitReact 1.40 · Death 2.04 · JawSnap 1.32 · JawChatter 1.16 · HeadTrack 1.64 |
+| Joint range (each joint on its own: no fold, no gap) | elbows and knees ±120 · shoulders and hips ±120 fore / aft, ±90 out / in · wrists and hands ±90 · ankles ±45 · spine bend and twist, chest bend ±45 · neck ±45 nod, ±60 turn |
+| Deformation (largest edge stretch in each clip) | Idle 1.07 · Walk 1.09 · Run 1.18 · Chase 1.28 · Attack 1.57 · Lunge 1.29 · HitReact 1.21 · Death 1.56 · JawSnap 1.32 · JawChatter 1.16 · HeadTrack 1.00 (v1: up to 2.39) |
 | Skull and lower jaw | rigid to 0.001 mm in every clip |
 
 ![Deformation test](renders/game/ASTRA_R08_game_poses.png)
@@ -129,8 +144,10 @@ Built in five scripted stages from the same blocks as the high-detail model (`sr
   Roblox's documented requirements and survive two independent importers exactly, but they have
   not been opened in Studio's 3D Importer or Animation Editor.  [docs/ROBLOX_IMPORT.md](docs/ROBLOX_IMPORT.md)
   lists the import settings and what to check.
-- Linear-blend skinning (all Roblox offers): the inside of a tightly bent joint folds flat (the
-  elbow in Death), and the right armpit stretches up to 2.4 × at the top of the attack swing.
+- The limbs are rigid armour segments: they cannot fold or stretch, but at the extremes of a pose
+  interlocking pieces pass through each other (as plates would collide) and the line where a limb
+  crosses its shoulder plate or hip block is faceted.  The torso is still linear-blend skinned (all
+  Roblox offers): clean to 45 degrees, it folds well beyond.
 - The game model's plates are in its maps and a coarse relief (about ±4 cm) of its outline; the
   individual stepped slabs exist only in the high-detail model.  The thin strands that twist
   round each cheek sinew are texture only.
@@ -154,8 +171,11 @@ BAKE_RES=2048 bvenv/bin/python experimental_02/src/game_bake.py
 ```
 
 ```bash
-bvenv/bin/python experimental_02/src/game_rig.py && bvenv/bin/python experimental_02/src/game_anim.py
+bvenv/bin/python experimental_02/src/game_rig.py && bvenv/bin/python experimental_02/src/game_clips_v2.py
 ```
+
+(`game_anim.py` keys the clips from nothing; v2 carries v1's clips over with `game_clips_v2.py`.
+`ASTRA_BODY=v1 game_mesh.py` still builds the v1 body.)
 
 ```bash
 bvenv/bin/python experimental_02/src/game_export.py
@@ -166,12 +186,21 @@ bvenv/bin/python experimental_02/src/game_preview.py poses
 ```
 
 ```bash
+bvenv/bin/python experimental_02/src/rig_audit.py
+```
+
+```bash
+ASTRA_AUDIT_MODEL=experimental_02/model/astra_r08_exp02_game_v1.blend ASTRA_AUDIT_JSON=experimental_02/analysis/rig_audit_v1.json bvenv/bin/python experimental_02/src/rig_audit.py --no-render
+```
+
+```bash
 bvenv/bin/python experimental_02/src/handoff.py
 ```
 
 The high-detail build takes about 8 s, the game mesh 15 s, the bake about 22 minutes on four
-CPU cores, rig + clips + export + all checks under a minute.  `game_preview.py` also takes
-`clip`, `compare`, `rig`, `uv` and `stats`.  The high-detail renders and sheets are made as in
+CPU cores (the body alone, `BAKE_ONLY=Body`, about 7), rig + clips + export + all checks under a
+minute, the audit about a minute.  `game_preview.py` also takes `clip`, `compare`, `rig`, `uv`,
+`stats` and `deep` (deep joint bends, v1 above v2).  The high-detail renders and sheets are made as in
 Model 01 (`render.py`, `make_sheets.py`, `report.py`); `changes_sheet.py` makes the before / after
 sheet (it uses Model 01 renders of the extra skull views in `renders/model01_views`, rendered from
 `experimental_01/model/astra_r08_exp01.blend` with this model's `render.py`).

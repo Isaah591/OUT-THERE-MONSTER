@@ -1,9 +1,69 @@
-# ASTRA R08 - Roblox Studio handoff
+# ASTRA R08 - Roblox Studio handoff (v2: armoured joints)
 
 Everything needed to bring the ASTRA R08 monster into Roblox Studio as an animated enemy: the
 game-ready mesh, its 27-bone skeleton and skinning, textures, eleven animation clips (each in its own
 FBX, all on the same skeleton and bind pose), an independently animated jaw, the bone list, a
 controller script and a test script.
+
+## What is new in v2
+
+v1 (kept unchanged beside this package: `ASTRA_R08_Roblox_v1/` and `ASTRA_R08_Roblox_v1.zip`) covered
+the body in one blended skin, which folded and went rubbery when a joint bent past about 30 degrees.
+In v2 the joints of the game Body mesh are rebuilt the way ASTRA's armour is built:
+
+- every limb segment - upper arm, forearm, second forearm, hand, thigh, shin, foot, toes, the left
+  shoulder plate and the neck - is a **rigid closed piece that follows its own bone alone**;
+- at each joint one segment ends in a rounded knuckle seated inside its neighbour, so when the joint
+  bends the segments turn against each other like plates, with no crease, no stretch and no gap (the
+  long right arm turns on its own rounded top, seated in the chest);
+- only the torso skin bends (Pelvis / Spine / Chest), spread over its whole height between the hip
+  blocks and the shoulder plates;
+- the spikes ride with the piece they are driven into.
+
+**Unchanged:** the skeleton (the same 27 bones, names, hierarchy, rest and bind pose), the eleven
+clips (copied from v1 key for key - 18,784 keys, none different), the jaw
+system, the Head and Eyes meshes (identical vertices and UVs), the silhouette at rest, and the
+high-detail source.  Nothing in Studio is set up differently from v1.
+
+Measured by the same audit script on both versions (`checks/rig_audit_v1.json`, `checks/rig_audit.json`):
+each joint bent on its own; *clean* = no triangle turned inside out, no edge stretched more than x2,
+and (v2) every pair of interlocking pieces still interlocked.
+
+| Joint | Bone | v1 clean to (degrees) | v2 clean to (degrees) | v2 worst stretch | v2 folded triangles | v2 pieces apart |
+|---|---|---|---|---|---|---|
+| Right shoulder, swing fore / aft | `RightUpperArm` | +-30 | **+-120 (all tested)** | 1.00 | 0 | none |
+| Right shoulder, swing out / in | `RightUpperArm` | +-30 | **+-90 (all tested)** | 1.00 | 0 | none |
+| Right elbow | `RightLowerArm` | +-30 | **+-120 (all tested)** | 1.00 | 0 | none |
+| Right forearm bend (RightWrist) | `RightWrist` | +-30 | **+-90 (all tested)** | 1.00 | 0 | none |
+| Right hand | `RightHand` | +-30 | **+-90 (all tested)** | 1.00 | 0 | none |
+| Left shoulder, swing fore / aft | `LeftUpperArm` | 0 | **+-120 (all tested)** | 1.00 | 0 | none |
+| Left shoulder, swing out / in | `LeftUpperArm` | 0 | **+-90 (all tested)** | 1.00 | 0 | none |
+| Left elbow | `LeftLowerArm` | +-30 | **+-120 (all tested)** | 1.00 | 0 | none |
+| Left hand | `LeftHand` | +-30 | **+-90 (all tested)** | 1.00 | 0 | none |
+| Right hip, swing fore / aft | `RightUpperLeg` | 0 | **+-120 (all tested)** | 1.00 | 0 | none |
+| Right hip, swing out / in | `RightUpperLeg` | +0 / -20 | **+-90 (all tested)** | 1.00 | 0 | none |
+| Right knee | `RightLowerLeg` | +0 / -30 | **+-120 (all tested)** | 1.00 | 0 | none |
+| Right ankle | `RightFoot` | +45 / -15 | **+-45 (all tested)** | 1.00 | 0 | none |
+| Left hip, swing fore / aft | `LeftUpperLeg` | 0 | **+-120 (all tested)** | 1.00 | 0 | none |
+| Left hip, swing out / in | `LeftUpperLeg` | 0 | **+-90 (all tested)** | 1.00 | 0 | none |
+| Left knee | `LeftLowerLeg` | +30 / -0 | **+-120 (all tested)** | 1.00 | 0 | none |
+| Left ankle | `LeftFoot` | +15 / -0 | **+-45 (all tested)** | 1.00 | 0 | none |
+| Spine bend | `Spine` | +45 / -30 | **+-45 (all tested)** | 1.46 | 0 | none |
+| Spine twist | `Spine` | +-15 | **+-45 (all tested)** | 1.34 | 0 | none |
+| Chest bend | `Chest` | +15 / -0 | **+-45 (all tested)** | 1.53 | 0 | none |
+| Neck nod | `Neck` | 0 | **+-45 (all tested)** | 1.00 | 0 | none |
+| Neck turn | `Neck` | 0 | **+-60 (all tested)** | 1.00 | 0 | none |
+| Head nod | `Head` | +45 / -30 | **+-45 (all tested)** | 1.00 | 0 | none |
+| Head turn | `Head` | +45 / -30 | **+-60 (all tested)** | 1.00 | 0 | none |
+| Jaw open / shut | `Jaw` | +25 / -30 | **+25 / -30** | 1.40 | 0 | none |
+
+Rotating a limb bone on its own moves only its own segments and the ones below it in the hierarchy
+(measured for every bone); Pelvis, Spine and Chest share the torso skin, so Spine and Chest bend it
+smoothly from the waist up.  The Head and Body meshes stay joined when the head and jaw move (the
+neck's top is seated inside the skull; buried surfaces slide past each other by up to
+16 cm, out of sight).  Interlocking pieces pass
+through each other at the extremes of a pose rather than open a gap - as real armour plates would
+collide, keep poses within what the creature could physically do.
 
 **Status:** every file was exported from Blender with the settings in Roblox's Blender guide and
 verified in Blender (116 of 116 checks passed - below and in `checks/VERIFICATION.md`).  The
@@ -15,14 +75,14 @@ everything arrived.
 
 | Path | What it is |
 |---|---|
-| `ASTRA_R08.fbx` | The character: meshes `ASTRA_R08_Body` (9,852 triangles), `ASTRA_R08_Head` (11,082 - skull, lower jaw, 67 teeth, gums, sinews, throat) and `ASTRA_R08_Eyes` (16), skinned to one 27-bone skeleton; one material per mesh with its 1024 x 1024 maps embedded; rest pose; no animation |
+| `ASTRA_R08.fbx` | The character: meshes `ASTRA_R08_Body` (13,386 triangles), `ASTRA_R08_Head` (11,082 - skull, lower jaw, 67 teeth, gums, sinews, throat) and `ASTRA_R08_Eyes` (16), skinned to one 27-bone skeleton; one material per mesh with its 1024 x 1024 maps embedded; rest pose; no animation |
 | `animations/` | Eleven clips, one per FBX (table below) |
 | `ASTRA_R08_game.blend` | The rigged Blender project: the three meshes, the skeleton and weights, the materials (maps linked from `textures/`) and all eleven clips as actions; saved in the rest pose |
 | `textures/` | `ASTRA_R08_<Body or Head>_<Color, Normal, Roughness, Metalness>.png`, 1024 x 1024 (Color / Normal 24-bit RGB, normal map OpenGL tangent space; Roughness / Metalness 8-bit grey); `uv/` UV layouts; `source_2048/` 2048 masters + albedo and ambient occlusion (folder only, not in the zip) |
 | `rig/` | `BONES.md` (every bone, its parent and what it moves), `bones.csv`, `ASTRA_R08_rig_reference.png` |
 | `roblox/` | `AstraR08.lua` (ModuleScript: plays the clips, layers jaw / head clips, procedural jaw and look-at), `AstraR08_Test.server.lua` (Script: plays every clip in turn), both together in `ASTRA_R08_Scripts.rbxmx` |
-| `checks/` | `VERIFICATION.md` (all 116 checks with their numbers), the data behind it, deformation numbers |
-| `previews/` | Pose sheet and deformation clip (MP4) of every clip, the game model beside the high-detail model |
+| `checks/` | `VERIFICATION.md` (all 116 checks with their numbers), the data behind it, deformation numbers, the articulation audit of v1 and v2 (`rig_audit_v1.json`, `rig_audit.json`), the clip carry-over check (`game_clips_v2.json`) |
+| `previews/` | Pose sheet and deformation clip (MP4) of every clip, the game model beside the high-detail model, deep joint bends v1 against v2, the bone-influence map and isolated joint bends of v2 |
 | `MANIFEST.txt` | Every file with its size and SHA-256 |
 
 The high-detail source model (1.13 million triangles) the maps were baked from is not part of the
@@ -32,13 +92,13 @@ package and was not changed: `experimental_02/model/astra_r08_exp02_highdetail.b
 
 | Requirement | Result |
 |---|---|
-| Each mesh within Roblox's 20,000-triangle limit | Body 9,852 · Head 11,082 · Eyes 16 - pass |
+| Each mesh within Roblox's 20,000-triangle limit | Body 13,386 · Head 11,082 · Eyes 16 - pass |
 | No vertex with more than four bone influences | most on any vertex: Body 4, Head 2, Eyes 1 - pass |
 | Root bone has no vertex influences | no skin cluster for Root in the file; 0 weight on Root - pass |
 | Skeleton and skinning survive FBX export | read back by two independent FBX readers (Blender's Python importer and its C++ ufbx importer): 27 bones with identical names and parents; vertex positions within 4e-06 studs; skin weights identical (largest difference 0) - pass |
 | All animations use the same skeleton and bind pose | all 11 clip files: the same 27 bones and hierarchy, and default (rest) transforms equal to the character's bind pose (largest difference 0 studs, 0 degrees); the character's bind pose equals its rest skeleton (to 2e-06); each clip played from its own file on the re-imported character deforms it exactly as in Blender (largest difference 0.0 mm) - pass |
 | Textures correctly linked | in the FBX each material carries its own four maps on their channels (colour on DiffuseColor, normal on NormalMap, roughness on ShininessExponent, metalness on ReflectionFactor) with the 1024 x 1024 PNGs embedded; in the .blend all 8 maps are linked from `./textures/` and load - pass |
-| Root position and orientation | Root bone at the origin, pointing straight up; soles on the ground plane (lowest point Y = 0.000); faces -Z (Roblox's front); the origin lies between the feet, 0.54 studs from their centre; height 10.30 studs (2.885 m) - pass |
+| Root position and orientation | Root bone at the origin, pointing straight up; soles on the ground plane (lowest point Y = 0.000); faces -Z (Roblox's front); the origin lies between the feet, 0.41 studs from their centre; height 10.30 studs (2.885 m) - pass |
 
 ## 1. Import the monster
 
@@ -66,6 +126,27 @@ package and was not changed: `experimental_02/model/astra_r08_exp02_highdetail.b
 6. **Animation holder.**  If the import did not create one, insert an `AnimationController` into the
    Model and an `Animator` into the AnimationController (a non-humanoid rig plays animations through
    these; the Animation Editor also needs one to open the rig).
+
+## Posing it in the Animation Editor
+
+Every section has its own bone - each upper arm, forearm, hand, thigh, shin and foot, the pelvis,
+the torso, the head and the jaw - and the Animation Editor poses bones directly ("for bones, you
+can rotate them to pose the rig" - Roblox Creator docs).
+
+1. Select the ASTRA_R08 model and open the **Animation Editor** (Avatar tab).
+2. Bones show while the Animation Editor is open (or with **View > Show Constraint Details**).  Click
+   a bone's joint in the viewport, or select the `Bone` in the Explorer (inside the model's MeshPart:
+   Root > Pelvis > Spine > Chest > ...).
+3. Rotate it (rotate tool).  A track for that bone appears in the track list.
+4. R15 equivalents: Pelvis ~ LowerTorso (root joint), Spine / Chest ~ UpperTorso (waist),
+   RightUpperArm ~ shoulder, RightLowerArm ~ elbow, RightHand ~ wrist, RightUpperLeg ~ hip,
+   RightLowerLeg ~ knee, RightFoot ~ ankle.  ASTRA adds RightWrist (a second forearm joint for the
+   long arm), the Shoulder and Hip bones (the chest's top corners and the left shoulder plate / the hip
+   blocks), Toes, Neck and Jaw.
+5. Rotating **Pelvis** moves the whole body; to tilt the hips with the feet planted, counter-rotate the
+   UpperLeg bones.  **RightHip / LeftHip** swing the whole leg about the pelvis centre; use **UpperLeg**
+   for normal hip bending.  Forward posing (bone by bone) is the documented way; Roblox does not say
+   whether its IK works on bone rigs.
 
 ## 2. Import the animations
 

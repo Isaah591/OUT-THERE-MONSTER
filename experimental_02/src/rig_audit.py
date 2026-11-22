@@ -1,9 +1,12 @@
 """ASTRA R08 - audit of the game rig's articulation (read-only).
 
-    bvenv/bin/python experimental_02/src/rig_audit.py
+    bvenv/bin/python experimental_02/src/rig_audit.py [--no-render]
 
-Opens model/astra_r08_exp02_game.blend and NEVER saves it.  Every pose is set on the in-memory
-copy only.  Measures:
+    ASTRA_AUDIT_MODEL=<game .blend>  ASTRA_AUDIT_JSON=<results .json>  ASTRA_AUDIT_RENDERS=<folder>
+        audit another build (default: model/astra_r08_exp02_game.blend -> analysis/rig_audit.json,
+        renders/audit/)
+
+Opens the game model and NEVER saves it.  Every pose is set on the in-memory copy only.  Measures:
 
   1. inventory  - every bone: parent, children, joint position, which vertices it carries (alone or
                   shared), which body section that is;
@@ -14,6 +17,10 @@ copy only.  Measures:
                   and the largest angle that stays clean;
   4. pivots     - whether each joint's pivot lies inside the limb it bends;
   5. seams      - whether the Head and Body meshes stay joined when the head and jaw move;
+  6. joints closed - where the Body is built from separate interlocking pieces (armoured joints), whether
+                  each pair of pieces that interlock at rest still interlock at every tested angle (a pair
+                  that comes apart is a gap you could see through); a single continuous skin passes
+                  trivially, its joints can only stretch or fold, which 3. measures;
 and renders the bone-influence map and isolated joint bends to renders/audit/.
 Results: analysis/rig_audit.json.
 """
@@ -26,8 +33,10 @@ from mathutils.bvhtree import BVHTree
 import game_anim as GA
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-GAME = os.path.join(ROOT, "model", "astra_r08_exp02_game.blend")
-OUT_DIR = os.path.join(ROOT, "renders", "audit")
+GAME = os.environ.get("ASTRA_AUDIT_MODEL", os.path.join(ROOT, "model", "astra_r08_exp02_game.blend"))
+OUT_JSON = os.environ.get("ASTRA_AUDIT_JSON", os.path.join(ROOT, "analysis", "rig_audit.json"))
+OUT_DIR = os.environ.get("ASTRA_AUDIT_RENDERS", os.path.join(ROOT, "renders", "audit"))
+ROD_REGION = 9                    # game_mesh.REGIONS.index("rod"): spikes stuck into a piece, not joint pieces
 STUD = 0.28
 MOVED = 0.002 / STUD              # a vertex "moves" when it travels more than 2 mm
 EDGE_MIN = 0.03 / STUD            # edges of at least 3 cm are measured for stretch
@@ -55,11 +64,11 @@ RANGES = [
     ("L elbow", "LeftLowerArm", "X", FULL),
     ("L hand", "LeftHand", "X", [-90, -60, -30, 30, 60, 90]),
     ("R hip - swing fore/aft", "RightUpperLeg", "X", FULL),
-    ("R hip - swing out/in", "RightUpperLeg", "Z", [-60, -45, -20, 20, 45, 60]),
+    ("R hip - swing out/in", "RightUpperLeg", "Z", [-90, -60, -45, -20, 20, 45, 60, 90]),
     ("R knee", "RightLowerLeg", "X", FULL),
     ("R ankle", "RightFoot", "X", [-45, -30, -15, 15, 30, 45]),
     ("L hip - swing fore/aft", "LeftUpperLeg", "X", FULL),
-    ("L hip - swing out/in", "LeftUpperLeg", "Z", [-60, -45, -20, 20, 45, 60]),
+    ("L hip - swing out/in", "LeftUpperLeg", "Z", [-90, -60, -45, -20, 20, 45, 60, 90]),
     ("L knee", "LeftLowerLeg", "X", FULL),
     ("L ankle", "LeftFoot", "X", [-45, -30, -15, 15, 30, 45]),
     ("Pelvis tilt", "Pelvis", "X", [-30, -15, 15, 30]),
@@ -101,6 +110,31 @@ class Scene:
             me.edges.foreach_get("vertices", e)
             self.E[ob.name] = e.reshape(-1, 2)
         self.rest = self.verts()
+        self.pieces()
+
+    def pieces(self):
+        """Connected pieces of the Body (one for a continuous skin; one per armour segment otherwise)."""
+        from scipy.sparse import coo_matrix
+        from scipy.sparse.csgraph import connected_components
+        me = bpy.data.objects["ASTRA_R08_Body"].data
+        F = self.F["ASTRA_R08_Body"]
+        n = len(me.vertices)
+        e = np.vstack([F[:, [0, 1]], F[:, [1, 2]], F[:, [2, 0]]])
+        k, lab = connected_components(coo_matrix((np.ones(len(e)), (e[:, 0], e[:, 1])), shape=(n, n)), directed=False)
+        rod = np.zeros(k, bool)
+        if "region" in me.attributes:
+            reg = np.zeros(len(me.polygons), np.int32)
+            me.attributes["region"].data.foreach_get("value", reg)
+            for c in range(k):
+                fm = lab[F[:, 0]] == c
+                rod[c] = fm.any() and bool((reg[fm] == ROD_REGION).all())
+        dom = self.dominant("ASTRA_R08_Body")
+        self.piece_of = lab
+        self.piece_faces = [F[lab[F[:, 0]] == c] for c in range(k)]
+        self.piece_rod = rod
+        self.piece_bones = [set(dom[lab == c]) for c in range(k)]
+        self.joints = joint_pairs(self) if k > 1 else []
+        log(f"Body: {k} connected piece(s), {int(rod.sum())} of them spikes, {len(self.joints)} interlocking joints")
 
     def verts(self):
         bpy.context.view_layer.update()
@@ -132,6 +166,64 @@ class Scene:
 
     def dominant(self, name):
         return np.array(self.names)[self.W[name].argmax(1)]
+
+
+def inside(tree, P):
+    """Point-in-solid by ray parity, majority of three directions (closed pieces)."""
+    out = np.zeros(len(P), bool)
+    dirs = (Vector((0.0, 0.0, 1.0)), Vector((0.0, 0.0, -1.0)), Vector((0.5773, 0.5773, 0.5773)))
+    for i, p in enumerate(P):
+        votes = 0
+        for d in dirs:
+            o, hits = Vector(p), 0
+            for _ in range(64):
+                h = tree.ray_cast(o, d)
+                if h[0] is None:
+                    break
+                hits += 1
+                o = h[0] + d * 1e-5
+            votes += hits % 2
+        out[i] = votes >= 2
+    return out
+
+
+def interlocked(S, V, a, b):
+    """Do pieces a and b of the Body overlap (a vertex of one inside the other)?"""
+    P = V["ASTRA_R08_Body"]
+    for x, y in ((a, b), (b, a)):
+        F = S.piece_faces[y]
+        tree = BVHTree.FromPolygons([tuple(p) for p in P], [tuple(f) for f in F])
+        vx = np.nonzero(S.piece_of == x)[0]
+        lo, hi = P[F.ravel()].min(0) - 1e-6, P[F.ravel()].max(0) + 1e-6
+        vx = vx[((P[vx] >= lo) & (P[vx] <= hi)).all(1)]          # only vertices inside y's bounding box
+        if len(vx) and inside(tree, P[vx]).any():
+            return True
+    return False
+
+
+def joint_pairs(S):
+    """Every joint between two Body pieces: a piece that follows one bone alone, and the piece that
+    carries most of that bone's parent (for a thigh, the skinned torso around its hip block; for an
+    upper arm, its shoulder plate).  Kept if the two interlock at rest."""
+    dom = S.dominant("ASTRA_R08_Body")
+    out = []
+    for c in range(len(S.piece_rod)):
+        if S.piece_rod[c] or len(S.piece_bones[c]) != 1:
+            continue
+        b = next(iter(S.piece_bones[c]))
+        par = S.ao.data.bones[b].parent
+        if par is None:
+            continue
+        best, q = 0, None
+        for k in range(len(S.piece_rod)):
+            if k == c or S.piece_rod[k]:
+                continue
+            nk = int(((S.piece_of == k) & (dom == par.name)).sum())
+            if nk > best:
+                best, q = nk, k
+        if q is not None and interlocked(S, S.rest, c, q):
+            out.append((c, q, b, par.name))
+    return out
 
 
 def measure(S, V, bones_moving):
@@ -232,29 +324,18 @@ def independence(S):
 
 
 def pivots(S):
-    me = bpy.data.objects["ASTRA_R08_Body"].data
     V = S.rest["ASTRA_R08_Body"]
     F = S.F["ASTRA_R08_Body"]
     tree = BVHTree.FromPolygons([tuple(p) for p in V], [tuple(f) for f in F])
+    # inside test per connected piece (ray parity), so overlapping armour pieces do not cancel out
+    trees = [BVHTree.FromPolygons([tuple(p) for p in V], [tuple(f) for f in Fc]) for Fc in S.piece_faces]
     out = {}
     for b in S.ao.data.bones:
         if b.name in ("Root", "Head", "Jaw"):
             continue
-        p = b.head_local
-        loc, nrm, idx, dist = tree.find_nearest(p)
-        # inside test: count crossings of a ray along +Z and -Z
-        inside = 0
-        for d in (Vector((0, 0, 1)), Vector((0, 0, -1)), Vector((1, 0, 0))):
-            o = p.copy()
-            hits = 0
-            for _ in range(64):
-                h = tree.ray_cast(o, d)
-                if h[0] is None:
-                    break
-                hits += 1
-                o = h[0] + d * 1e-4
-            inside += hits % 2
-        out[b.name] = dict(inside=inside >= 2, depth_cm=round(dist * STUD * 100, 1))
+        p = np.array(b.head_local)
+        loc, nrm, idx, dist = tree.find_nearest(Vector(p))
+        out[b.name] = dict(inside=any(bool(inside(t, p[None])[0]) for t in trees), depth_cm=round(dist * STUD * 100, 1))
     return out
 
 
@@ -288,7 +369,13 @@ def ranges(S):
             V = S.pose(bone, axis, a)
             m = measure(S, V, S.subtree(bone))
             m["angle"] = a
-            m["clean"] = m["folded_triangles"] == 0 and m["stretch"] <= 2.0
+            # every joint whose two pieces moved relative to each other must still interlock
+            mv = np.linalg.norm(V["ASTRA_R08_Body"] - S.rest["ASTRA_R08_Body"], axis=1) > MOVED
+            apart = [f"{b}/{p}" for (x, y, b, p) in S.joints
+                     if (mv[S.piece_of == x].any() or mv[S.piece_of == y].any()) and not interlocked(S, V, x, y)]
+            m["pieces_apart"] = len(apart)
+            m["joints_apart"] = apart
+            m["clean"] = m["folded_triangles"] == 0 and m["stretch"] <= 2.0 and m["pieces_apart"] == 0
             rows.append(m)
         pos = [r for r in rows if r["angle"] > 0]
         neg = [r for r in rows if r["angle"] < 0]
@@ -301,8 +388,11 @@ def ranges(S):
                 else:
                     break
             return best
-        res.append(dict(test=label, bone=bone, axis=axis, results=rows, clean_to_plus=clean_to(pos), clean_to_minus=clean_to(neg)))
-        log(f"   {label:<30} clean to +{clean_to(pos)} / -{clean_to(neg)} deg")
+        res.append(dict(test=label, bone=bone, axis=axis, results=rows,
+                        clean_to_plus=clean_to(pos), clean_to_minus=clean_to(neg)))
+        log(f"   {label:<30} clean to +{clean_to(pos)} / -{clean_to(neg)} deg  (worst stretch "
+            f"{max(r['stretch'] for r in rows):.2f}, folds {max(r['folded_triangles'] for r in rows)}, "
+            f"joints apart {sorted({j for r in rows for j in r['joints_apart']})})")
     S.reset()
     return res
 
@@ -441,8 +531,9 @@ def main():
     log(f"pivots, seams ({time.time() - t0:.1f} s)")
     rng = ranges(S)
     log(f"ranges ({time.time() - t0:.1f} s)")
-    json.dump(dict(model=os.path.relpath(GAME, ROOT), saved=False, vertices=totals, bones=inv, independence=ind,
-                   pivots=piv, seams=sea, ranges=rng), open(os.path.join(ROOT, "analysis", "rig_audit.json"), "w"), indent=1)
+    json.dump(dict(model=os.path.relpath(GAME, ROOT), body_pieces=int(len(S.piece_rod)),
+                   interlocking_joints=[f"{b}/{p}" for (x, y, b, p) in S.joints], saved=False, vertices=totals, bones=inv, independence=ind,
+                   pivots=piv, seams=sea, ranges=rng), open(OUT_JSON, "w"), indent=1)
     if "--no-render" not in sys.argv:
         cols = influence_material(S)
         render_audit(S, cols)

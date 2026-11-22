@@ -1,53 +1,59 @@
-ASTRA R08 - Roblox Studio handoff package: files, sizes, SHA-256
+ASTRA R08 - Roblox Studio handoff package, v2 (armoured joints): files, sizes, SHA-256
 
- 10,206,684  0a4fa2fd0affddf25f2c691f9bec7e7f4d01ed11a8d8839a406ca3bec5c78f99  ASTRA_R08.fbx
-  1,147,862  62a3bbf26782b5fa6ef63ceae0b2db7ba0d54dbbb4bf2c85cefaf803659413d8  ASTRA_R08_game.blend
-     12,540  fb760b24dfeb5e937edba2fe42761cef5db24d1aa6007e540f4c1f8b427c332d  README.md
-    248,108  129a04f1e9e3762d5ef84772ba5fed365e8174c915b55c13823ed16e3213650f  animations/ASTRA_R08_Attack.fbx
-    216,508  ed5183da921efb42aa345680386f8fbe49c98b0839d05723bb706eac56124476  animations/ASTRA_R08_Chase.fbx
-    292,860  812c3eb9cf980820a983c4addcddaf72f1e35e989ab1a2dffd579f2d95c2de82  animations/ASTRA_R08_Death.fbx
-     46,604  989848eaf5a68835a734399f3194bf1035ea3c10ba64515dc97e437304bc53ba  animations/ASTRA_R08_HeadTrack.fbx
-    216,524  98b94f2d323225788549217b502096ffa465b0fcc8837b70f8a60e7f82382694  animations/ASTRA_R08_HitReact.fbx
-    346,396  89b806437395b5c0581fa5c296e8f225e9ee68667edee63db8f10b667d8ef3a5  animations/ASTRA_R08_Idle.fbx
-     39,452  790205221d0416050132f02d610029db09b3a434cac650d8f022a0c64fa1f9fd  animations/ASTRA_R08_JawChatter.fbx
-     39,356  dfd538c93e16948112818edb35e2b68e0d1ac1912c6b4f1dfead61cac3d02d00  animations/ASTRA_R08_JawSnap.fbx
-    240,700  416349915217c2090f3a88f6a78099a30f33b9332d195bbb8239d1e5134219c3  animations/ASTRA_R08_Lunge.fbx
-    216,508  a10516612191e4f3c2cd20c3eda6d7ecdc860abf317122ebe2a943ba889a8f30  animations/ASTRA_R08_Run.fbx
-    247,244  c7a81467ba98e574f322cb8f95b0558fe97c45e23c490fe5313243e9019b0553  animations/ASTRA_R08_Walk.fbx
-     16,547  17b122ca79d00044369fec03160136a64240c8d465f62ab60a38568f097c7510  checks/VERIFICATION.md
-    309,214  8afbc81dbe19a6a0aae6a77b1a31fe10b7a708b0008ba279a36e627d4685f72a  checks/fbx_verification.json
+  9,645,132  3c3cbff2206bff3eee75841575b9cb44f64b4899e11e3bcabe2b07942cea5902  ASTRA_R08.fbx
+  1,218,906  6ca6cf4462919bf5e5999797356b8e3be01c2ebab136ada6783a447ea5c8f013  ASTRA_R08_game.blend
+     18,699  0b4e6713946938a68726ea1d95b983a9c320f88d08fc7f7647fdaa400fc74996  README.md
+    248,108  89dba1cbcceb178180ac1171b0ac28f0f3c489e6cf8c768d890d71b34211c392  animations/ASTRA_R08_Attack.fbx
+    216,508  23d7d9bb79a1cbdc87b3fd49f66483e8d91b1dd27840c725fb0d70c2c0447fec  animations/ASTRA_R08_Chase.fbx
+    292,860  a2a9736640c9d2c97c8bbe112de837eadcc2d2f49e442bbda9ee1f15204acc35  animations/ASTRA_R08_Death.fbx
+     46,604  374eb1dd0ab5b184cc8a7f419afb051c6f485c970198e5e6fa1481757f015486  animations/ASTRA_R08_HeadTrack.fbx
+    216,524  00c499074f6487bc1365dc78f94f6a12b951ecb98d32a361c1acf13e31eab3dc  animations/ASTRA_R08_HitReact.fbx
+    346,396  8553fb2cbff6d19530c4d418fd239d598f3d40b4b5b2646a3f291dd20a4a9f24  animations/ASTRA_R08_Idle.fbx
+     39,452  75d7594e841a34885d0e5abed7c2fda7428266abdf919a3a6c7562f3e66dc17c  animations/ASTRA_R08_JawChatter.fbx
+     39,356  95c9172bfe612da3c9bdf968c4f51f96b889a9dc44109e5a9fecc127bd95e844  animations/ASTRA_R08_JawSnap.fbx
+    240,700  6b28d16b96bee4f723fc896247c7e4d3c34fe00f64124d32ed872ae7d3d1c496  animations/ASTRA_R08_Lunge.fbx
+    216,508  a9603045cc6541f4873a7070c6e453f8b1d8824024f7818ee4ae8327b054a6fa  animations/ASTRA_R08_Run.fbx
+    247,244  d12662cb1e00287a513daebadb3c52a43e6d37882d1e6ec4a38c39f69d484471  animations/ASTRA_R08_Walk.fbx
+     16,551  27c8771db9b55cd5797c5ef31589f80382dae0330ba8ba1e4b4f46a0f37de6df  checks/VERIFICATION.md
+    309,194  1cac7eaf03bc4d4ed3f6d61c6b77df3d50a248e0c65e41efcf7486006098c47a  checks/fbx_verification.json
       2,233  62b278c184d234a13b7fa848f5489a54cb66a946d4dd606941dc1951002df427  checks/game_animations.json
-      2,663  29725176e48862e4ff51a0dbcc05833b388aaf223c808cea0c9c59dcc1a2b225  checks/game_deformation.json
+      2,860  c1e43858204ef6c8d2b99c7eae3d50ce6007067974f73a829871f5ce2635c578  checks/game_clips_v2.json
+      2,614  e6abbca28830815b912b852df686e117904ad89d073615f4f2b57955430cdbe1  checks/game_deformation.json
      10,088  78e491dc05848c00b1db02698c76ee043f8bf02c508bbe90106fe9a37a4c7464  checks/game_rig.json
-      1,450  67741c86ad1605deea1cb49ac6a1d3938f3c6929174c3f815e7d2140f4fe209f  checks/game_weights.json
-    814,313  131b61643bfc0c44c3fddc585a224821df1e9d6d95f1902638a5d85addddf487  previews/ASTRA_R08_deformation_test.mp4
-  4,851,264  b2b784d7449c5a54a56f0f7ae1bbfd6f10b3f8ccbee73c81d6edb983aae22f7d  previews/ASTRA_R08_game_poses.png
-  3,286,087  8bbefa0d48e0b1f229a0c4db9d2afbf4cf1d4dbb53c632fc938921fcf69537d2  previews/ASTRA_R08_game_vs_highdetail.png
-  1,538,563  e065b2a9a218ec6280fb76cf4a39bf63b1c43ed8cb0feb0b4bf3939fe817ec28  rig/ASTRA_R08_rig_reference.png
-      5,645  d3f5a04d43c7fdf80558821d70db5a41f223e7db8a97fd1c6015687b2d4dc50a  rig/BONES.md
-      3,667  3dbbd54958dc13a4a74f0530c52ed2c5110389a9615576a9fecee28710319b61  rig/bones.csv
+      1,433  23afa87122c2995d112bbbef4842a4d088a2abeb74f55dfc6cbe79c84b3dcdf5  checks/game_weights.json
+     58,940  5306de31eb54266a3ca8269e985e450ed65ba0819a0afd0327bcfd532f56a5c8  checks/rig_audit.json
+     60,917  03ca3b6c37583c83983e2d3e5e9398770ade2f1ebfe418ebaf0086fe8ebd4ff9  checks/rig_audit_v1.json
+    947,038  289f4c63f2d390991472df22b61bf56450737fea4f832c7da01b88e3618d312b  previews/ASTRA_R08_bone_influence_map.png
+  2,437,546  da896cd82b78608bde868350238b273548e3b720a085efbff8fe68c8c98ba517  previews/ASTRA_R08_deep_bends_v1_v2.png
+    816,725  94c7ab9e34c17c4002016fdfdb30ecdc36c315b0d3dd51eb4acd9a2c8985f792  previews/ASTRA_R08_deformation_test.mp4
+  4,835,369  aaaba05be91421adff43f7c911d1e4570526cae694547524c75032031b73310b  previews/ASTRA_R08_game_poses.png
+  3,277,529  54e522b308a35f0e276a721af5a66928bb8c7a636292c8432d3a7d3a3e11b9ae  previews/ASTRA_R08_game_vs_highdetail.png
+  1,585,145  c81715aafa35a285a9fec095855aa2c06d001a861cab4651bd8e5c0b9bbf0326  previews/ASTRA_R08_isolated_joints.png
+  1,537,042  593e1b1cdc6073cc05a3dd42d7c2a89e2b91dc229c54cfcce2880ecd5bcbb263  rig/ASTRA_R08_rig_reference.png
+      6,831  f56d58a2ee1732342ccb01039d3180c1369810dcbd7c5ed4351c1a01baa9c93e  rig/BONES.md
+      4,406  f4ac6454731dbaa5be7a031c070ba1514481d6d4a0fc43742721179e59bf2137  rig/bones.csv
      12,627  b0a237bc55e5c6a08560de753708add41c3dbcf8750558fa463da7e10b121721  roblox/ASTRA_R08_Scripts.rbxmx
       8,981  4ef45b84889595e7635a655c07aeb7789c6de09dcfe14fcce9ec16b2c75d0ae7  roblox/AstraR08.lua
       2,926  17bc35fb9f0fef4f5ef6f88e326254f53342135759968f6446498ca288c3f1de  roblox/AstraR08_Test.server.lua
-  1,466,658  6da88796a51cef1af21b83d0d409071f622e09359b7a2383cb4e30541c28e16f  textures/ASTRA_R08_Body_Color.png
-     17,396  366b6c3df4efdec1dc715340b827754a912fdb27e5e20995fcf276cfc5094ad6  textures/ASTRA_R08_Body_Metalness.png
-  2,303,640  d8019e72c74bd5ff77eada79f5cc18c1e84422b1d97a71fa467b8cba28a1644b  textures/ASTRA_R08_Body_Normal.png
-    482,206  5c06db3646923b4b1e03ed4148d285c4a7f90fadd9b4bd575c0aab598f09d402  textures/ASTRA_R08_Body_Roughness.png
+  1,276,274  cb48ce8b5256e705ce35b441b9a852ab9788f82fbcba732a8863cc6b962e8460  textures/ASTRA_R08_Body_Color.png
+     22,908  cfeeae6be4f71e9301fd0a31fbf1dcd3fd07ab0e9d444e018c57cc95b04dfe87  textures/ASTRA_R08_Body_Metalness.png
+  1,775,137  61361e948dcc167bdb61c22ae66797c15a82b01123f3d5f957203d645f330fe3  textures/ASTRA_R08_Body_Normal.png
+    424,526  3f61a529c0c8187e400ab5cf5db892a5c91905001322a8a3ef6dae959e1a5ddb  textures/ASTRA_R08_Body_Roughness.png
   1,345,672  a1f1d3e427dfc2ef051b9ff40fc0b54170905cf2c968f1cc16bd9c30c0665f75  textures/ASTRA_R08_Head_Color.png
       4,774  d82013facf7ed46518ae23000c56cd298a0673d6ff64adfd4325aa2254549bb6  textures/ASTRA_R08_Head_Metalness.png
   2,153,642  c394ddb11e2ce617a3a8cbbd7e7c30ac657dc1dd70add85d61c79331dbb300eb  textures/ASTRA_R08_Head_Normal.png
     428,052  389d05d8b709639265a966e506301fa38ede891ff3d8f4e6e5e30c0ab43f1a64  textures/ASTRA_R08_Head_Roughness.png
-  2,343,598  5eaa61df9cddfbc5efc6b2cc1e5430d7d61451d7e927faf5a1ebdf1d55d4fd58  textures/source_2048/ASTRA_R08_Body_AO_2048.png
-  4,233,466  037a627ef35f5f59d0188bcfdd2bd206c193e385a816e08e941008665e5dbd53  textures/source_2048/ASTRA_R08_Body_Albedo_2048.png
-  5,322,439  9bae89bc00de3277dc2a5afb139f6c574d282ab8f3d3ef430f79a91d8f3370ae  textures/source_2048/ASTRA_R08_Body_Color_2048.png
-     25,849  70e05bb58eab0597b1a5212d51f1b6f23095423419be7ad4ab46a6094be62174  textures/source_2048/ASTRA_R08_Body_Metalness_2048.png
-  9,098,981  12cd63689753b1ec21ca56b4dba55210d223818d295dbdc3a9dd391726e93777  textures/source_2048/ASTRA_R08_Body_Normal_2048.png
-  1,509,859  878643e9d92b20099fab22aca86419cd3853f9ecbf88ffc6e2f95ea3ec41cbe5  textures/source_2048/ASTRA_R08_Body_Roughness_2048.png
+  2,107,398  96b3d358480b4fd5c5899ed320ee144a1e614a1e7dc88179f8a5bb522daeb7cc  textures/source_2048/ASTRA_R08_Body_AO_2048.png
+  3,839,457  d5b07cddee2f7408b4754c070e728ce359512197d25cc888958c40c10ec77449  textures/source_2048/ASTRA_R08_Body_Albedo_2048.png
+  4,650,943  fbd24232bc2c7ff880165e09127ec44bb27b8e6670a49298c7b5dcb91b417ec2  textures/source_2048/ASTRA_R08_Body_Color_2048.png
+     29,985  1b817b4b365be2ebb0720ddecb9a91c3365b675c2828b021eccb48a23cd71238  textures/source_2048/ASTRA_R08_Body_Metalness_2048.png
+  6,876,204  695043dc542e8a04b3531a126e395d10802eeb630453a3b42bfd44964753bab2  textures/source_2048/ASTRA_R08_Body_Normal_2048.png
+  1,394,699  1e5930c242b1656d9c5416ccde4b889a4b7576295843de2755ae5448e4db9e8d  textures/source_2048/ASTRA_R08_Body_Roughness_2048.png
   1,800,939  aeae57195bda5a6be49a7c131179db1751cf92b0ec3afa0f61d738318e0068f1  textures/source_2048/ASTRA_R08_Head_AO_2048.png
   4,213,581  26b1c65d9deaec341bbd93471a5514fd33a9df614c9a0df9851e9fc5ac4d9261  textures/source_2048/ASTRA_R08_Head_Albedo_2048.png
   4,648,904  b85ea53998700907c605d6962b80b11b0cdd2d4c45af2dcc045bc443000fc8a1  textures/source_2048/ASTRA_R08_Head_Color_2048.png
      10,353  8190992eadbef52e32157107918880051131bb6d61aec253d847046bd3f98d6e  textures/source_2048/ASTRA_R08_Head_Metalness_2048.png
   8,222,839  4d88c50dfdfbbb296d2ac7276c31441749367b264030e14acc79831e10b6fd02  textures/source_2048/ASTRA_R08_Head_Normal_2048.png
     903,920  a7ffd12686a9efb4c1509691fb1f766ad30121e9751370846002ded511126067  textures/source_2048/ASTRA_R08_Head_Roughness_2048.png
-    329,712  13fb8c3cd253d927dbceb8d3259428f32894bd35fbf72f6a35ec21d2a5ba2aec  textures/uv/ASTRA_R08_Body_UV_layout.png
+    338,799  6a1bdcd76b1c5d82deed47ebc500f251aff3a700fe3a513691259847bb9ab853  textures/uv/ASTRA_R08_Body_UV_layout.png
     343,504  0f3091f0c231bf40852a314ca4a1c94babd936d1972f6ff9ad2aee894ca9ba10  textures/uv/ASTRA_R08_Head_UV_layout.png
